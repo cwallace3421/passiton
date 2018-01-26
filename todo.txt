@@ -1,0 +1,15 @@
+pupil classes
+line draw manager
+state manager
+teacher class
+sprites
+
+
+
+
+
+map holds 2d array of pupils
+pupil holds wether or not they are the current
+line draw has to start within the current pupil
+line draw has to end within valid pupil
+global noise / attention meter

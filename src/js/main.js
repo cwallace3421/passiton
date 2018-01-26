@@ -1,10 +1,12 @@
-import StateTest from './states/StateTest'
+import StateMenu from './states/StateMenu';
+import StatePlay from './states/StatePlay';
 
 class Game extends Phaser.Game {
 
     constructor() {
         super(window.innerWidth, window.innerHeight, Phaser.AUTO, 'container', null, false, true);
-        this.state.add('test', new StateTest(), true);
+        this.state.add('menu', new StateMenu(), true);
+        this.state.add('play', new StatePlay(), false);
     }
 
 }
