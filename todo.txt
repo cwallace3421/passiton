@@ -30,3 +30,13 @@ Teacher:
 Start phaser
 start timer for turn around
     once triggered
+
+
+
+Blue: 0x00AEEF
+
+Red: 0x790000
+
+Pink: 0xF49AC2
+
+Blackboard: 0x1F3429

@@ -1,3 +1,5 @@
+import g from '../global';
+
 class StateLose extends Phaser.State {
 
     constructor() {
@@ -13,8 +15,11 @@ class StateLose extends Phaser.State {
     }
 
     create() {
-        const hello = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Lose');
-        hello.anchor.setTo(0.5);
+        this.game.stage.backgroundColor = 0x790000;
+
+        const messageSpr = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'failure');
+        messageSpr.anchor.setTo(0.5);
+        messageSpr.scale.setTo(0.2);
     }
 
     update() {

@@ -19,10 +19,12 @@ class Teacher {
                 this.aniTurn.stop();
                 this.aniChalk.play('chalk');
                 if (this.turnTimer) {
-                    // this.turnTimer.destory();
                     console.log(this.turnTimer);
                 }
                 this.turnTimer = undefined;
+                if (g.currentPoint) {
+                    g.lose = true;
+                }
             }, this);
             waitTimer.start();
             console.log('waitTimer start');
@@ -59,7 +61,11 @@ class Teacher {
         }
         if (g.meter >= 100) {
             // Exclamantion point
-            turn();
+            g.lose = true;
+            this.spr.frame = 2;
+        }
+        if (g.lose) {
+            this.spr.frame = 2;
         }
     }
 

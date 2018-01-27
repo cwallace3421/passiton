@@ -38,16 +38,28 @@ class ArmManager {
             this.setArmLength(mousePos);
             this.setArmAngle(mousePos);
 
+            g.currentPoint = mousePos;
             g.meter += 0.1;
+            if (g.meter > 100) {
+                g.meter = 100;
+            }
 
             if (!isDown && this.active) {
                 this.toggleActive(false);
                 const endX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - g.radiansOffset);
                 const endY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - g.radiansOffset);
                 g.droppedPoint = new Phaser.Point(endX, endY);
+                g.currentPoint = null;
                 console.log('line release');
             }
         }
+
+        if (g.lose) {
+            this.toggleActive(false);
+            g.droppedPoint = null;
+            g.currentPoint = null;
+        }
+
         this.spr.bringToTop();
     }
 

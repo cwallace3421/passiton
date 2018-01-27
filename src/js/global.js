@@ -11,6 +11,7 @@ const global = {
     radiansOffset: Phaser.Math.degToRad(90),
     maxArmLength: 110,
     droppedPoint: null,
+    currentPoint: null,
     activePupil: null,
     meter: 50,
     win: false,

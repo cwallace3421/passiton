@@ -116,6 +116,16 @@ class GameMap {
             winTimer.start();
             g.win = false;
         }
+
+        if (g.lose) {
+            const loseTimer = this.game.time.create(true);
+            loseTimer.add(Phaser.Timer.SECOND * 2, () => {
+                console.log('change to lose state');
+                this.game.state.start('lose', true, false);
+            }, this);
+            loseTimer.start();
+            g.lose = false;
+        }
     }
 
     giveInitialNote() {

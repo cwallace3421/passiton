@@ -15,13 +15,19 @@ class PetPupil {
         this.spr.anchor.setTo(0, 1);
         this.spr.scale.setTo(0.5);
 
-        this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
+        // this.alert = this.game.add.sprite(x + (this.spr.width / 2) + 2, y - 76, 'alert');
+        // this.alert.anchor.setTo(0.5, 1);
+
+        // this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
+        this.coll = new Phaser.Circle(x + (this.spr.width / 2), y - (this.spr.height / 2) - 10, 140);
 
         // this.game.debug.geom(this.coll);
     }
 
     update() {
-
+        if (g.currentPoint && this.coll.contains(g.currentPoint.x, g.currentPoint.y)) {
+            g.lose = true;
+        }
     }
 
     select() {

@@ -258,6 +258,9 @@ var StatePlay = function (_Phaser$State) {
             this.game.load.image('teachers_pet', 'assets/teachers_pet.png');
             this.game.load.image('blackboard', 'assets/blackboard.png');
             this.game.load.image('teachers_desk', 'assets/teachers_desk.png');
+            this.game.load.image('alert', 'assets/alert.png');
+            this.game.load.image('success', 'assets/success.png');
+            this.game.load.image('failure', 'assets/detention.png');
             this.game.load.spritesheet('teacher', 'assets/teacher/teacher_spritesheet.png', 180, 280);
         }
     }, {
@@ -295,6 +298,7 @@ var global = {
     radiansOffset: Phaser.Math.degToRad(90),
     maxArmLength: 110,
     droppedPoint: null,
+    currentPoint: null,
     activePupil: null,
     meter: 50,
     win: false,
@@ -453,6 +457,16 @@ var GameMap = function () {
                 }, this);
                 winTimer.start();
                 _global2.default.win = false;
+            }
+
+            if (_global2.default.lose) {
+                var loseTimer = this.game.time.create(true);
+                loseTimer.add(Phaser.Timer.SECOND * 2, function () {
+                    console.log('change to lose state');
+                    _this.game.state.start('lose', true, false);
+                }, this);
+                loseTimer.start();
+                _global2.default.lose = false;
             }
         }
     }, {
@@ -744,16 +758,28 @@ var ArmManager = function () {
                 this.setArmLength(mousePos);
                 this.setArmAngle(mousePos);
 
+                _global2.default.currentPoint = mousePos;
                 _global2.default.meter += 0.1;
+                if (_global2.default.meter > 100) {
+                    _global2.default.meter = 100;
+                }
 
                 if (!isDown && this.active) {
                     this.toggleActive(false);
                     var endX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - _global2.default.radiansOffset);
                     var endY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - _global2.default.radiansOffset);
                     _global2.default.droppedPoint = new Phaser.Point(endX, endY);
+                    _global2.default.currentPoint = null;
                     console.log('line release');
                 }
             }
+
+            if (_global2.default.lose) {
+                this.toggleActive(false);
+                _global2.default.droppedPoint = null;
+                _global2.default.currentPoint = null;
+            }
+
             this.spr.bringToTop();
         }
     }, {
@@ -911,14 +937,22 @@ var PetPupil = function () {
         this.spr.anchor.setTo(0, 1);
         this.spr.scale.setTo(0.5);
 
-        this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
+        // this.alert = this.game.add.sprite(x + (this.spr.width / 2) + 2, y - 76, 'alert');
+        // this.alert.anchor.setTo(0.5, 1);
+
+        // this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
+        this.coll = new Phaser.Circle(x + this.spr.width / 2, y - this.spr.height / 2 - 10, 140);
 
         // this.game.debug.geom(this.coll);
     }
 
     _createClass(PetPupil, [{
         key: 'update',
-        value: function update() {}
+        value: function update() {
+            if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y)) {
+                _global2.default.lose = true;
+            }
+        }
     }, {
         key: 'select',
         value: function select() {}
@@ -997,10 +1031,12 @@ var Teacher = function () {
                 _this.aniTurn.stop();
                 _this.aniChalk.play('chalk');
                 if (_this.turnTimer) {
-                    // this.turnTimer.destory();
                     console.log(_this.turnTimer);
                 }
                 _this.turnTimer = undefined;
+                if (_global2.default.currentPoint) {
+                    _global2.default.lose = true;
+                }
             }, _this);
             waitTimer.start();
             console.log('waitTimer start');
@@ -1041,7 +1077,11 @@ var Teacher = function () {
             }
             if (_global2.default.meter >= 100) {
                 // Exclamantion point
-                turn();
+                _global2.default.lose = true;
+                this.spr.frame = 2;
+            }
+            if (_global2.default.lose) {
+                this.spr.frame = 2;
             }
         }
     }, {
@@ -1078,6 +1118,12 @@ module.exports = Teacher;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _global = __webpack_require__(3);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -1105,8 +1151,11 @@ var StateWin = function (_Phaser$State) {
     }, {
         key: 'create',
         value: function create() {
-            var hello = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Win');
-            hello.anchor.setTo(0.5);
+            this.game.stage.backgroundColor = 0x1F3429;
+
+            var messageSpr = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'success');
+            messageSpr.anchor.setTo(0.5);
+            messageSpr.scale.setTo(0.2);
         }
     }, {
         key: 'update',
@@ -1135,6 +1184,12 @@ module.exports = StateWin;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _global = __webpack_require__(3);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -1162,8 +1217,11 @@ var StateLose = function (_Phaser$State) {
     }, {
         key: 'create',
         value: function create() {
-            var hello = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Lose');
-            hello.anchor.setTo(0.5);
+            this.game.stage.backgroundColor = 0x790000;
+
+            var messageSpr = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'failure');
+            messageSpr.anchor.setTo(0.5);
+            messageSpr.scale.setTo(0.2);
         }
     }, {
         key: 'update',
