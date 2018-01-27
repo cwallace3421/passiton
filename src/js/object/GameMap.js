@@ -1,19 +1,23 @@
 import g from '../global';
 import NeutralPupil from '../pupils/NeutralPupil';
 import EmptyPupil from '../pupils/EmptyPupil';
+import BullyPupil from '../pupils/BullyPupil';
+import PetPupil from '../pupils/PetPupil';
 
 class GameMap {
 
     constructor(game) {
         this.game = game;
 
+        this.teacherAreaHeight = 190;
+
         this.deskRowSize = Math.floor(g.areaW / (g.deskWidth + g.deskGap));
         const deskRowWidth = (this.deskRowSize * g.deskWidth) + ((this.deskRowSize - 1) * g.deskGap);
         g.startXOffset = (g.areaW - deskRowWidth) / 2;
 
-        this.deskColSize = Math.floor((g.areaH - 150) / (g.deskHeight + g.deskGap));
+        this.deskColSize = Math.floor((g.areaH - this.teacherAreaHeight) / (g.deskHeight + g.deskGap));
         const deskColWidth = (this.deskColSize * g.deskHeight) + ((this.deskColSize - 1) * g.deskGap);
-        g.startYOffset = ((g.areaH - 150) - deskColWidth) / 2;
+        g.startYOffset = ((g.areaH - this.teacherAreaHeight) - deskColWidth) / 2;
 
         for (let y = 0; y < this.deskColSize; y++) {
             for (let x = 0; x < this.deskRowSize; x++) {
@@ -45,6 +49,29 @@ class GameMap {
             this.pupils.push(row);
         }
         this.giveInitialNote();
+
+        // Generate bullies
+        for (let n = 0; n < 2; n++) {
+            const x = this.game.rnd.integerInRange(1, this.deskRowSize - 2);
+            const y = this.game.rnd.integerInRange(1, this.deskColSize - 2);
+
+            if (this.pupils[y][x].spr.destroy) {
+                this.pupils[y][x].spr.destroy();
+            }
+            this.pupils[y][x] = new BullyPupil(this.game, x, y);
+        }
+
+        // Generate teacher pet
+        for (let n = 0; n < 1; n++) {
+            const x = this.game.rnd.integerInRange(1, this.deskRowSize - 2);
+            const y = this.game.rnd.integerInRange(1, this.deskColSize - 2);
+
+            if (this.pupils[y][x].spr.destroy) {
+                this.pupils[y][x].spr.destroy();
+            }
+            this.pupils[y][x] = new PetPupil(this.game, x, y);
+        }
+
         console.log(this.pupils);
     }
 

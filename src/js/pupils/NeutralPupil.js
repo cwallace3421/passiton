@@ -16,7 +16,6 @@ class NeutralPupil {
         this.spr = this.game.add.sprite(x, y, key);
         this.spr.anchor.setTo(0, 1);
         this.spr.scale.setTo(0.5);
-        this.spr.inputEnabled = true;
 
         this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
         this.armManager = new ArmManager(this.coll, this.game, this, this.spr.centerX, this.spr.centerY);

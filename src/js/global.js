@@ -1,5 +1,5 @@
 const global = {
-    areaW: 660,
+    areaW: 780,
     areaH: 560,
     deskWidth: 174 / 2,
     deskHeight: 120 / 2,
