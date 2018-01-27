@@ -1,8 +1,9 @@
 const global = {
-    areaW: 500,
+    areaW: 660,
     areaH: 560,
-    chairSize: 50,
-    chairGap: 30,
+    deskWidth: 174 / 2,
+    deskHeight: 120 / 2,
+    deskGap: 20,
 }
 
 export default global;
