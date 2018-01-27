@@ -7,19 +7,21 @@ class NeutralPupil {
         this.game = game;
         this.speed = 10;
         this.noiseRange = [0, 5];
-        this.focus = false;
+        this.paper = false;
 
         const x = g.area.left + g.startXOffset + ((g.deskWidth + g.deskGap) * iX) - g.deskGap + (g.deskWidth / 2) - 10;
         const y = g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGap) * iY) - g.deskGap + 38;
-        this.spr = this.game.add.sprite(x, y, 'generic_boy_1');
+        const key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_girl_1';
+
+        this.spr = this.game.add.sprite(x, y, key);
         this.spr.anchor.setTo(0, 1);
         this.spr.scale.setTo(0.5);
         this.spr.inputEnabled = true;
 
-        this.coll = new Phaser.Rectangle(x, y - this.spr.height, this.spr.width, this.spr.height);
-        // this.game.debug.geom(this.coll);
+        this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
+        this.armManager = new ArmManager(this.coll, this.game, this, this.spr.centerX, this.spr.centerY);
 
-        this.armManager = new ArmManager(this.coll, this.game, this.spr.centerX, this.spr.centerY);
+        // this.game.debug.geom(this.coll);
 
         // this.high = new Phaser.Sprite(this.game, 0, 0, 'generic_boy_1');
         // this.high.anchor.setTo(0.5);
@@ -38,15 +40,30 @@ class NeutralPupil {
     }
 
     check(x, y) {
-
+        return this.coll.contains(x, y);
     }
 
     highlight(highlight) {
-
+        if (highlight) {
+            this.spr.tint = 0xAAAAAA;
+        } else {
+            this.spr.tint = 0xFFFFFF;
+        }
     }
 
-    isFocused() {
-        return this.focus;
+    givePaper() {
+        this.highlight(true);
+        this.paper = true;
+        g.activePupil = this;
+    }
+
+    takePaper() {
+        this.highlight(false);
+        this.paper = false;
+    }
+
+    hasPaper() {
+        return this.paper;
     }
 
     isSelectable() {

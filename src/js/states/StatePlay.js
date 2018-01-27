@@ -37,6 +37,9 @@ class StatePlay extends Phaser.State {
         this.game.load.image('table', '/assets/table.png');
         this.game.load.image('chair', '/assets/chair.png');
         this.game.load.image('generic_boy_1', '/assets/generic_boy_1.png');
+        this.game.load.image('generic_girl_1', '/assets/generic_girl_1.png');
+        this.game.load.image('bully', '/assets/bully.png');
+        this.game.load.image('teachers_pet', '/assets/teachers_pet.png');
     }
 
     resize() {

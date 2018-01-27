@@ -2,10 +2,11 @@ import g from '../global';
 
 class ArmManager {
 
-    constructor(parent, game, startX, startY) {
+    constructor(parent, game, pupil, startX, startY) {
         this.parent = new Phaser.Rectangle(parent.left, parent.top, parent.width, parent.height);
         this.parent.uid = Math.floor(Math.random() * 1000);
         this.game = game;
+        this.pupil = pupil;
         this.startPos = new Phaser.Point(startX, startY);
 
         this.spr = this.game.add.sprite(startX, startY, 'pixel');
@@ -19,6 +20,10 @@ class ArmManager {
     }
 
     update() {
+        if (!this.pupil.hasPaper()) {
+            return;
+        }
+
         const mousePos = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
         const isDown = this.game.input.activePointer.leftButton.isDown;
 
@@ -35,6 +40,9 @@ class ArmManager {
 
             if (!isDown && this.active) {
                 this.toggleActive(false);
+                const endX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - g.radiansOffset);
+                const endY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - g.radiansOffset);
+                g.droppedPoint = new Phaser.Point(endX, endY);
                 console.log('line release');
             }
         }

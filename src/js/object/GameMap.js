@@ -44,6 +44,7 @@ class GameMap {
             }
             this.pupils.push(row);
         }
+        this.giveInitialNote();
         console.log(this.pupils);
     }
 
@@ -55,7 +56,39 @@ class GameMap {
                 }
             }
         }
-        this.test = true;
+        this.shouldPassPaper();
+    }
+
+    giveInitialNote() {
+        if (this.game.rnd.integerInRange(0, 100) > 50) {
+            // Bottom left
+            if (!this.pupils[0][0].isSelectable()) {
+                this.pupils[0][0] = new NeutralPupil(this.game, 0, 0);
+            }
+            this.pupils[0][0].givePaper();
+        } else {
+            // Bottom right
+            if (!this.pupils[0][this.deskRowSize - 1].isSelectable()) {
+                this.pupils[0][this.deskRowSize - 1] = new NeutralPupil(this.game, this.deskRowSize - 1, 0);
+            }
+            this.pupils[0][this.deskRowSize - 1].givePaper();
+        }
+    }
+
+    shouldPassPaper() {
+        if (g.droppedPoint) {
+            for (let y = 0; y < this.pupils.length; y++) {
+                for (let x = 0; x < this.pupils[0].length; x++) {
+                    if (this.pupils[y][x].check && this.pupils[y][x].givePaper) {
+                        if (this.pupils[y][x].check(g.droppedPoint.x, g.droppedPoint.y)) {
+                            g.activePupil.takePaper();
+                            this.pupils[y][x].givePaper();
+                        }
+                    }
+                }
+            }
+            g.droppedPoint = null;
+        }
     }
 
 }

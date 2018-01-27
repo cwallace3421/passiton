@@ -249,6 +249,9 @@ var StatePlay = function (_Phaser$State) {
             this.game.load.image('table', '/assets/table.png');
             this.game.load.image('chair', '/assets/chair.png');
             this.game.load.image('generic_boy_1', '/assets/generic_boy_1.png');
+            this.game.load.image('generic_girl_1', '/assets/generic_girl_1.png');
+            this.game.load.image('bully', '/assets/bully.png');
+            this.game.load.image('teachers_pet', '/assets/teachers_pet.png');
         }
     }, {
         key: 'resize',
@@ -283,7 +286,9 @@ var global = {
     startYOffset: null,
     armActive: false,
     radiansOffset: Phaser.Math.degToRad(90),
-    maxArmLength: 110
+    maxArmLength: 110,
+    droppedPoint: null,
+    activePupil: null
 };
 
 exports.default = global;
@@ -355,6 +360,7 @@ var GameMap = function () {
                 }
                 this.pupils.push(row);
             }
+            this.giveInitialNote();
             console.log(this.pupils);
         }
     }, {
@@ -367,7 +373,41 @@ var GameMap = function () {
                     }
                 }
             }
-            this.test = true;
+            this.shouldPassPaper();
+        }
+    }, {
+        key: 'giveInitialNote',
+        value: function giveInitialNote() {
+            if (this.game.rnd.integerInRange(0, 100) > 50) {
+                // Bottom left
+                if (!this.pupils[0][0].isSelectable()) {
+                    this.pupils[0][0] = new _NeutralPupil2.default(this.game, 0, 0);
+                }
+                this.pupils[0][0].givePaper();
+            } else {
+                // Bottom right
+                if (!this.pupils[0][this.deskRowSize - 1].isSelectable()) {
+                    this.pupils[0][this.deskRowSize - 1] = new _NeutralPupil2.default(this.game, this.deskRowSize - 1, 0);
+                }
+                this.pupils[0][this.deskRowSize - 1].givePaper();
+            }
+        }
+    }, {
+        key: 'shouldPassPaper',
+        value: function shouldPassPaper() {
+            if (_global2.default.droppedPoint) {
+                for (var y = 0; y < this.pupils.length; y++) {
+                    for (var x = 0; x < this.pupils[0].length; x++) {
+                        if (this.pupils[y][x].check && this.pupils[y][x].givePaper) {
+                            if (this.pupils[y][x].check(_global2.default.droppedPoint.x, _global2.default.droppedPoint.y)) {
+                                _global2.default.activePupil.takePaper();
+                                this.pupils[y][x].givePaper();
+                            }
+                        }
+                    }
+                }
+                _global2.default.droppedPoint = null;
+            }
         }
     }]);
 
@@ -404,19 +444,21 @@ var NeutralPupil = function () {
         this.game = game;
         this.speed = 10;
         this.noiseRange = [0, 5];
-        this.focus = false;
+        this.paper = false;
 
         var x = _global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGap) * iX - _global2.default.deskGap + _global2.default.deskWidth / 2 - 10;
         var y = _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGap) * iY - _global2.default.deskGap + 38;
-        this.spr = this.game.add.sprite(x, y, 'generic_boy_1');
+        var key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_girl_1';
+
+        this.spr = this.game.add.sprite(x, y, key);
         this.spr.anchor.setTo(0, 1);
         this.spr.scale.setTo(0.5);
         this.spr.inputEnabled = true;
 
-        this.coll = new Phaser.Rectangle(x, y - this.spr.height, this.spr.width, this.spr.height);
-        // this.game.debug.geom(this.coll);
+        this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
+        this.armManager = new _ArmManager2.default(this.coll, this.game, this, this.spr.centerX, this.spr.centerY);
 
-        this.armManager = new _ArmManager2.default(this.coll, this.game, this.spr.centerX, this.spr.centerY);
+        // this.game.debug.geom(this.coll);
 
         // this.high = new Phaser.Sprite(this.game, 0, 0, 'generic_boy_1');
         // this.high.anchor.setTo(0.5);
@@ -436,14 +478,35 @@ var NeutralPupil = function () {
         value: function select() {}
     }, {
         key: 'check',
-        value: function check(x, y) {}
+        value: function check(x, y) {
+            return this.coll.contains(x, y);
+        }
     }, {
         key: 'highlight',
-        value: function highlight(_highlight) {}
+        value: function highlight(_highlight) {
+            if (_highlight) {
+                this.spr.tint = 0xAAAAAA;
+            } else {
+                this.spr.tint = 0xFFFFFF;
+            }
+        }
     }, {
-        key: 'isFocused',
-        value: function isFocused() {
-            return this.focus;
+        key: 'givePaper',
+        value: function givePaper() {
+            this.highlight(true);
+            this.paper = true;
+            _global2.default.activePupil = this;
+        }
+    }, {
+        key: 'takePaper',
+        value: function takePaper() {
+            this.highlight(false);
+            this.paper = false;
+        }
+    }, {
+        key: 'hasPaper',
+        value: function hasPaper() {
+            return this.paper;
         }
     }, {
         key: 'isSelectable',
@@ -545,12 +608,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ArmManager = function () {
-    function ArmManager(parent, game, startX, startY) {
+    function ArmManager(parent, game, pupil, startX, startY) {
         _classCallCheck(this, ArmManager);
 
         this.parent = new Phaser.Rectangle(parent.left, parent.top, parent.width, parent.height);
         this.parent.uid = Math.floor(Math.random() * 1000);
         this.game = game;
+        this.pupil = pupil;
         this.startPos = new Phaser.Point(startX, startY);
 
         this.spr = this.game.add.sprite(startX, startY, 'pixel');
@@ -566,6 +630,10 @@ var ArmManager = function () {
     _createClass(ArmManager, [{
         key: 'update',
         value: function update() {
+            if (!this.pupil.hasPaper()) {
+                return;
+            }
+
             var mousePos = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
             var isDown = this.game.input.activePointer.leftButton.isDown;
 
@@ -582,6 +650,9 @@ var ArmManager = function () {
 
                 if (!isDown && this.active) {
                     this.toggleActive(false);
+                    var endX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - _global2.default.radiansOffset);
+                    var endY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - _global2.default.radiansOffset);
+                    _global2.default.droppedPoint = new Phaser.Point(endX, endY);
                     console.log('line release');
                 }
             }

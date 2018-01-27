@@ -9,7 +9,9 @@ const global = {
     startYOffset: null,
     armActive: false,
     radiansOffset: Phaser.Math.degToRad(90),
-    maxArmLength: 110
+    maxArmLength: 110,
+    droppedPoint: null,
+    activePupil: null,
 }
 
 export default global;
