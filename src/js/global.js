@@ -16,6 +16,8 @@ const global = {
     meter: 50,
     win: false,
     lose: false,
+    armGrp: null,
+    envGrp: null
 }
 
 export default global;

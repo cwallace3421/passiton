@@ -236,12 +236,16 @@ var StatePlay = function (_Phaser$State) {
     }, {
         key: 'create',
         value: function create() {
+            _global2.default.armGrp = this.game.add.group();
+            _global2.default.envGrp = this.game.add.group();
             this.gameMap = new _GameMap2.default(this.game);
         }
     }, {
         key: 'update',
         value: function update() {
             this.game.world.sort('y', Phaser.Group.SORT_ASCENDING);
+            this.game.world.bringToTop(_global2.default.armGrp);
+            this.game.world.sendToBack(_global2.default.envGrp);
             this.gameMap.update();
         }
     }, {
@@ -261,6 +265,9 @@ var StatePlay = function (_Phaser$State) {
             this.game.load.image('alert', 'assets/alert.png');
             this.game.load.image('success', 'assets/success.png');
             this.game.load.image('failure', 'assets/detention.png');
+            this.game.load.image('arm', 'assets/arm.png');
+            this.game.load.image('hand', 'assets/hand.png');
+            this.game.load.image('meter_board', 'assets/meter_board.png');
             this.game.load.spritesheet('teacher', 'assets/teacher/teacher_spritesheet.png', 180, 280);
         }
     }, {
@@ -302,7 +309,9 @@ var global = {
     activePupil: null,
     meter: 50,
     win: false,
-    lose: false
+    lose: false,
+    armGrp: null,
+    envGrp: null
 };
 
 exports.default = global;
@@ -340,6 +349,10 @@ var _Teacher = __webpack_require__(11);
 
 var _Teacher2 = _interopRequireDefault(_Teacher);
 
+var _Meter = __webpack_require__(14);
+
+var _Meter2 = _interopRequireDefault(_Meter);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -355,14 +368,24 @@ var GameMap = function () {
         this.teacherAreaHeight = 190;
 
         this.wallH = 160;
-        // this.wallSpr = this.game.add.sprite(g.area.left, g.area.top, 'pixel');
-        // this.wallSpr.width = g.areaW;
-        // this.wallSpr.height = this.wallH;
-        // this.wallSpr.tint = 0xAA0606;
+        this.wallSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'pixel');
+        this.wallSpr.width = _global2.default.areaW;
+        this.wallSpr.height = this.wallH;
+        this.wallSpr.tint = 0xFCFBE3;
+        _global2.default.envGrp.add(this.wallSpr);
 
-        this.boardSpr = this.game.add.sprite(_global2.default.area.left + _global2.default.area.width / 2, 10, 'blackboard');
+        this.floorSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top + this.wallH, 'pixel');
+        this.floorSpr.width = _global2.default.areaW;
+        this.floorSpr.height = _global2.default.area.height - this.wallH;
+        this.floorSpr.tint = 0xAAAAAA;
+        _global2.default.envGrp.add(this.floorSpr);
+
+        this.boardSpr = this.game.add.sprite(_global2.default.area.left + _global2.default.area.width / 2, 17, 'blackboard');
         this.boardSpr.anchor.setTo(0.5, 0);
         this.boardSpr.scale.setTo(0.5);
+        _global2.default.envGrp.add(this.boardSpr);
+
+        this.meterObj = new _Meter2.default(this.game, this.boardSpr.x + this.boardSpr.width / 2 + 6, 25);
 
         // this.areaSpr = this.game.add.sprite(g.area.topLeft.x, g.area.topLeft.y, 'pixel');
         // this.areaSpr.width = g.areaW;
@@ -389,7 +412,6 @@ var GameMap = function () {
         this.generatePupils();
 
         this.teacher = new _Teacher2.default(this.game, _global2.default.area.left + _global2.default.area.width / 2, this.teacherAreaHeight + 20);
-        this.meterText = this.game.add.text(0, 0, _global2.default.meter);
     }
 
     _createClass(GameMap, [{
@@ -447,6 +469,7 @@ var GameMap = function () {
             }
             this.shouldPassPaper();
             this.teacher.update();
+            this.meterObj.update();
             this.meterText.text = _global2.default.meter;
 
             if (_global2.default.win) {
@@ -727,12 +750,24 @@ var ArmManager = function () {
         this.pupil = pupil;
         this.startPos = new Phaser.Point(startX, startY);
 
-        this.spr = this.game.add.sprite(startX, startY, 'pixel');
-        this.spr.width = 8;
-        this.spr.height = 2;
+        this.spr = this.game.add.sprite(startX, startY, 'arm');
+        // this.spr.width = 8;
+        // this.spr.height = 2;
         this.spr.anchor.setTo(0.5, 1);
-        this.spr.tint = 0x000000;
+        this.spr.scale.setTo(0.8);
         this.spr.visible = false;
+        _global2.default.armGrp.add(this.spr);
+
+        var handX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - _global2.default.radiansOffset);
+        var handY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - _global2.default.radiansOffset);
+
+        this.handSpr = this.game.add.sprite(startX, startY, 'hand');
+        this.handSpr.anchor.setTo(0.6, 0.5);
+        this.handSpr.scale.setTo(0.5);
+        this.handSpr.visible = false;
+        _global2.default.armGrp.add(this.handSpr);
+        this.handSpr.bringToTop();
+        this.spr.sendToBack();
 
         this.active = false;
     }
@@ -746,6 +781,13 @@ var ArmManager = function () {
 
             var mousePos = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
             var isDown = this.game.input.activePointer.leftButton.isDown;
+
+            var endX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - _global2.default.radiansOffset);
+            var endY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - _global2.default.radiansOffset);
+
+            this.handSpr.position.x = endX;
+            this.handSpr.position.y = endY;
+            this.handSpr.rotation = this.spr.rotation;
 
             if (!this.active && !_global2.default.armActive) {
                 if (this.parent.contains(mousePos.x, mousePos.y) && isDown) {
@@ -766,8 +808,6 @@ var ArmManager = function () {
 
                 if (!isDown && this.active) {
                     this.toggleActive(false);
-                    var endX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - _global2.default.radiansOffset);
-                    var endY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - _global2.default.radiansOffset);
                     _global2.default.droppedPoint = new Phaser.Point(endX, endY);
                     _global2.default.currentPoint = null;
                     console.log('line release');
@@ -804,6 +844,7 @@ var ArmManager = function () {
             this.active = active;
             this.spr.visible = active;
             _global2.default.armActive = active;
+            this.handSpr.visible = active;
         }
     }]);
 
@@ -1240,6 +1281,58 @@ var StateLose = function (_Phaser$State) {
 }(Phaser.State);
 
 module.exports = StateLose;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _global = __webpack_require__(3);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Meter = function () {
+    function Meter(game, x, y) {
+        _classCallCheck(this, Meter);
+
+        this.game = game;
+
+        this.backSpr = this.game.add.sprite(x + 1, y, 'pixel');
+        this.backSpr.width = 30;
+        this.backSpr.height = 112;
+        this.backSpr.tint = 0x1F3429;
+        _global2.default.envGrp.add(this.backSpr);
+
+        this.meterSpr = this.game.add.sprite(x + 7, y - 7 + 112, 'pixel');
+        this.meterSpr.width = 34 / 2;
+        this.meterSpr.height = 192 / 2;
+        this.meterSpr.tint = 0x790000;
+        this.meterSpr.anchor.setTo(0, 1);
+        _global2.default.envGrp.add(this.meterSpr);
+
+        this.frameSpr = this.game.add.sprite(x, y, 'meter_board');
+        this.frameSpr.scale.setTo(0.5);
+    }
+
+    _createClass(Meter, [{
+        key: 'update',
+        value: function update() {
+            this.meterSpr.height = Math.ceil(_global2.default.meter / 100 * (192 / 2));
+        }
+    }]);
+
+    return Meter;
+}();
+
+module.exports = Meter;
 
 /***/ })
 /******/ ]);

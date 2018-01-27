@@ -16,11 +16,15 @@ class StatePlay extends Phaser.State {
     }
 
     create() {
+        g.armGrp = this.game.add.group();
+        g.envGrp = this.game.add.group();
         this.gameMap = new GameMap(this.game);
     }
 
     update() {
         this.game.world.sort('y', Phaser.Group.SORT_ASCENDING);
+        this.game.world.bringToTop(g.armGrp);
+        this.game.world.sendToBack(g.envGrp);
         this.gameMap.update();
     }
 
@@ -39,6 +43,9 @@ class StatePlay extends Phaser.State {
         this.game.load.image('alert', 'assets/alert.png');
         this.game.load.image('success', 'assets/success.png');
         this.game.load.image('failure', 'assets/detention.png');
+        this.game.load.image('arm', 'assets/arm.png');
+        this.game.load.image('hand', 'assets/hand.png');
+        this.game.load.image('meter_board', 'assets/meter_board.png');
         this.game.load.spritesheet('teacher', 'assets/teacher/teacher_spritesheet.png', 180, 280);
     }
 

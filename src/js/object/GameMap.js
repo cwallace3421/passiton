@@ -4,6 +4,7 @@ import EmptyPupil from '../pupils/EmptyPupil';
 import BullyPupil from '../pupils/BullyPupil';
 import PetPupil from '../pupils/PetPupil';
 import Teacher from '../object/Teacher';
+import Meter from '../object/Meter';
 
 class GameMap {
 
@@ -15,14 +16,24 @@ class GameMap {
         this.teacherAreaHeight = 190;
 
         this.wallH = 160;
-        // this.wallSpr = this.game.add.sprite(g.area.left, g.area.top, 'pixel');
-        // this.wallSpr.width = g.areaW;
-        // this.wallSpr.height = this.wallH;
-        // this.wallSpr.tint = 0xAA0606;
+        this.wallSpr = this.game.add.sprite(g.area.left, g.area.top, 'pixel');
+        this.wallSpr.width = g.areaW;
+        this.wallSpr.height = this.wallH;
+        this.wallSpr.tint = 0xFCFBE3;
+        g.envGrp.add(this.wallSpr);
 
-        this.boardSpr = this.game.add.sprite(g.area.left + (g.area.width / 2), 10, 'blackboard');
+        this.floorSpr = this.game.add.sprite(g.area.left, g.area.top + this.wallH, 'pixel');
+        this.floorSpr.width = g.areaW;
+        this.floorSpr.height = g.area.height - this.wallH;
+        this.floorSpr.tint = 0xAAAAAA;
+        g.envGrp.add(this.floorSpr);
+
+        this.boardSpr = this.game.add.sprite(g.area.left + (g.area.width / 2), 17, 'blackboard');
         this.boardSpr.anchor.setTo(0.5, 0);
         this.boardSpr.scale.setTo(0.5);
+        g.envGrp.add(this.boardSpr);
+
+        this.meterObj = new Meter(this.game, this.boardSpr.x + (this.boardSpr.width / 2) + 6, 25);
 
         // this.areaSpr = this.game.add.sprite(g.area.topLeft.x, g.area.topLeft.y, 'pixel');
         // this.areaSpr.width = g.areaW;
@@ -52,7 +63,6 @@ class GameMap {
         this.generatePupils();
 
         this.teacher = new Teacher(this.game, g.area.left + (g.area.width / 2), this.teacherAreaHeight + 20);
-        this.meterText = this.game.add.text(0, 0, g.meter);
     }
 
     generatePupils() {
@@ -105,6 +115,7 @@ class GameMap {
         }
         this.shouldPassPaper();
         this.teacher.update();
+        this.meterObj.update();
         this.meterText.text = g.meter;
 
         if (g.win) {

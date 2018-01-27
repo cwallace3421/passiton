@@ -9,12 +9,24 @@ class ArmManager {
         this.pupil = pupil;
         this.startPos = new Phaser.Point(startX, startY);
 
-        this.spr = this.game.add.sprite(startX, startY, 'pixel');
-        this.spr.width = 8;
-        this.spr.height = 2;
+        this.spr = this.game.add.sprite(startX, startY, 'arm');
+        // this.spr.width = 8;
+        // this.spr.height = 2;
         this.spr.anchor.setTo(0.5, 1);
-        this.spr.tint = 0x000000;
+        this.spr.scale.setTo(0.8);
         this.spr.visible = false;
+        g.armGrp.add(this.spr);
+
+        const handX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - g.radiansOffset);
+        const handY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - g.radiansOffset);
+
+        this.handSpr = this.game.add.sprite(startX, startY, 'hand');
+        this.handSpr.anchor.setTo(0.6, 0.5);
+        this.handSpr.scale.setTo(0.5);
+        this.handSpr.visible = false;
+        g.armGrp.add(this.handSpr);
+        this.handSpr.bringToTop();
+        this.spr.sendToBack();
 
         this.active = false;
     }
@@ -26,6 +38,13 @@ class ArmManager {
 
         const mousePos = new Phaser.Point(this.game.input.activePointer.x, this.game.input.activePointer.y);
         const isDown = this.game.input.activePointer.leftButton.isDown;
+
+        const endX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - g.radiansOffset);
+        const endY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - g.radiansOffset);
+
+        this.handSpr.position.x = endX;
+        this.handSpr.position.y = endY;
+        this.handSpr.rotation = this.spr.rotation;
 
         if (!this.active && !g.armActive) {
             if (this.parent.contains(mousePos.x, mousePos.y) && isDown) {
@@ -46,8 +65,6 @@ class ArmManager {
 
             if (!isDown && this.active) {
                 this.toggleActive(false);
-                const endX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - g.radiansOffset);
-                const endY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - g.radiansOffset);
                 g.droppedPoint = new Phaser.Point(endX, endY);
                 g.currentPoint = null;
                 console.log('line release');
@@ -81,6 +98,7 @@ class ArmManager {
         this.active = active;
         this.spr.visible = active;
         g.armActive = active;
+        this.handSpr.visible = active;
     }
 
 }
