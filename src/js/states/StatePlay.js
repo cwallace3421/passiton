@@ -16,14 +16,6 @@ class StatePlay extends Phaser.State {
     }
 
     create() {
-        const w = g.areaW;
-        const h = g.areaH;
-
-        g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - w) / 2), Math.floor((window.innerHeight - h) / 2), w, h);
-        this.areaSpr = this.game.add.sprite(g.area.topLeft.x, g.area.topLeft.y, 'pixel');
-        this.areaSpr.width = w;
-        this.areaSpr.height = h;
-
         this.gameMap = new GameMap(this.game);
     }
 
@@ -38,8 +30,13 @@ class StatePlay extends Phaser.State {
         this.game.load.image('chair', '/assets/chair.png');
         this.game.load.image('generic_boy_1', '/assets/generic_boy_1.png');
         this.game.load.image('generic_girl_1', '/assets/generic_girl_1.png');
+        this.game.load.image('hero_boy_1', '/assets/hero_boy_1.png');
+        this.game.load.image('target_boy_1', '/assets/target_boy_1.png');
         this.game.load.image('bully', '/assets/bully.png');
         this.game.load.image('teachers_pet', '/assets/teachers_pet.png');
+        this.game.load.image('blackboard', '/assets/blackboard.png');
+        this.game.load.image('teachers_desk', '/assets/teachers_desk.png');
+        this.game.load.spritesheet('teacher', '/assets/teacher/teacher_spritesheet.png', 180, 280);
     }
 
     resize() {

@@ -12,6 +12,9 @@ const global = {
     maxArmLength: 110,
     droppedPoint: null,
     activePupil: null,
+    meter: 50,
+    win: false,
+    lose: false,
 }
 
 export default global;

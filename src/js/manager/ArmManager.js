@@ -38,6 +38,8 @@ class ArmManager {
             this.setArmLength(mousePos);
             this.setArmAngle(mousePos);
 
+            g.meter += 0.1;
+
             if (!isDown && this.active) {
                 this.toggleActive(false);
                 const endX = this.startPos.x + this.spr.height * Math.cos(this.spr.rotation - g.radiansOffset);

@@ -3,7 +3,7 @@ import ArmManager from '../manager/ArmManager';
 
 class NeutralPupil {
 
-    constructor(game, iX, iY) {
+    constructor(game, iX, iY, type) {
         this.game = game;
         this.speed = 10;
         this.noiseRange = [0, 5];
@@ -11,7 +11,15 @@ class NeutralPupil {
 
         const x = g.area.left + g.startXOffset + ((g.deskWidth + g.deskGap) * iX) - g.deskGap + (g.deskWidth / 2) - 10;
         const y = g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGap) * iY) - g.deskGap + 38;
-        const key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_girl_1';
+
+        let key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_girl_1';
+        if (type === 'hero') {
+            this.hero = true;
+            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'hero_boy_1' : 'hero_boy_1';
+        } else if (type === 'target') {
+            this.target = true;
+            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'target_boy_1' : 'target_boy_1';
+        }
 
         this.spr = this.game.add.sprite(x, y, key);
         this.spr.anchor.setTo(0, 1);
@@ -54,6 +62,9 @@ class NeutralPupil {
         this.highlight(true);
         this.paper = true;
         g.activePupil = this;
+        if (this.target) {
+            g.win = true; // !!
+        }
     }
 
     takePaper() {

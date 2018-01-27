@@ -3,13 +3,30 @@ import NeutralPupil from '../pupils/NeutralPupil';
 import EmptyPupil from '../pupils/EmptyPupil';
 import BullyPupil from '../pupils/BullyPupil';
 import PetPupil from '../pupils/PetPupil';
+import Teacher from '../object/Teacher';
 
 class GameMap {
 
     constructor(game) {
         this.game = game;
 
+        g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
+
         this.teacherAreaHeight = 190;
+
+        this.wallH = 160;
+        // this.wallSpr = this.game.add.sprite(g.area.left, g.area.top, 'pixel');
+        // this.wallSpr.width = g.areaW;
+        // this.wallSpr.height = this.wallH;
+        // this.wallSpr.tint = 0xAA0606;
+
+        this.boardSpr = this.game.add.sprite(g.area.left + (g.area.width / 2), 10, 'blackboard');
+        this.boardSpr.anchor.setTo(0.5, 0);
+        this.boardSpr.scale.setTo(0.5);
+
+        // this.areaSpr = this.game.add.sprite(g.area.topLeft.x, g.area.topLeft.y, 'pixel');
+        // this.areaSpr.width = g.areaW;
+        // this.areaSpr.height = g.areaH;
 
         this.deskRowSize = Math.floor(g.areaW / (g.deskWidth + g.deskGap));
         const deskRowWidth = (this.deskRowSize * g.deskWidth) + ((this.deskRowSize - 1) * g.deskGap);
@@ -33,6 +50,9 @@ class GameMap {
             }
         }
         this.generatePupils();
+
+        this.teacher = new Teacher(this.game, g.area.left + (g.area.width / 2), this.teacherAreaHeight + 20);
+        this.meterText = this.game.add.text(0, 0, g.meter);
     }
 
     generatePupils() {
@@ -84,21 +104,39 @@ class GameMap {
             }
         }
         this.shouldPassPaper();
+        this.teacher.update();
+        this.meterText.text = g.meter;
+
+        if (g.win) {
+            const winTimer = this.game.time.create(true);
+            winTimer.add(Phaser.Timer.SECOND * 2, () => {
+                console.log('change to win state');
+                this.game.state.start('win', true, false);
+            }, this);
+            winTimer.start();
+            g.win = false;
+        }
     }
 
     giveInitialNote() {
         if (this.game.rnd.integerInRange(0, 100) > 50) {
-            // Bottom left
-            if (!this.pupils[0][0].isSelectable()) {
-                this.pupils[0][0] = new NeutralPupil(this.game, 0, 0);
-            }
+            // Bottom left hero
+            this.pupils[0][0].spr.destroy();
+            this.pupils[0][0] = new NeutralPupil(this.game, 0, 0, 'hero');
             this.pupils[0][0].givePaper();
+
+            // Top right target
+            this.pupils[this.deskColSize - 1][this.deskRowSize - 1].spr.destroy();
+            this.pupils[this.deskColSize - 1][this.deskRowSize - 1] = new NeutralPupil(this.game, this.deskRowSize - 1, this.deskColSize - 1, 'target');
         } else {
-            // Bottom right
-            if (!this.pupils[0][this.deskRowSize - 1].isSelectable()) {
-                this.pupils[0][this.deskRowSize - 1] = new NeutralPupil(this.game, this.deskRowSize - 1, 0);
-            }
+            // Bottom right hero
+            this.pupils[0][this.deskRowSize - 1].spr.destroy();
+            this.pupils[0][this.deskRowSize - 1] = new NeutralPupil(this.game, this.deskRowSize - 1, 0, 'hero');
             this.pupils[0][this.deskRowSize - 1].givePaper();
+
+            // Top left target
+            this.pupils[this.deskColSize - 1][0].spr.destroy();
+            this.pupils[this.deskColSize - 1][0] = new NeutralPupil(this.game, 0, this.deskColSize - 1, 'target');
         }
     }
 
