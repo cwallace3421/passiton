@@ -109,7 +109,7 @@ class GameMap {
 
         if (g.win) {
             const winTimer = this.game.time.create(true);
-            winTimer.add(Phaser.Timer.SECOND * 2, () => {
+            winTimer.add(Phaser.Timer.SECOND * 1, () => {
                 console.log('change to win state');
                 this.game.state.start('win', true, false);
             }, this);

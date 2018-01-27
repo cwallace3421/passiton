@@ -247,18 +247,18 @@ var StatePlay = function (_Phaser$State) {
     }, {
         key: 'preload',
         value: function preload() {
-            this.game.load.image('pixel', '/assets/pixel.png');
-            this.game.load.image('table', '/assets/table.png');
-            this.game.load.image('chair', '/assets/chair.png');
-            this.game.load.image('generic_boy_1', '/assets/generic_boy_1.png');
-            this.game.load.image('generic_girl_1', '/assets/generic_girl_1.png');
-            this.game.load.image('hero_boy_1', '/assets/hero_boy_1.png');
-            this.game.load.image('target_boy_1', '/assets/target_boy_1.png');
-            this.game.load.image('bully', '/assets/bully.png');
-            this.game.load.image('teachers_pet', '/assets/teachers_pet.png');
-            this.game.load.image('blackboard', '/assets/blackboard.png');
-            this.game.load.image('teachers_desk', '/assets/teachers_desk.png');
-            this.game.load.spritesheet('teacher', '/assets/teacher/teacher_spritesheet.png', 180, 280);
+            this.game.load.image('pixel', 'assets/pixel.png');
+            this.game.load.image('table', 'assets/table.png');
+            this.game.load.image('chair', 'assets/chair.png');
+            this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
+            this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
+            this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
+            this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
+            this.game.load.image('bully', 'assets/bully.png');
+            this.game.load.image('teachers_pet', 'assets/teachers_pet.png');
+            this.game.load.image('blackboard', 'assets/blackboard.png');
+            this.game.load.image('teachers_desk', 'assets/teachers_desk.png');
+            this.game.load.spritesheet('teacher', 'assets/teacher/teacher_spritesheet.png', 180, 280);
         }
     }, {
         key: 'resize',
@@ -447,7 +447,7 @@ var GameMap = function () {
 
             if (_global2.default.win) {
                 var winTimer = this.game.time.create(true);
-                winTimer.add(Phaser.Timer.SECOND * 2, function () {
+                winTimer.add(Phaser.Timer.SECOND * 1, function () {
                     console.log('change to win state');
                     _this.game.state.start('win', true, false);
                 }, this);
@@ -989,7 +989,7 @@ var Teacher = function () {
         this.aniTurn = this.spr.animations.add('turn', [1, 5, 5, 2], 2, false);
         this.aniTurn.onComplete.add(function () {
             var waitTimer = _this.game.time.create(true);
-            waitTimer.add(Phaser.Timer.SECOND * 2, function () {
+            waitTimer.add(Phaser.Timer.SECOND * 5, function () {
                 console.log('waitTurner complete');
                 for (var i = 0; i < _this.game.rnd.integerInRange(1, 3); i++) {
                     _this.lowerMeter();
@@ -1012,7 +1012,7 @@ var Teacher = function () {
         this.startPhase = true;
 
         this.startTimer = this.game.time.create(true);
-        this.startTimer.add(Phaser.Timer.SECOND * 5, function () {
+        this.startTimer.add(Phaser.Timer.SECOND * 6, function () {
             console.log('startTimer complete');
             _this.startPhase = false;
         }, this);

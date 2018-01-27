@@ -11,7 +11,7 @@ class Teacher {
         this.aniTurn = this.spr.animations.add('turn', [1, 5, 5, 2], 2, false);
         this.aniTurn.onComplete.add(() => {
             const waitTimer = this.game.time.create(true);
-            waitTimer.add(Phaser.Timer.SECOND * 2, () => {
+            waitTimer.add(Phaser.Timer.SECOND * 5, () => {
                 console.log('waitTurner complete');
                 for (let i = 0; i < this.game.rnd.integerInRange(1, 3); i++) {
                     this.lowerMeter();
@@ -34,7 +34,7 @@ class Teacher {
         this.startPhase = true;
 
         this.startTimer = this.game.time.create(true);
-        this.startTimer.add(Phaser.Timer.SECOND * 5, () => {
+        this.startTimer.add(Phaser.Timer.SECOND * 6, () => {
             console.log('startTimer complete');
             this.startPhase = false;
         }, this);
