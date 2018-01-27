@@ -4,23 +4,22 @@ import EmptyPupil from '../pupils/EmptyPupil';
 
 class GameMap {
 
-    constructor(game, area) {
+    constructor(game) {
         this.game = game;
-        this.area = area;
 
         this.deskRowSize = Math.floor(g.areaW / (g.deskWidth + g.deskGap));
         const deskRowWidth = (this.deskRowSize * g.deskWidth) + ((this.deskRowSize - 1) * g.deskGap);
-        const startXOffset = (g.areaW - deskRowWidth) / 2;
+        g.startXOffset = (g.areaW - deskRowWidth) / 2;
 
         this.deskColSize = Math.floor((g.areaH - 150) / (g.deskHeight + g.deskGap));
         const deskColWidth = (this.deskColSize * g.deskHeight) + ((this.deskColSize - 1) * g.deskGap);
-        const startYOffset = ((g.areaH - 150) - deskColWidth) / 2;
+        g.startYOffset = ((g.areaH - 150) - deskColWidth) / 2;
 
         for (let y = 0; y < this.deskColSize; y++) {
             for (let x = 0; x < this.deskRowSize; x++) {
                 this.desk = this.game.add.sprite(
-                    this.area.left + startXOffset + ((g.deskWidth + g.deskGap) * x),
-                    this.area.bottom - startYOffset - ((g.deskHeight + g.deskGap) * y),
+                    g.area.left + g.startXOffset + ((g.deskWidth + g.deskGap) * x),
+                    g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGap) * y),
                     'table');
                 this.desk.anchor.setTo(0, 1);
                 this.desk.scale.setTo(0.5);
@@ -33,8 +32,30 @@ class GameMap {
     }
 
     generatePupils() {
-        this.pupils = new Array(this.deskColSize).fill(new Array(this.deskRowSize).fill(new EmptyPupil()));
+        this.pupils = [];
+        for (let y = 0; y < this.deskColSize; y++) {
+            const row = [];
+            for (let x = 0; x < this.deskRowSize; x++) {
+                if (this.game.rnd.integerInRange(0, 100) > 80) {
+                    row.push(new EmptyPupil(this.game, x, y));
+                } else {
+                    row.push(new NeutralPupil(this.game, x, y));
+                }
+            }
+            this.pupils.push(row);
+        }
         console.log(this.pupils);
+    }
+
+    update() {
+        for (let y = 0; y < this.pupils.length; y++) {
+            for (let x = 0; x < this.pupils[0].length; x++) {
+                if (this.pupils[y][x].update) {
+                    this.pupils[y][x].update();
+                }
+            }
+        }
+        this.test = true;
     }
 
 }
