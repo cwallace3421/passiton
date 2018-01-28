@@ -11,8 +11,6 @@ class GameMap {
     constructor(game) {
         this.game = game;
 
-        g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
-
         this.teacherAreaHeight = 190;
 
         this.wallH = 160;

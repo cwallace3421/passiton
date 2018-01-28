@@ -172,6 +172,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _global = __webpack_require__(0);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -197,23 +203,45 @@ var StateMenu = function (_Phaser$State) {
     }, {
         key: 'create',
         value: function create() {
-            this.game.stage.backgroundColor = 0x4488aa;
+            _global2.default.area = new Phaser.Rectangle(Math.floor((window.innerWidth - _global2.default.areaW) / 2), Math.floor((window.innerHeight - _global2.default.areaH) / 2), _global2.default.areaW, _global2.default.areaH);
 
-            var hello = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'press any key to continue');
-            hello.anchor.setTo(0.5);
+            this.state = 0;
+            this.introSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'title');
+            this.introSpr.visible = false;
+            this.infoOneSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'info_1');
+            this.infoOneSpr.visible = false;
+            this.infoTwoSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'info_2');
+            this.infoTwoSpr.visible = false;
         }
     }, {
         key: 'update',
         value: function update() {
             var _this2 = this;
 
-            this.game.input.keyboard.onDownCallback = function (event) {
-                _this2.game.state.start('play');
+            this.game.input.keyboard.onUpCallback = function (event) {
+                _this2.state++;
+                console.log(_this2.state);
             };
+
+            if (this.state === 0) {
+                this.introSpr.visible = true;
+            } else if (this.state === 1) {
+                this.introSpr.visible = false;
+                this.infoOneSpr.visible = true;
+            } else if (this.state === 2) {
+                this.infoOneSpr.visible = false;
+                this.infoTwoSpr.visible = true;
+            } else if (this.state >= 3) {
+                this.game.state.start('play', true);
+            }
         }
     }, {
         key: 'preload',
-        value: function preload() {}
+        value: function preload() {
+            this.game.load.image('title', 'assets/intro.png');
+            this.game.load.image('info_1', 'assets/howtoplay_1.png');
+            this.game.load.image('info_2', 'assets/howtoplay_2.png');
+        }
     }, {
         key: 'resize',
         value: function resize() {
@@ -371,8 +399,6 @@ var GameMap = function () {
         _classCallCheck(this, GameMap);
 
         this.game = game;
-
-        _global2.default.area = new Phaser.Rectangle(Math.floor((window.innerWidth - _global2.default.areaW) / 2), Math.floor((window.innerHeight - _global2.default.areaH) / 2), _global2.default.areaW, _global2.default.areaH);
 
         this.teacherAreaHeight = 190;
 
