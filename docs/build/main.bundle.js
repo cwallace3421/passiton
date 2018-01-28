@@ -102,7 +102,14 @@ var global = {
 
     bullyNoise: 20,
     armNoise: 0.3,
-    passiveSilence: 0.01
+    passiveSilence: 0.01,
+
+    soundBackground: null,
+    soundTeacherScream: null,
+    soundTeacherTalk: null,
+    soundPetScream: null,
+    soundBullyGrunts: null,
+    soundPassPaper: null
 };
 
 exports.default = global;
@@ -209,6 +216,8 @@ var StateMenu = function (_Phaser$State) {
         value: function create() {
             _global2.default.area = new Phaser.Rectangle(Math.floor((window.innerWidth - _global2.default.areaW) / 2), Math.floor((window.innerHeight - _global2.default.areaH) / 2), _global2.default.areaW, _global2.default.areaH);
 
+            this.game.stage.backgroundColor = 0x000000;
+
             this.state = 0;
             this.introSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'title');
             this.introSpr.visible = false;
@@ -216,6 +225,8 @@ var StateMenu = function (_Phaser$State) {
             this.infoOneSpr.visible = false;
             this.infoTwoSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'info_2');
             this.infoTwoSpr.visible = false;
+
+            _global2.default.soundBackground = this.game.sound.play('background_music', 0.4, true);
         }
     }, {
         key: 'update',
@@ -245,6 +256,35 @@ var StateMenu = function (_Phaser$State) {
             this.game.load.image('title', 'assets/intro.png');
             this.game.load.image('info_1', 'assets/howtoplay_1.png');
             this.game.load.image('info_2', 'assets/howtoplay_2.png');
+
+            this.game.load.image('pixel', 'assets/pixel.png');
+            this.game.load.image('table', 'assets/table.png');
+            this.game.load.image('chair', 'assets/chair.png');
+            this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
+            this.game.load.image('generic_boy_2', 'assets/generic_boy_2.png');
+            this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
+            this.game.load.image('generic_girl_2', 'assets/generic_girl_2.png');
+            this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
+            this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
+            this.game.load.image('bully', 'assets/bully.png');
+            this.game.load.image('teachers_pet', 'assets/teachers_pet.png');
+            this.game.load.image('blackboard', 'assets/blackboard.png');
+            this.game.load.image('teachers_desk', 'assets/teachers_desk.png');
+            this.game.load.image('alert', 'assets/alert.png');
+            this.game.load.image('success', 'assets/success.png');
+            this.game.load.image('failure', 'assets/detention.png');
+            this.game.load.image('arm', 'assets/arm.png');
+            this.game.load.image('hand', 'assets/hand.png');
+            this.game.load.image('meter_board', 'assets/meter_board.png');
+            this.game.load.spritesheet('teacher', 'assets/teacher/teacher_spritesheet.png', 180, 280);
+            this.game.load.spritesheet('beatup', 'assets/beatup/beatup_spritesheet.png', 150, 150);
+
+            game.load.audio('background_music', ['assets/sounds/professor_umlaut.mp3']);
+            game.load.audio('crunchy', ['assets/sounds/crunchy.mp3']);
+            game.load.audio('scream_pet', ['assets/sounds/screm_pet.mp3']);
+            game.load.audio('scream_teacher', ['assets/sounds/screm_teacher.mp3']);
+            game.load.audio('teacher_talk', ['assets/sounds/teacher_talk.mp3']);
+            game.load.audio('bully_grunts', ['assets/sounds/bully_grunts.mp3']);
         }
     }, {
         key: 'resize',
@@ -303,7 +343,7 @@ var StatePlay = function (_Phaser$State) {
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
             this.game.input.mouse.capture = true;
-            this.game.input.keyboard.onDownCallback = undefined;
+            this.game.input.keyboard.onUpCallback = undefined;
         }
     }, {
         key: 'create',
@@ -324,27 +364,7 @@ var StatePlay = function (_Phaser$State) {
         }
     }, {
         key: 'preload',
-        value: function preload() {
-            this.game.load.image('pixel', 'assets/pixel.png');
-            this.game.load.image('table', 'assets/table.png');
-            this.game.load.image('chair', 'assets/chair.png');
-            this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
-            this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
-            this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
-            this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
-            this.game.load.image('bully', 'assets/bully.png');
-            this.game.load.image('teachers_pet', 'assets/teachers_pet.png');
-            this.game.load.image('blackboard', 'assets/blackboard.png');
-            this.game.load.image('teachers_desk', 'assets/teachers_desk.png');
-            this.game.load.image('alert', 'assets/alert.png');
-            this.game.load.image('success', 'assets/success.png');
-            this.game.load.image('failure', 'assets/detention.png');
-            this.game.load.image('arm', 'assets/arm.png');
-            this.game.load.image('hand', 'assets/hand.png');
-            this.game.load.image('meter_board', 'assets/meter_board.png');
-            this.game.load.spritesheet('teacher', 'assets/teacher/teacher_spritesheet.png', 180, 280);
-            this.game.load.spritesheet('beatup', 'assets/beatup/beatup_spritesheet.png', 150, 150);
-        }
+        value: function preload() {}
     }, {
         key: 'resize',
         value: function resize() {
@@ -579,6 +599,7 @@ var GameMap = function () {
                     for (var x = 0; x < this.pupils[0].length; x++) {
                         if (this.pupils[y][x].check && this.pupils[y][x].givePaper) {
                             if (this.pupils[y][x].check(_global2.default.droppedPoint.x, _global2.default.droppedPoint.y)) {
+                                _global2.default.soundPassPaper = this.game.sound.play('crunchy', 0.6, false);
                                 _global2.default.activePupil.takePaper();
                                 this.pupils[y][x].givePaper();
                             }
@@ -629,12 +650,22 @@ var NeutralPupil = function () {
         var y = _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGap) * iY - _global2.default.deskGap + 38;
 
         var key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_girl_1';
+        if (this.game.rnd.integerInRange(0, 100) > 50) {
+            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_boy_2';
+        } else {
+            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_girl_1' : 'generic_girl_2';
+        }
+
         if (type === 'hero') {
             this.hero = true;
             key = this.game.rnd.integerInRange(0, 100) > 50 ? 'hero_boy_1' : 'hero_boy_1';
         } else if (type === 'target') {
             this.target = true;
             key = this.game.rnd.integerInRange(0, 100) > 50 ? 'target_boy_1' : 'target_boy_1';
+        }
+
+        if (key === 'generic_girl_2') {
+            x -= 5;
         }
 
         this.spr = this.game.add.sprite(x, y, key);
@@ -1001,6 +1032,7 @@ var BullyPupil = function () {
 
             if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y) && _global2.default.armActive && !_global2.default.stopArm && !this.paper) {
                 _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, this.spr.width / 2, -this.spr.height + 35);
+                _global2.default.soundBullyGrunts = this.game.sound.play('bully_grunts', 0.5, false);
                 _global2.default.bullyStopArm = true;
                 _global2.default.meter += _global2.default.bullyNoise;
                 if (_global2.default.meter > 100) {
@@ -1135,6 +1167,7 @@ var PetPupil = function () {
                 _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, this.spr.width / 2, -this.spr.height + 35);
                 _global2.default.meter = 1000;
                 _global2.default.petStopArm = true;
+                _global2.default.soundPetScream = this.game.sound.play('scream_pet', 0.4, false);
             }
         }
     }, {
@@ -1211,7 +1244,7 @@ var Teacher = function () {
         this.aniTurn = this.spr.animations.add('turn', [1, 5, 5, 2], 2, false);
         this.aniTurn.onComplete.add(function () {
             var waitTimer = _this.game.time.create(true);
-            waitTimer.add(Phaser.Timer.SECOND * 5, function () {
+            waitTimer.add(Phaser.Timer.SECOND * 4, function () {
                 console.log('waitTurner complete');
                 for (var i = 0; i < _this.game.rnd.integerInRange(2, 6); i++) {
                     _this.lowerMeter();
@@ -1223,6 +1256,7 @@ var Teacher = function () {
                 }
                 _this.turnTimer = undefined;
                 _this.facingClass = false;
+                _global2.default.soundTeacherTalk.resume();
             }, _this);
             waitTimer.start();
             _this.facingClass = true;
@@ -1232,10 +1266,12 @@ var Teacher = function () {
         this.aniChalk = this.spr.animations.add('chalk', [0, 1], 2, true);
         this.aniChalk.play('chalk');
 
+        _global2.default.soundTeacherTalk = this.game.sound.play('teacher_talk', 0.5, true);
+
         this.startPhase = true;
 
         this.startTimer = this.game.time.create(true);
-        this.startTimer.add(Phaser.Timer.SECOND * 6, function () {
+        this.startTimer.add(Phaser.Timer.SECOND * 5, function () {
             console.log('startTimer complete');
             _this.startPhase = false;
         }, this);
@@ -1251,9 +1287,8 @@ var Teacher = function () {
 
             if (!this.startPhase) {
                 if (!this.turnTimer) {
-
                     this.turnTimer = this.game.time.create(true);
-                    this.turnTimer.add(Phaser.Timer.SECOND * 3, function () {
+                    this.turnTimer.add(Phaser.Timer.SECOND * 4.5, function () {
                         console.log('turnTimer complete');
                         _this2.turn();
                     }, this);
@@ -1275,6 +1310,10 @@ var Teacher = function () {
             if (_global2.default.lose) {
                 _global2.default.noInput = true;
                 this.spr.frame = 2;
+                _global2.default.soundTeacherTalk.stop();
+                if (!_global2.default.soundTeacherScream) {
+                    _global2.default.soundTeacherScream = this.game.sound.play('scream_teacher', 0.4, false);
+                }
             }
         }
     }, {
@@ -1286,6 +1325,7 @@ var Teacher = function () {
             }
             this.aniChalk.stop();
             this.aniTurn.play('turn');
+            _global2.default.soundTeacherTalk.pause();
         }
     }, {
         key: 'lowerMeter',
@@ -1391,11 +1431,35 @@ var StateWin = function (_Phaser$State) {
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
             this.game.input.mouse.capture = true;
-            this.game.input.keyboard.onDownCallback = undefined;
+            this.game.input.keyboard.onUpCallback = undefined;
         }
     }, {
         key: 'create',
         value: function create() {
+            if (_global2.default.soundTeacherTalk) {
+                _global2.default.soundTeacherTalk.stop();
+            }
+            if (_global2.default.soundTeacherScream) {
+                _global2.default.soundTeacherScream.stop();
+            }
+            if (_global2.default.soundPetScream) {
+                _global2.default.soundPetScream.stop();
+            }
+            if (_global2.default.soundBullyGrunts) {
+                _global2.default.soundBullyGrunts.stop();
+            }
+            if (_global2.default.soundPassPaper) {
+                _global2.default.soundPassPaper.stop();
+            }
+
+            this.game.input.keyboard.onUpCallback = function (event) {
+                location.reload();
+                // if (g.soundBackground) {
+                //     g.soundBackground.stop();
+                // }
+                // this.game.state.start('menu', true, true);
+            };
+
             this.game.stage.backgroundColor = 0x1F3429;
 
             var messageSpr = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'success');
@@ -1457,11 +1521,35 @@ var StateLose = function (_Phaser$State) {
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
             this.game.input.mouse.capture = true;
-            this.game.input.keyboard.onDownCallback = undefined;
+            this.game.input.keyboard.onUpCallback = undefined;
         }
     }, {
         key: 'create',
         value: function create() {
+            if (_global2.default.soundTeacherTalk) {
+                _global2.default.soundTeacherTalk.stop();
+            }
+            if (_global2.default.soundTeacherScream) {
+                _global2.default.soundTeacherScream.stop();
+            }
+            if (_global2.default.soundPetScream) {
+                _global2.default.soundPetScream.stop();
+            }
+            if (_global2.default.soundBullyGrunts) {
+                _global2.default.soundBullyGrunts.stop();
+            }
+            if (_global2.default.soundPassPaper) {
+                _global2.default.soundPassPaper.stop();
+            }
+
+            this.game.input.keyboard.onUpCallback = function (event) {
+                location.reload();
+                // if (g.soundBackground) {
+                //     g.soundBackground.stop();
+                // }
+                // this.game.state.start('menu', true, true);
+            };
+
             this.game.stage.backgroundColor = 0x790000;
 
             var messageSpr = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'failure');
