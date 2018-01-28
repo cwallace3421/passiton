@@ -12,7 +12,7 @@ class Teacher {
         this.aniTurn = this.spr.animations.add('turn', [1, 5, 5, 2], 2, false);
         this.aniTurn.onComplete.add(() => {
             const waitTimer = this.game.time.create(true);
-            waitTimer.add(Phaser.Timer.SECOND * 5, () => {
+            waitTimer.add(Phaser.Timer.SECOND * 4, () => {
                 console.log('waitTurner complete');
                 for (let i = 0; i < this.game.rnd.integerInRange(2, 6); i++) {
                     this.lowerMeter();
@@ -24,6 +24,7 @@ class Teacher {
                 }
                 this.turnTimer = undefined;
                 this.facingClass = false;
+                g.soundTeacherTalk.resume();
             }, this);
             waitTimer.start();
             this.facingClass = true;
@@ -33,10 +34,12 @@ class Teacher {
         this.aniChalk = this.spr.animations.add('chalk', [0, 1], 2, true);
         this.aniChalk.play('chalk');
 
+        g.soundTeacherTalk = this.game.sound.play('teacher_talk', 0.5, true);
+
         this.startPhase = true;
 
         this.startTimer = this.game.time.create(true);
-        this.startTimer.add(Phaser.Timer.SECOND * 6, () => {
+        this.startTimer.add(Phaser.Timer.SECOND * 5, () => {
             console.log('startTimer complete');
             this.startPhase = false;
         }, this);
@@ -48,9 +51,8 @@ class Teacher {
     update() {
         if (!this.startPhase) {
             if (!this.turnTimer) {
-
                 this.turnTimer = this.game.time.create(true);
-                this.turnTimer.add(Phaser.Timer.SECOND * 3, () => {
+                this.turnTimer.add(Phaser.Timer.SECOND * 4.5, () => {
                     console.log('turnTimer complete');
                     this.turn();
                 }, this);
@@ -72,6 +74,10 @@ class Teacher {
         if (g.lose) {
             g.noInput = true;
             this.spr.frame = 2;
+            g.soundTeacherTalk.stop();
+            if (!g.soundTeacherScream) {
+                g.soundTeacherScream = this.game.sound.play('scream_teacher', 0.4, false);
+            }
         }
     }
 
@@ -82,6 +88,7 @@ class Teacher {
         }
         this.aniChalk.stop();
         this.aniTurn.play('turn');
+        g.soundTeacherTalk.pause();
     }
 
     lowerMeter() {

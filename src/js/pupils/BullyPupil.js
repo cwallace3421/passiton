@@ -40,6 +40,7 @@ class BullyPupil {
     update() {
         if (g.currentPoint && this.coll.contains(g.currentPoint.x, g.currentPoint.y) && g.armActive && !g.stopArm && !this.paper) {
             AlertManager.pingAlert(this.game, this.spr.position.x, this.spr.position.y, this.spr.width / 2, -this.spr.height + 35);
+            g.soundBullyGrunts = this.game.sound.play('bully_grunts', 0.5, false);
             g.bullyStopArm = true;
             g.meter += g.bullyNoise;
             if (g.meter > 100) {

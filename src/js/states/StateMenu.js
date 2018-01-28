@@ -22,6 +22,8 @@ class StateMenu extends Phaser.State {
         this.infoOneSpr.visible = false;
         this.infoTwoSpr = this.game.add.sprite(g.area.left, g.area.top, 'info_2');
         this.infoTwoSpr.visible = false;
+
+        g.soundBackground = this.game.sound.play('background_music', 0.4, true);
     }
 
     update() {
@@ -47,6 +49,34 @@ class StateMenu extends Phaser.State {
         this.game.load.image('title', 'assets/intro.png');
         this.game.load.image('info_1', 'assets/howtoplay_1.png');
         this.game.load.image('info_2', 'assets/howtoplay_2.png');
+
+        this.game.load.image('pixel', 'assets/pixel.png');
+        this.game.load.image('table', 'assets/table.png');
+        this.game.load.image('chair', 'assets/chair.png');
+        this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
+        this.game.load.image('generic_boy_2', 'assets/generic_boy_2.png');
+        this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
+        this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
+        this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
+        this.game.load.image('bully', 'assets/bully.png');
+        this.game.load.image('teachers_pet', 'assets/teachers_pet.png');
+        this.game.load.image('blackboard', 'assets/blackboard.png');
+        this.game.load.image('teachers_desk', 'assets/teachers_desk.png');
+        this.game.load.image('alert', 'assets/alert.png');
+        this.game.load.image('success', 'assets/success.png');
+        this.game.load.image('failure', 'assets/detention.png');
+        this.game.load.image('arm', 'assets/arm.png');
+        this.game.load.image('hand', 'assets/hand.png');
+        this.game.load.image('meter_board', 'assets/meter_board.png');
+        this.game.load.spritesheet('teacher', 'assets/teacher/teacher_spritesheet.png', 180, 280);
+        this.game.load.spritesheet('beatup', 'assets/beatup/beatup_spritesheet.png', 150, 150);
+
+        game.load.audio('background_music', ['assets/sounds/professor_umlaut.mp3']);
+        game.load.audio('crunchy', ['assets/sounds/crunchy.mp3']);
+        game.load.audio('scream_pet', ['assets/sounds/screm_pet.mp3']);
+        game.load.audio('scream_teacher', ['assets/sounds/screm_teacher.mp3']);
+        game.load.audio('teacher_talk', ['assets/sounds/teacher_talk.mp3']);
+        game.load.audio('bully_grunts', ['assets/sounds/bully_grunts.mp3']);
     }
 
     resize() {

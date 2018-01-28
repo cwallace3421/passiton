@@ -27,7 +27,14 @@ const global = {
 
     bullyNoise: 20,
     armNoise: 0.3,
-    passiveSilence: 0.01
+    passiveSilence: 0.01,
+
+    soundBackground: null,
+    soundTeacherScream: null,
+    soundTeacherTalk: null,
+    soundPetScream: null,
+    soundBullyGrunts: null,
+    soundPassPaper: null
 }
 
 export default global;

@@ -31,6 +31,7 @@ class PetPupil {
             AlertManager.pingAlert(this.game, this.spr.position.x, this.spr.position.y, this.spr.width / 2, -this.spr.height + 35);
             g.meter = 1000;
             g.petStopArm = true;
+            g.soundPetScream = this.game.sound.play('scream_pet', 0.4, false);
         }
     }
 

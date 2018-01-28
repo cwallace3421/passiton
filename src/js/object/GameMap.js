@@ -182,6 +182,7 @@ class GameMap {
                 for (let x = 0; x < this.pupils[0].length; x++) {
                     if (this.pupils[y][x].check && this.pupils[y][x].givePaper) {
                         if (this.pupils[y][x].check(g.droppedPoint.x, g.droppedPoint.y)) {
+                            g.soundPassPaper = this.game.sound.play('crunchy', 0.6, false);
                             g.activePupil.takePaper();
                             this.pupils[y][x].givePaper();
                         }

@@ -15,6 +15,22 @@ class StateLose extends Phaser.State {
     }
 
     create() {
+        if (g.soundTeacherTalk) {
+            g.soundTeacherTalk.stop();
+        }
+        if (g.soundTeacherScream) {
+            g.soundTeacherScream.stop();
+        }
+        if (g.soundPetScream) {
+            g.soundPetScream.stop();
+        }
+        if (g.soundBullyGrunts) {
+            g.soundBullyGrunts.stop();
+        }
+        if (g.soundPassPaper) {
+            g.soundPassPaper.stop();
+        }
+
         this.game.stage.backgroundColor = 0x790000;
 
         const messageSpr = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'failure');
