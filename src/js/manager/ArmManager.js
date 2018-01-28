@@ -20,7 +20,7 @@ class ArmManager {
         const handY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - g.radiansOffset);
 
         this.handSpr = this.game.add.sprite(startX, startY, 'hand');
-        this.handSpr.anchor.setTo(0.6, 0.5);
+        this.handSpr.anchor.setTo(0.5, 0.5);
         this.handSpr.scale.setTo(0.5);
         this.handSpr.visible = false;
         g.armGrp.add(this.handSpr);
@@ -89,8 +89,6 @@ class ArmManager {
             g.petStopArm = false;
             this.pupil.takePaper();
         }
-
-        this.spr.bringToTop();
     }
 
     setArmLength(pos) {

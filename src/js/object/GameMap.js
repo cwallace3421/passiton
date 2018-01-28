@@ -31,6 +31,11 @@ class GameMap {
         this.boardSpr.scale.setTo(0.5);
         g.envGrp.add(this.boardSpr);
 
+        this.teachersDeskSpr = this.game.add.sprite(g.area.right - 125, g.area.top + this.wallH + 40, 'teachers_desk');
+        this.teachersDeskSpr.anchor.setTo(0.5, 1);
+        this.teachersDeskSpr.scale.setTo(0.5);
+        g.envGrp.add(this.teachersDeskSpr);
+
         this.meterObj = new Meter(this.game, this.boardSpr.x + (this.boardSpr.width / 2) + 6, g.area.top + 11);
 
         this.deskRowSize = Math.floor(g.areaW / (g.deskWidth + g.deskGap));

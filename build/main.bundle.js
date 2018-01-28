@@ -444,6 +444,11 @@ var GameMap = function () {
         this.boardSpr.scale.setTo(0.5);
         _global2.default.envGrp.add(this.boardSpr);
 
+        this.teachersDeskSpr = this.game.add.sprite(_global2.default.area.right - 125, _global2.default.area.top + this.wallH + 40, 'teachers_desk');
+        this.teachersDeskSpr.anchor.setTo(0.5, 1);
+        this.teachersDeskSpr.scale.setTo(0.5);
+        _global2.default.envGrp.add(this.teachersDeskSpr);
+
         this.meterObj = new _Meter2.default(this.game, this.boardSpr.x + this.boardSpr.width / 2 + 6, _global2.default.area.top + 11);
 
         this.deskRowSize = Math.floor(_global2.default.areaW / (_global2.default.deskWidth + _global2.default.deskGap));
@@ -787,7 +792,7 @@ var ArmManager = function () {
         var handY = this.startPos.y + this.spr.height * Math.sin(this.spr.rotation - _global2.default.radiansOffset);
 
         this.handSpr = this.game.add.sprite(startX, startY, 'hand');
-        this.handSpr.anchor.setTo(0.6, 0.5);
+        this.handSpr.anchor.setTo(0.5, 0.5);
         this.handSpr.scale.setTo(0.5);
         this.handSpr.visible = false;
         _global2.default.armGrp.add(this.handSpr);
@@ -858,8 +863,6 @@ var ArmManager = function () {
                 _global2.default.petStopArm = false;
                 this.pupil.takePaper();
             }
-
-            this.spr.bringToTop();
         }
     }, {
         key: 'setArmLength',
