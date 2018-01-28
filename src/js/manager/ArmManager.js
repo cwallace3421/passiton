@@ -56,7 +56,7 @@ class ArmManager {
             this.setArmLength(mousePos);
             this.setArmAngle(mousePos);
 
-            g.currentPoint = mousePos;
+            g.currentPoint = new Phaser.Point(endX, endY);
             g.meter += g.armNoise;
             if (g.meter > 100) {
                 g.meter = 100;
@@ -69,8 +69,13 @@ class ArmManager {
             }
         }
 
+        if (g.noInput) {
+            this.toggleActive(false);
+        }
+
         if (g.lose) {
             this.toggleActive(false);
+            g.noInput = true;
         }
 
         if (g.bullyStopArm) {

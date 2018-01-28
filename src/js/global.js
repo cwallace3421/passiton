@@ -23,8 +23,11 @@ const global = {
     petStopArm: false,
     passToFromIndex: null,
 
+    noInput: false,
+
     bullyNoise: 20,
-    armNoise: 0.5
+    armNoise: 0.3,
+    passiveSilence: 0.01
 }
 
 export default global;

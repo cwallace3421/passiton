@@ -98,8 +98,11 @@ var global = {
     petStopArm: false,
     passToFromIndex: null,
 
+    noInput: false,
+
     bullyNoise: 20,
-    armNoise: 0.5
+    armNoise: 0.3,
+    passiveSilence: 0.01
 };
 
 exports.default = global;
@@ -489,6 +492,13 @@ var GameMap = function () {
         value: function update() {
             var _this = this;
 
+            if (!_global2.default.noInput) {
+                _global2.default.meter -= _global2.default.passiveSilence;
+                if (_global2.default.meter < 0) {
+                    _global2.default.meter = 0;
+                }
+            }
+
             for (var y = 0; y < this.pupils.length; y++) {
                 for (var x = 0; x < this.pupils[0].length; x++) {
                     if (this.pupils[y][x].update) {
@@ -524,6 +534,7 @@ var GameMap = function () {
                 }, this);
                 winTimer.start();
                 _global2.default.win = false;
+                _global2.default.noInput = true;
             }
 
             if (_global2.default.lose) {
@@ -534,6 +545,7 @@ var GameMap = function () {
                 }, this);
                 loseTimer.start();
                 _global2.default.lose = false;
+                _global2.default.noInput = true;
             }
         }
     }, {
@@ -782,7 +794,7 @@ var ArmManager = function () {
                 this.setArmLength(mousePos);
                 this.setArmAngle(mousePos);
 
-                _global2.default.currentPoint = mousePos;
+                _global2.default.currentPoint = new Phaser.Point(endX, endY);
                 _global2.default.meter += _global2.default.armNoise;
                 if (_global2.default.meter > 100) {
                     _global2.default.meter = 100;
@@ -795,8 +807,13 @@ var ArmManager = function () {
                 }
             }
 
+            if (_global2.default.noInput) {
+                this.toggleActive(false);
+            }
+
             if (_global2.default.lose) {
                 this.toggleActive(false);
+                _global2.default.noInput = true;
             }
 
             if (_global2.default.bullyStopArm) {
@@ -1247,15 +1264,17 @@ var Teacher = function () {
             }
             if (_global2.default.meter >= 100) {
                 _global2.default.lose = true;
-                this.spr.frame = 2;
             }
             if (this.facingClass && _global2.default.currentPoint) {
                 _global2.default.lose = true;
             }
             if (_global2.default.lose && !this.alerting) {
-                this.spr.frame = 2;
                 _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 28, 6);
                 this.alerting = true;
+            }
+            if (_global2.default.lose) {
+                _global2.default.noInput = true;
+                this.spr.frame = 2;
             }
         }
     }, {

@@ -61,15 +61,17 @@ class Teacher {
         }
         if (g.meter >= 100) {
             g.lose = true;
-            this.spr.frame = 2;
         }
         if (this.facingClass && g.currentPoint) {
             g.lose = true;
         }
         if (g.lose && !this.alerting) {
-            this.spr.frame = 2;
             AlertManager.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 28, 6);
             this.alerting = true;
+        }
+        if (g.lose) {
+            g.noInput = true;
+            this.spr.frame = 2;
         }
     }
 

@@ -97,6 +97,13 @@ class GameMap {
     }
 
     update() {
+        if (!g.noInput) {
+            g.meter -= g.passiveSilence;
+            if (g.meter < 0) {
+                g.meter = 0;
+            }
+        }
+
         for (let y = 0; y < this.pupils.length; y++) {
             for (let x = 0; x < this.pupils[0].length; x++) {
                 if (this.pupils[y][x].update) {
@@ -132,6 +139,7 @@ class GameMap {
             }, this);
             winTimer.start();
             g.win = false;
+            g.noInput = true;
         }
 
         if (g.lose) {
@@ -142,6 +150,7 @@ class GameMap {
             }, this);
             loseTimer.start();
             g.lose = false;
+            g.noInput = true;
         }
     }
 
