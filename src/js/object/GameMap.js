@@ -116,7 +116,6 @@ class GameMap {
         this.shouldPassPaper();
         this.teacher.update();
         this.meterObj.update();
-        this.meterText.text = g.meter;
 
         if (g.win) {
             const winTimer = this.game.time.create(true);

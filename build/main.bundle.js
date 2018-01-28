@@ -470,7 +470,6 @@ var GameMap = function () {
             this.shouldPassPaper();
             this.teacher.update();
             this.meterObj.update();
-            this.meterText.text = _global2.default.meter;
 
             if (_global2.default.win) {
                 var winTimer = this.game.time.create(true);
@@ -590,10 +589,13 @@ var NeutralPupil = function () {
 
         // this.game.debug.geom(this.coll);
 
-        // this.high = new Phaser.Sprite(this.game, 0, 0, 'generic_boy_1');
-        // this.high.anchor.setTo(0.5);
-        // this.high.scale.setTo(1.1);
-        // this.high.tint = 0xFFFFFF;
+        // this.high = this.game.add.sprite(x - 4, y - this.spr.height + 8, key);
+        // this.high.anchor.setTo(0, 0.1);
+        // this.high.scale.setTo(0.5);
+        // this.high.tint = 0xEE0000;
+        // this.high.width += 8;
+        // this.high.height += 8;
+
         // this.high.alpha = 0.8;
         // this.spr.addChild(this.high);
     }
@@ -615,7 +617,7 @@ var NeutralPupil = function () {
         key: 'highlight',
         value: function highlight(_highlight) {
             if (_highlight) {
-                this.spr.tint = 0xAAAAAA;
+                this.spr.tint = 0x16EE16;
             } else {
                 this.spr.tint = 0xFFFFFF;
             }
