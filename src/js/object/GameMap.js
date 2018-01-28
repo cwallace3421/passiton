@@ -26,12 +26,12 @@ class GameMap {
         this.floorSpr.tint = 0xAAAAAA;
         g.envGrp.add(this.floorSpr);
 
-        this.boardSpr = this.game.add.sprite(g.area.left + (g.area.width / 2), 17, 'blackboard');
+        this.boardSpr = this.game.add.sprite(g.area.left + (g.area.width / 2), g.area.top + 4, 'blackboard');
         this.boardSpr.anchor.setTo(0.5, 0);
         this.boardSpr.scale.setTo(0.5);
         g.envGrp.add(this.boardSpr);
 
-        this.meterObj = new Meter(this.game, this.boardSpr.x + (this.boardSpr.width / 2) + 6, 25);
+        this.meterObj = new Meter(this.game, this.boardSpr.x + (this.boardSpr.width / 2) + 6, g.area.top + 11);
 
         this.deskRowSize = Math.floor(g.areaW / (g.deskWidth + g.deskGap));
         const deskRowWidth = (this.deskRowSize * g.deskWidth) + ((this.deskRowSize - 1) * g.deskGap);
@@ -53,7 +53,7 @@ class GameMap {
         }
         this.generatePupils();
 
-        this.teacher = new Teacher(this.game, g.area.left + (g.area.width / 2), this.teacherAreaHeight + 23);
+        this.teacher = new Teacher(this.game, g.area.left + (g.area.width / 2), g.area.top + this.teacherAreaHeight);
     }
 
     generatePupils() {

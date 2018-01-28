@@ -24,7 +24,7 @@ const global = {
     passToFromIndex: null,
 
     bullyNoise: 20,
-    armNoise: 0.6
+    armNoise: 0.5
 }
 
 export default global;

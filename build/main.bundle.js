@@ -99,7 +99,7 @@ var global = {
     passToFromIndex: null,
 
     bullyNoise: 20,
-    armNoise: 0.6
+    armNoise: 0.5
 };
 
 exports.default = global;
@@ -416,12 +416,12 @@ var GameMap = function () {
         this.floorSpr.tint = 0xAAAAAA;
         _global2.default.envGrp.add(this.floorSpr);
 
-        this.boardSpr = this.game.add.sprite(_global2.default.area.left + _global2.default.area.width / 2, 17, 'blackboard');
+        this.boardSpr = this.game.add.sprite(_global2.default.area.left + _global2.default.area.width / 2, _global2.default.area.top + 4, 'blackboard');
         this.boardSpr.anchor.setTo(0.5, 0);
         this.boardSpr.scale.setTo(0.5);
         _global2.default.envGrp.add(this.boardSpr);
 
-        this.meterObj = new _Meter2.default(this.game, this.boardSpr.x + this.boardSpr.width / 2 + 6, 25);
+        this.meterObj = new _Meter2.default(this.game, this.boardSpr.x + this.boardSpr.width / 2 + 6, _global2.default.area.top + 11);
 
         this.deskRowSize = Math.floor(_global2.default.areaW / (_global2.default.deskWidth + _global2.default.deskGap));
         var deskRowWidth = this.deskRowSize * _global2.default.deskWidth + (this.deskRowSize - 1) * _global2.default.deskGap;
@@ -440,7 +440,7 @@ var GameMap = function () {
         }
         this.generatePupils();
 
-        this.teacher = new _Teacher2.default(this.game, _global2.default.area.left + _global2.default.area.width / 2, this.teacherAreaHeight + 23);
+        this.teacher = new _Teacher2.default(this.game, _global2.default.area.left + _global2.default.area.width / 2, _global2.default.area.top + this.teacherAreaHeight);
     }
 
     _createClass(GameMap, [{
