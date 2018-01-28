@@ -24,6 +24,11 @@ class PetPupil {
         // this.game.debug.geom(this.coll);
     }
 
+    destroy() {
+        this.spr.destroy();
+        this.coll = null;
+    }
+
     update() {
         if (g.currentPoint && this.coll.contains(g.currentPoint.x, g.currentPoint.y)) {
             g.lose = true;

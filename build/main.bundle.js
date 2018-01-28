@@ -445,8 +445,8 @@ var GameMap = function () {
                 var _x = this.game.rnd.integerInRange(1, this.deskRowSize - 2);
                 var _y = this.game.rnd.integerInRange(1, this.deskColSize - 2);
 
-                if (this.pupils[_y][_x].spr.destroy) {
-                    this.pupils[_y][_x].spr.destroy();
+                if (this.pupils[_y][_x].destroy) {
+                    this.pupils[_y][_x].destroy();
                 }
                 this.pupils[_y][_x] = new _BullyPupil2.default(this.game, _x, _y);
             }
@@ -456,8 +456,8 @@ var GameMap = function () {
                 var _x2 = this.game.rnd.integerInRange(1, this.deskRowSize - 2);
                 var _y2 = this.game.rnd.integerInRange(1, this.deskColSize - 2);
 
-                if (this.pupils[_y2][_x2].spr.destroy) {
-                    this.pupils[_y2][_x2].spr.destroy();
+                if (this.pupils[_y2][_x2].destroy) {
+                    this.pupils[_y2][_x2].destroy();
                 }
                 this.pupils[_y2][_x2] = new _PetPupil2.default(this.game, _x2, _y2);
             }
@@ -521,21 +521,21 @@ var GameMap = function () {
         value: function giveInitialNote() {
             if (this.game.rnd.integerInRange(0, 100) > 50) {
                 // Bottom left hero
-                this.pupils[0][0].spr.destroy();
+                this.pupils[0][0].destroy();
                 this.pupils[0][0] = new _NeutralPupil2.default(this.game, 0, 0, 'hero');
                 this.pupils[0][0].givePaper();
 
                 // Top right target
-                this.pupils[this.deskColSize - 1][this.deskRowSize - 1].spr.destroy();
+                this.pupils[this.deskColSize - 1][this.deskRowSize - 1].destroy();
                 this.pupils[this.deskColSize - 1][this.deskRowSize - 1] = new _NeutralPupil2.default(this.game, this.deskRowSize - 1, this.deskColSize - 1, 'target');
             } else {
                 // Bottom right hero
-                this.pupils[0][this.deskRowSize - 1].spr.destroy();
+                this.pupils[0][this.deskRowSize - 1].destroy();
                 this.pupils[0][this.deskRowSize - 1] = new _NeutralPupil2.default(this.game, this.deskRowSize - 1, 0, 'hero');
                 this.pupils[0][this.deskRowSize - 1].givePaper();
 
                 // Top left target
-                this.pupils[this.deskColSize - 1][0].spr.destroy();
+                this.pupils[this.deskColSize - 1][0].destroy();
                 this.pupils[this.deskColSize - 1][0] = new _NeutralPupil2.default(this.game, 0, this.deskColSize - 1, 'target');
             }
         }
@@ -613,19 +613,15 @@ var NeutralPupil = function () {
         this.armManager = new _ArmManager2.default(this.coll, this.game, this, this.spr.centerX, this.spr.centerY);
 
         // this.game.debug.geom(this.coll);
-
-        // this.high = this.game.add.sprite(x - 4, y - this.spr.height + 8, key);
-        // this.high.anchor.setTo(0, 0.1);
-        // this.high.scale.setTo(0.5);
-        // this.high.tint = 0xEE0000;
-        // this.high.width += 8;
-        // this.high.height += 8;
-
-        // this.high.alpha = 0.8;
-        // this.spr.addChild(this.high);
     }
 
     _createClass(NeutralPupil, [{
+        key: 'destroy',
+        value: function destroy() {
+            this.spr.destroy();
+            this.coll = null;
+        }
+    }, {
         key: 'update',
         value: function update() {
             this.armManager.update();
@@ -862,6 +858,11 @@ var EmptyPupil = function () {
     }
 
     _createClass(EmptyPupil, [{
+        key: 'destroy',
+        value: function destroy() {
+            this.spr.destroy();
+        }
+    }, {
         key: 'update',
         value: function update() {}
     }, {
@@ -936,10 +937,17 @@ var BullyPupil = function () {
 
         this.coll = new Phaser.Circle(x + this.spr.width / 2, y - this.spr.height / 2 - 10, 140);
 
-        this.game.debug.geom(this.coll);
+        // this.game.debug.geom(this.coll);
     }
 
     _createClass(BullyPupil, [{
+        key: 'destroy',
+        value: function destroy() {
+            this.spr.destroy();
+            this.beatupSpr.destroy();
+            this.coll = null;
+        }
+    }, {
         key: 'update',
         value: function update() {
             var _this = this;
@@ -1067,6 +1075,12 @@ var PetPupil = function () {
     }
 
     _createClass(PetPupil, [{
+        key: 'destroy',
+        value: function destroy() {
+            this.spr.destroy();
+            this.coll = null;
+        }
+    }, {
         key: 'update',
         value: function update() {
             if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y)) {

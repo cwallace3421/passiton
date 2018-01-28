@@ -11,6 +11,10 @@ class EmptyPupil {
         this.spr.scale.setTo(0.5);
     }
 
+    destroy() {
+        this.spr.destroy();
+    }
+
     update() {
 
     }

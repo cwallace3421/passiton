@@ -85,8 +85,8 @@ class GameMap {
             const x = this.game.rnd.integerInRange(1, this.deskRowSize - 2);
             const y = this.game.rnd.integerInRange(1, this.deskColSize - 2);
 
-            if (this.pupils[y][x].spr.destroy) {
-                this.pupils[y][x].spr.destroy();
+            if (this.pupils[y][x].destroy) {
+                this.pupils[y][x].destroy();
             }
             this.pupils[y][x] = new BullyPupil(this.game, x, y);
         }
@@ -96,8 +96,8 @@ class GameMap {
             const x = this.game.rnd.integerInRange(1, this.deskRowSize - 2);
             const y = this.game.rnd.integerInRange(1, this.deskColSize - 2);
 
-            if (this.pupils[y][x].spr.destroy) {
-                this.pupils[y][x].spr.destroy();
+            if (this.pupils[y][x].destroy) {
+                this.pupils[y][x].destroy();
             }
             this.pupils[y][x] = new PetPupil(this.game, x, y);
         }
@@ -157,21 +157,21 @@ class GameMap {
     giveInitialNote() {
         if (this.game.rnd.integerInRange(0, 100) > 50) {
             // Bottom left hero
-            this.pupils[0][0].spr.destroy();
+            this.pupils[0][0].destroy();
             this.pupils[0][0] = new NeutralPupil(this.game, 0, 0, 'hero');
             this.pupils[0][0].givePaper();
 
             // Top right target
-            this.pupils[this.deskColSize - 1][this.deskRowSize - 1].spr.destroy();
+            this.pupils[this.deskColSize - 1][this.deskRowSize - 1].destroy();
             this.pupils[this.deskColSize - 1][this.deskRowSize - 1] = new NeutralPupil(this.game, this.deskRowSize - 1, this.deskColSize - 1, 'target');
         } else {
             // Bottom right hero
-            this.pupils[0][this.deskRowSize - 1].spr.destroy();
+            this.pupils[0][this.deskRowSize - 1].destroy();
             this.pupils[0][this.deskRowSize - 1] = new NeutralPupil(this.game, this.deskRowSize - 1, 0, 'hero');
             this.pupils[0][this.deskRowSize - 1].givePaper();
 
             // Top left target
-            this.pupils[this.deskColSize - 1][0].spr.destroy();
+            this.pupils[this.deskColSize - 1][0].destroy();
             this.pupils[this.deskColSize - 1][0] = new NeutralPupil(this.game, 0, this.deskColSize - 1, 'target');
         }
     }

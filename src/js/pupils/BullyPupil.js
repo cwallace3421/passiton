@@ -27,7 +27,13 @@ class BullyPupil {
 
         this.coll = new Phaser.Circle(x + (this.spr.width / 2), y - (this.spr.height / 2) - 10, 140);
 
-        this.game.debug.geom(this.coll);
+        // this.game.debug.geom(this.coll);
+    }
+
+    destroy() {
+        this.spr.destroy();
+        this.beatupSpr.destroy();
+        this.coll = null;
     }
 
     update() {

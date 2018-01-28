@@ -29,16 +29,11 @@ class NeutralPupil {
         this.armManager = new ArmManager(this.coll, this.game, this, this.spr.centerX, this.spr.centerY);
 
         // this.game.debug.geom(this.coll);
+    }
 
-        // this.high = this.game.add.sprite(x - 4, y - this.spr.height + 8, key);
-        // this.high.anchor.setTo(0, 0.1);
-        // this.high.scale.setTo(0.5);
-        // this.high.tint = 0xEE0000;
-        // this.high.width += 8;
-        // this.high.height += 8;
-
-        // this.high.alpha = 0.8;
-        // this.spr.addChild(this.high);
+    destroy() {
+        this.spr.destroy();
+        this.coll = null;
     }
 
     update() {
