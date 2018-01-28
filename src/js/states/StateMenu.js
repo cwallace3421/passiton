@@ -15,6 +15,8 @@ class StateMenu extends Phaser.State {
     create() {
         g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
 
+        this.game.stage.backgroundColor = 0x000000;
+
         this.state = 0;
         this.introSpr = this.game.add.sprite(g.area.left, g.area.top, 'title');
         this.introSpr.visible = false;
@@ -56,6 +58,7 @@ class StateMenu extends Phaser.State {
         this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
         this.game.load.image('generic_boy_2', 'assets/generic_boy_2.png');
         this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
+        this.game.load.image('generic_girl_2', 'assets/generic_girl_2.png');
         this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
         this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
         this.game.load.image('bully', 'assets/bully.png');

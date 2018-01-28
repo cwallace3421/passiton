@@ -9,14 +9,14 @@ class NeutralPupil {
         this.noiseRange = [0, 5];
         this.paper = false;
 
-        const x = g.area.left + g.startXOffset + ((g.deskWidth + g.deskGap) * iX) - g.deskGap + (g.deskWidth / 2) - 10;
-        const y = g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGap) * iY) - g.deskGap + 38;
+        let x = g.area.left + g.startXOffset + ((g.deskWidth + g.deskGap) * iX) - g.deskGap + (g.deskWidth / 2) - 10;
+        let y = g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGap) * iY) - g.deskGap + 38;
 
         let key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_girl_1';
         if (this.game.rnd.integerInRange(0, 100) > 50) {
             key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_boy_2';
         } else {
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_girl_1' : 'generic_girl_1';
+            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_girl_1' : 'generic_girl_2';
         }
 
         if (type === 'hero') {
@@ -25,6 +25,10 @@ class NeutralPupil {
         } else if (type === 'target') {
             this.target = true;
             key = this.game.rnd.integerInRange(0, 100) > 50 ? 'target_boy_1' : 'target_boy_1';
+        }
+
+        if (key === 'generic_girl_2') {
+            x -= 5;
         }
 
         this.spr = this.game.add.sprite(x, y, key);

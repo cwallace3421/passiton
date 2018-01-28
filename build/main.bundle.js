@@ -216,6 +216,8 @@ var StateMenu = function (_Phaser$State) {
         value: function create() {
             _global2.default.area = new Phaser.Rectangle(Math.floor((window.innerWidth - _global2.default.areaW) / 2), Math.floor((window.innerHeight - _global2.default.areaH) / 2), _global2.default.areaW, _global2.default.areaH);
 
+            this.game.stage.backgroundColor = 0x000000;
+
             this.state = 0;
             this.introSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'title');
             this.introSpr.visible = false;
@@ -261,6 +263,7 @@ var StateMenu = function (_Phaser$State) {
             this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
             this.game.load.image('generic_boy_2', 'assets/generic_boy_2.png');
             this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
+            this.game.load.image('generic_girl_2', 'assets/generic_girl_2.png');
             this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
             this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
             this.game.load.image('bully', 'assets/bully.png');
@@ -340,7 +343,7 @@ var StatePlay = function (_Phaser$State) {
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
             this.game.input.mouse.capture = true;
-            this.game.input.keyboard.onDownCallback = undefined;
+            this.game.input.keyboard.onUpCallback = undefined;
         }
     }, {
         key: 'create',
@@ -650,7 +653,7 @@ var NeutralPupil = function () {
         if (this.game.rnd.integerInRange(0, 100) > 50) {
             key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_boy_2';
         } else {
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_girl_1' : 'generic_girl_1';
+            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_girl_1' : 'generic_girl_2';
         }
 
         if (type === 'hero') {
@@ -659,6 +662,10 @@ var NeutralPupil = function () {
         } else if (type === 'target') {
             this.target = true;
             key = this.game.rnd.integerInRange(0, 100) > 50 ? 'target_boy_1' : 'target_boy_1';
+        }
+
+        if (key === 'generic_girl_2') {
+            x -= 5;
         }
 
         this.spr = this.game.add.sprite(x, y, key);
@@ -1424,7 +1431,7 @@ var StateWin = function (_Phaser$State) {
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
             this.game.input.mouse.capture = true;
-            this.game.input.keyboard.onDownCallback = undefined;
+            this.game.input.keyboard.onUpCallback = undefined;
         }
     }, {
         key: 'create',
@@ -1444,6 +1451,14 @@ var StateWin = function (_Phaser$State) {
             if (_global2.default.soundPassPaper) {
                 _global2.default.soundPassPaper.stop();
             }
+
+            this.game.input.keyboard.onUpCallback = function (event) {
+                location.reload();
+                // if (g.soundBackground) {
+                //     g.soundBackground.stop();
+                // }
+                // this.game.state.start('menu', true, true);
+            };
 
             this.game.stage.backgroundColor = 0x1F3429;
 
@@ -1506,7 +1521,7 @@ var StateLose = function (_Phaser$State) {
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
             this.game.input.mouse.capture = true;
-            this.game.input.keyboard.onDownCallback = undefined;
+            this.game.input.keyboard.onUpCallback = undefined;
         }
     }, {
         key: 'create',
@@ -1526,6 +1541,14 @@ var StateLose = function (_Phaser$State) {
             if (_global2.default.soundPassPaper) {
                 _global2.default.soundPassPaper.stop();
             }
+
+            this.game.input.keyboard.onUpCallback = function (event) {
+                location.reload();
+                // if (g.soundBackground) {
+                //     g.soundBackground.stop();
+                // }
+                // this.game.state.start('menu', true, true);
+            };
 
             this.game.stage.backgroundColor = 0x790000;
 

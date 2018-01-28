@@ -12,7 +12,7 @@ class StatePlay extends Phaser.State {
         this.game.renderer.clearBeforeRender = false;
         this.game.renderer.renderSession.roundPixels = true;
         this.game.input.mouse.capture = true;
-        this.game.input.keyboard.onDownCallback = undefined;
+        this.game.input.keyboard.onUpCallback = undefined;
     }
 
     create() {

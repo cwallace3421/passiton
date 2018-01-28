@@ -11,7 +11,7 @@ class StateLose extends Phaser.State {
         this.game.renderer.clearBeforeRender = false;
         this.game.renderer.renderSession.roundPixels = true;
         this.game.input.mouse.capture = true;
-        this.game.input.keyboard.onDownCallback = undefined;
+        this.game.input.keyboard.onUpCallback = undefined;
     }
 
     create() {
@@ -30,6 +30,14 @@ class StateLose extends Phaser.State {
         if (g.soundPassPaper) {
             g.soundPassPaper.stop();
         }
+
+        this.game.input.keyboard.onUpCallback = (event) => {
+            location.reload();
+            // if (g.soundBackground) {
+            //     g.soundBackground.stop();
+            // }
+            // this.game.state.start('menu', true, true);
+        };
 
         this.game.stage.backgroundColor = 0x790000;
 
