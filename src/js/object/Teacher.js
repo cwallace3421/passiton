@@ -1,4 +1,5 @@
 import g from '../global';
+import AlertManager from '../manager/AlertManager';
 
 class Teacher {
 
@@ -13,7 +14,7 @@ class Teacher {
             const waitTimer = this.game.time.create(true);
             waitTimer.add(Phaser.Timer.SECOND * 5, () => {
                 console.log('waitTurner complete');
-                for (let i = 0; i < this.game.rnd.integerInRange(1, 3); i++) {
+                for (let i = 0; i < this.game.rnd.integerInRange(2, 6); i++) {
                     this.lowerMeter();
                 }
                 this.aniTurn.stop();
@@ -59,17 +60,16 @@ class Teacher {
             }
         }
         if (g.meter >= 100) {
-            // Exclamantion point
             g.lose = true;
-            this.spr.frame = 2;
-        }
-        if (g.lose) {
             this.spr.frame = 2;
         }
         if (this.facingClass && g.currentPoint) {
             g.lose = true;
+        }
+        if (g.lose && !this.alerting) {
             this.spr.frame = 2;
-            // Exclamantion point
+            AlertManager.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 28, 6);
+            this.alerting = true;
         }
     }
 
@@ -83,7 +83,7 @@ class Teacher {
     }
 
     lowerMeter() {
-        g.meter -= 5;
+        g.meter -= 8;
         if (g.meter < 0) {
             g.meter = 0;
         }

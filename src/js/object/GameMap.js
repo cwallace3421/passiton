@@ -33,10 +33,6 @@ class GameMap {
 
         this.meterObj = new Meter(this.game, this.boardSpr.x + (this.boardSpr.width / 2) + 6, 25);
 
-        // this.areaSpr = this.game.add.sprite(g.area.topLeft.x, g.area.topLeft.y, 'pixel');
-        // this.areaSpr.width = g.areaW;
-        // this.areaSpr.height = g.areaH;
-
         this.deskRowSize = Math.floor(g.areaW / (g.deskWidth + g.deskGap));
         const deskRowWidth = (this.deskRowSize * g.deskWidth) + ((this.deskRowSize - 1) * g.deskGap);
         g.startXOffset = (g.areaW - deskRowWidth) / 2;
@@ -53,14 +49,11 @@ class GameMap {
                     'table');
                 this.desk.anchor.setTo(0, 1);
                 this.desk.scale.setTo(0.5);
-                // this.desk.width = g.deskSize;
-                // this.desk.height = g.deskSize;
-                // this.desk.tint = 0x000000;
             }
         }
         this.generatePupils();
 
-        this.teacher = new Teacher(this.game, g.area.left + (g.area.width / 2), this.teacherAreaHeight + 20);
+        this.teacher = new Teacher(this.game, g.area.left + (g.area.width / 2), this.teacherAreaHeight + 23);
     }
 
     generatePupils() {
@@ -143,7 +136,7 @@ class GameMap {
 
         if (g.lose) {
             const loseTimer = this.game.time.create(true);
-            loseTimer.add(Phaser.Timer.SECOND * 2, () => {
+            loseTimer.add(Phaser.Timer.SECOND * 4, () => {
                 console.log('change to lose state');
                 this.game.state.start('lose', true, false);
             }, this);

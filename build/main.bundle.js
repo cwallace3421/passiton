@@ -95,10 +95,11 @@ var global = {
     envGrp: null,
     topGrp: null,
     bullyStopArm: false,
+    petStopArm: false,
     passToFromIndex: null,
 
-    bullyNoise: 10,
-    armNoise: 0.2
+    bullyNoise: 20,
+    armNoise: 0.6
 };
 
 exports.default = global;
@@ -422,10 +423,6 @@ var GameMap = function () {
 
         this.meterObj = new _Meter2.default(this.game, this.boardSpr.x + this.boardSpr.width / 2 + 6, 25);
 
-        // this.areaSpr = this.game.add.sprite(g.area.topLeft.x, g.area.topLeft.y, 'pixel');
-        // this.areaSpr.width = g.areaW;
-        // this.areaSpr.height = g.areaH;
-
         this.deskRowSize = Math.floor(_global2.default.areaW / (_global2.default.deskWidth + _global2.default.deskGap));
         var deskRowWidth = this.deskRowSize * _global2.default.deskWidth + (this.deskRowSize - 1) * _global2.default.deskGap;
         _global2.default.startXOffset = (_global2.default.areaW - deskRowWidth) / 2;
@@ -439,14 +436,11 @@ var GameMap = function () {
                 this.desk = this.game.add.sprite(_global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGap) * x, _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGap) * y, 'table');
                 this.desk.anchor.setTo(0, 1);
                 this.desk.scale.setTo(0.5);
-                // this.desk.width = g.deskSize;
-                // this.desk.height = g.deskSize;
-                // this.desk.tint = 0x000000;
             }
         }
         this.generatePupils();
 
-        this.teacher = new _Teacher2.default(this.game, _global2.default.area.left + _global2.default.area.width / 2, this.teacherAreaHeight + 20);
+        this.teacher = new _Teacher2.default(this.game, _global2.default.area.left + _global2.default.area.width / 2, this.teacherAreaHeight + 23);
     }
 
     _createClass(GameMap, [{
@@ -534,7 +528,7 @@ var GameMap = function () {
 
             if (_global2.default.lose) {
                 var loseTimer = this.game.time.create(true);
-                loseTimer.add(Phaser.Timer.SECOND * 2, function () {
+                loseTimer.add(Phaser.Timer.SECOND * 4, function () {
                     console.log('change to lose state');
                     _this.game.state.start('lose', true, false);
                 }, this);
@@ -811,6 +805,12 @@ var ArmManager = function () {
                 this.pupil.takePaper();
             }
 
+            if (_global2.default.petStopArm) {
+                this.toggleActive(false);
+                _global2.default.petStopArm = false;
+                this.pupil.takePaper();
+            }
+
             this.spr.bringToTop();
         }
     }, {
@@ -931,6 +931,10 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
+var _AlertManager = __webpack_require__(14);
+
+var _AlertManager2 = _interopRequireDefault(_AlertManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -978,7 +982,8 @@ var BullyPupil = function () {
         value: function update() {
             var _this = this;
 
-            if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y) && _global2.default.armActive && !_global2.default.stopArm) {
+            if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y) && _global2.default.armActive && !_global2.default.stopArm && !this.paper) {
+                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, this.spr.width / 2, -this.spr.height + 35);
                 _global2.default.bullyStopArm = true;
                 _global2.default.meter += _global2.default.bullyNoise;
                 if (_global2.default.meter > 100) {
@@ -1071,6 +1076,10 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
+var _AlertManager = __webpack_require__(14);
+
+var _AlertManager2 = _interopRequireDefault(_AlertManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1091,10 +1100,6 @@ var PetPupil = function () {
         this.spr.anchor.setTo(0, 1);
         this.spr.scale.setTo(0.5);
 
-        // this.alert = this.game.add.sprite(x + (this.spr.width / 2) + 2, y - 76, 'alert');
-        // this.alert.anchor.setTo(0.5, 1);
-
-        // this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
         this.coll = new Phaser.Circle(x + this.spr.width / 2, y - this.spr.height / 2 - 10, 140);
 
         // this.game.debug.geom(this.coll);
@@ -1109,8 +1114,10 @@ var PetPupil = function () {
     }, {
         key: 'update',
         value: function update() {
-            if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y)) {
-                _global2.default.lose = true;
+            if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y) && !_global2.default.lose) {
+                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, this.spr.width / 2, -this.spr.height + 35);
+                _global2.default.meter = 1000;
+                _global2.default.petStopArm = true;
             }
         }
     }, {
@@ -1165,6 +1172,10 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
+var _AlertManager = __webpack_require__(14);
+
+var _AlertManager2 = _interopRequireDefault(_AlertManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1185,7 +1196,7 @@ var Teacher = function () {
             var waitTimer = _this.game.time.create(true);
             waitTimer.add(Phaser.Timer.SECOND * 5, function () {
                 console.log('waitTurner complete');
-                for (var i = 0; i < _this.game.rnd.integerInRange(1, 3); i++) {
+                for (var i = 0; i < _this.game.rnd.integerInRange(2, 6); i++) {
                     _this.lowerMeter();
                 }
                 _this.aniTurn.stop();
@@ -1235,17 +1246,16 @@ var Teacher = function () {
                 }
             }
             if (_global2.default.meter >= 100) {
-                // Exclamantion point
                 _global2.default.lose = true;
-                this.spr.frame = 2;
-            }
-            if (_global2.default.lose) {
                 this.spr.frame = 2;
             }
             if (this.facingClass && _global2.default.currentPoint) {
                 _global2.default.lose = true;
+            }
+            if (_global2.default.lose && !this.alerting) {
                 this.spr.frame = 2;
-                // Exclamantion point
+                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 28, 6);
+                this.alerting = true;
             }
         }
     }, {
@@ -1261,7 +1271,7 @@ var Teacher = function () {
     }, {
         key: 'lowerMeter',
         value: function lowerMeter() {
-            _global2.default.meter -= 5;
+            _global2.default.meter -= 8;
             if (_global2.default.meter < 0) {
                 _global2.default.meter = 0;
             }
@@ -1456,6 +1466,56 @@ var StateLose = function (_Phaser$State) {
 }(Phaser.State);
 
 module.exports = StateLose;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _global = __webpack_require__(0);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AlertManager = function () {
+    function AlertManager() {
+        _classCallCheck(this, AlertManager);
+    }
+
+    _createClass(AlertManager, null, [{
+        key: 'pingAlert',
+        value: function pingAlert(game, x, y, offsetx, offsety) {
+            var _this = this;
+
+            var showTime = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;
+
+            var spr = game.add.sprite(x + offsetx, y + offsety, 'alert');
+            spr.anchor.setTo(0.5, 1);
+            _global2.default.topGrp.add(spr);
+            var heightOrg = spr.height;
+            spr.height = 0;
+            var tween = game.add.tween(spr).to({ height: heightOrg }, 100, 'Linear', true);
+            tween.onComplete.add(function () {
+                var clearTimer = game.time.create(true);
+                clearTimer.add(Phaser.Timer.SECOND * showTime, function () {
+                    spr.destroy();
+                }, _this);
+                clearTimer.start();
+            }, this);
+        }
+    }]);
+
+    return AlertManager;
+}();
+
+module.exports = AlertManager;
 
 /***/ })
 /******/ ]);

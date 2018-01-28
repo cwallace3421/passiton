@@ -20,10 +20,11 @@ const global = {
     envGrp: null,
     topGrp: null,
     bullyStopArm: false,
+    petStopArm: false,
     passToFromIndex: null,
 
-    bullyNoise: 10,
-    armNoise: 0.2
+    bullyNoise: 20,
+    armNoise: 0.6
 }
 
 export default global;

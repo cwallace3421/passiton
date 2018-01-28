@@ -79,6 +79,12 @@ class ArmManager {
             this.pupil.takePaper();
         }
 
+        if (g.petStopArm) {
+            this.toggleActive(false);
+            g.petStopArm = false;
+            this.pupil.takePaper();
+        }
+
         this.spr.bringToTop();
     }
 
