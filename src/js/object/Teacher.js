@@ -22,11 +22,10 @@ class Teacher {
                     console.log(this.turnTimer);
                 }
                 this.turnTimer = undefined;
-                if (g.currentPoint) {
-                    g.lose = true;
-                }
+                this.facingClass = false;
             }, this);
             waitTimer.start();
+            this.facingClass = true;
             console.log('waitTimer start');
         });
 
@@ -66,6 +65,11 @@ class Teacher {
         }
         if (g.lose) {
             this.spr.frame = 2;
+        }
+        if (this.facingClass && g.currentPoint) {
+            g.lose = true;
+            this.spr.frame = 2;
+            // Exclamantion point
         }
     }
 

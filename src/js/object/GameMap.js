@@ -117,6 +117,22 @@ class GameMap {
         this.teacher.update();
         this.meterObj.update();
 
+        if (g.passToFromIndex) {
+            const available = [];
+            if (this.pupils[g.passToFromIndex.y - 1][g.passToFromIndex.x].givePaper) {
+                available.push(new Phaser.Point(g.passToFromIndex.x, g.passToFromIndex.y - 1));
+            }
+            if (this.pupils[g.passToFromIndex.y - 1][g.passToFromIndex.x - 1].givePaper) {
+                available.push(new Phaser.Point(g.passToFromIndex.x - 1, g.passToFromIndex.y - 1));
+            }
+            if (this.pupils[g.passToFromIndex.y - 1][g.passToFromIndex.x + 1].givePaper) {
+                available.push(new Phaser.Point(g.passToFromIndex.x + 1, g.passToFromIndex.y - 1));
+            }
+            const passTo = this.game.rnd.integerInRange(0, available.length - 1);
+            this.pupils[available[passTo].y][available[passTo].x].givePaper();
+            g.passToFromIndex = null;
+        }
+
         if (g.win) {
             const winTimer = this.game.time.create(true);
             winTimer.add(Phaser.Timer.SECOND * 1, () => {

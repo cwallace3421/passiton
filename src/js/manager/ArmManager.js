@@ -4,7 +4,6 @@ class ArmManager {
 
     constructor(parent, game, pupil, startX, startY) {
         this.parent = new Phaser.Rectangle(parent.left, parent.top, parent.width, parent.height);
-        this.parent.uid = Math.floor(Math.random() * 1000);
         this.game = game;
         this.pupil = pupil;
         this.startPos = new Phaser.Point(startX, startY);
@@ -58,7 +57,7 @@ class ArmManager {
             this.setArmAngle(mousePos);
 
             g.currentPoint = mousePos;
-            g.meter += 0.1;
+            g.meter += g.armNoise;
             if (g.meter > 100) {
                 g.meter = 100;
             }
@@ -66,15 +65,18 @@ class ArmManager {
             if (!isDown && this.active) {
                 this.toggleActive(false);
                 g.droppedPoint = new Phaser.Point(endX, endY);
-                g.currentPoint = null;
                 console.log('line release');
             }
         }
 
         if (g.lose) {
             this.toggleActive(false);
-            g.droppedPoint = null;
-            g.currentPoint = null;
+        }
+
+        if (g.bullyStopArm) {
+            this.toggleActive(false);
+            g.bullyStopArm = false;
+            this.pupil.takePaper();
         }
 
         this.spr.bringToTop();
@@ -99,6 +101,16 @@ class ArmManager {
         this.spr.visible = active;
         g.armActive = active;
         this.handSpr.visible = active;
+
+        if (!active) {
+            this.spr.position.x = this.startPos.x;
+            this.spr.position.y = this.startPos.y;
+            this.handSpr.position.x = this.startPos.x;
+            this.handSpr.position.y = this.startPos.y;
+            this.spr.height = 5;
+            g.droppedPoint = null;
+            g.currentPoint = null;
+        }
     }
 
 }

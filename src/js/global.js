@@ -13,11 +13,17 @@ const global = {
     droppedPoint: null,
     currentPoint: null,
     activePupil: null,
-    meter: 50,
+    meter: 0,
     win: false,
     lose: false,
     armGrp: null,
-    envGrp: null
+    envGrp: null,
+    topGrp: null,
+    bullyStopArm: false,
+    passToFromIndex: null,
+
+    bullyNoise: 10,
+    armNoise: 0.2
 }
 
 export default global;
