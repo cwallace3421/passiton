@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -121,19 +121,69 @@ exports.default = global;
 "use strict";
 
 
-var _StateMenu = __webpack_require__(2);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _global = __webpack_require__(0);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AlertManager = function () {
+    function AlertManager() {
+        _classCallCheck(this, AlertManager);
+    }
+
+    _createClass(AlertManager, null, [{
+        key: 'pingAlert',
+        value: function pingAlert(game, x, y, offsetx, offsety) {
+            var _this = this;
+
+            var showTime = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;
+
+            var spr = game.add.sprite(x + offsetx, y + offsety, 'alert');
+            spr.anchor.setTo(0.5, 1);
+            _global2.default.topGrp.add(spr);
+            var heightOrg = spr.height;
+            spr.height = 0;
+            var tween = game.add.tween(spr).to({ height: heightOrg }, 100, 'Linear', true);
+            tween.onComplete.add(function () {
+                var clearTimer = game.time.create(true);
+                clearTimer.add(Phaser.Timer.SECOND * showTime, function () {
+                    spr.destroy();
+                }, _this);
+                clearTimer.start();
+            }, this);
+        }
+    }]);
+
+    return AlertManager;
+}();
+
+module.exports = AlertManager;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _StateMenu = __webpack_require__(3);
 
 var _StateMenu2 = _interopRequireDefault(_StateMenu);
 
-var _StatePlay = __webpack_require__(3);
+var _StatePlay = __webpack_require__(4);
 
 var _StatePlay2 = _interopRequireDefault(_StatePlay);
 
-var _StateWin = __webpack_require__(12);
+var _StateWin = __webpack_require__(13);
 
 var _StateWin2 = _interopRequireDefault(_StateWin);
 
-var _StateLose = __webpack_require__(13);
+var _StateLose = __webpack_require__(14);
 
 var _StateLose2 = _interopRequireDefault(_StateLose);
 
@@ -171,7 +221,7 @@ window.addEventListener('resize', function () {
 });
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -299,7 +349,7 @@ var StateMenu = function (_Phaser$State) {
 exports.default = StateMenu;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -315,7 +365,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _GameMap = __webpack_require__(4);
+var _GameMap = __webpack_require__(5);
 
 var _GameMap2 = _interopRequireDefault(_GameMap);
 
@@ -378,7 +428,7 @@ var StatePlay = function (_Phaser$State) {
 exports.default = StatePlay;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -390,27 +440,27 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _NeutralPupil = __webpack_require__(5);
+var _NeutralPupil = __webpack_require__(6);
 
 var _NeutralPupil2 = _interopRequireDefault(_NeutralPupil);
 
-var _EmptyPupil = __webpack_require__(7);
+var _EmptyPupil = __webpack_require__(8);
 
 var _EmptyPupil2 = _interopRequireDefault(_EmptyPupil);
 
-var _BullyPupil = __webpack_require__(8);
+var _BullyPupil = __webpack_require__(9);
 
 var _BullyPupil2 = _interopRequireDefault(_BullyPupil);
 
-var _PetPupil = __webpack_require__(9);
+var _PetPupil = __webpack_require__(10);
 
 var _PetPupil2 = _interopRequireDefault(_PetPupil);
 
-var _Teacher = __webpack_require__(10);
+var _Teacher = __webpack_require__(11);
 
 var _Teacher2 = _interopRequireDefault(_Teacher);
 
-var _Meter = __webpack_require__(11);
+var _Meter = __webpack_require__(12);
 
 var _Meter2 = _interopRequireDefault(_Meter);
 
@@ -622,7 +672,7 @@ var GameMap = function () {
 module.exports = GameMap;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -634,7 +684,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _ArmManager = __webpack_require__(6);
+var _ArmManager = __webpack_require__(7);
 
 var _ArmManager2 = _interopRequireDefault(_ArmManager);
 
@@ -755,7 +805,7 @@ var NeutralPupil = function () {
 module.exports = NeutralPupil;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -906,7 +956,7 @@ var ArmManager = function () {
 module.exports = ArmManager;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -970,7 +1020,7 @@ var EmptyPupil = function () {
 module.exports = EmptyPupil;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -982,7 +1032,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _AlertManager = __webpack_require__(14);
+var _AlertManager = __webpack_require__(1);
 
 var _AlertManager2 = _interopRequireDefault(_AlertManager);
 
@@ -1116,7 +1166,7 @@ var BullyPupil = function () {
 module.exports = BullyPupil;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1128,7 +1178,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _AlertManager = __webpack_require__(14);
+var _AlertManager = __webpack_require__(1);
 
 var _AlertManager2 = _interopRequireDefault(_AlertManager);
 
@@ -1213,7 +1263,7 @@ var PetPupil = function () {
 module.exports = PetPupil;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1225,7 +1275,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _AlertManager = __webpack_require__(14);
+var _AlertManager = __webpack_require__(1);
 
 var _AlertManager2 = _interopRequireDefault(_AlertManager);
 
@@ -1346,7 +1396,7 @@ var Teacher = function () {
 module.exports = Teacher;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1398,7 +1448,7 @@ var Meter = function () {
 module.exports = Meter;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1488,7 +1538,7 @@ var StateWin = function (_Phaser$State) {
 module.exports = StateWin;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1576,56 +1626,6 @@ var StateLose = function (_Phaser$State) {
 }(Phaser.State);
 
 module.exports = StateLose;
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _global = __webpack_require__(0);
-
-var _global2 = _interopRequireDefault(_global);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var AlertManager = function () {
-    function AlertManager() {
-        _classCallCheck(this, AlertManager);
-    }
-
-    _createClass(AlertManager, null, [{
-        key: 'pingAlert',
-        value: function pingAlert(game, x, y, offsetx, offsety) {
-            var _this = this;
-
-            var showTime = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;
-
-            var spr = game.add.sprite(x + offsetx, y + offsety, 'alert');
-            spr.anchor.setTo(0.5, 1);
-            _global2.default.topGrp.add(spr);
-            var heightOrg = spr.height;
-            spr.height = 0;
-            var tween = game.add.tween(spr).to({ height: heightOrg }, 100, 'Linear', true);
-            tween.onComplete.add(function () {
-                var clearTimer = game.time.create(true);
-                clearTimer.add(Phaser.Timer.SECOND * showTime, function () {
-                    spr.destroy();
-                }, _this);
-                clearTimer.start();
-            }, this);
-        }
-    }]);
-
-    return AlertManager;
-}();
-
-module.exports = AlertManager;
 
 /***/ })
 /******/ ]);
