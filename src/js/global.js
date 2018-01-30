@@ -1,9 +1,10 @@
 const global = {
     areaW: 780,
     areaH: 560,
-    deskWidth: 174 / 2,
-    deskHeight: 120 / 2,
-    deskGap: 20,
+    deskWidth: 154 / 2,
+    deskHeight: 136 / 2,
+    deskGapVert: 18,
+    deskGapHort: 22,
     area: null,
     startXOffset: null,
     startYOffset: null,

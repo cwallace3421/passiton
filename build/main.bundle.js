@@ -76,9 +76,10 @@ Object.defineProperty(exports, "__esModule", {
 var global = {
     areaW: 780,
     areaH: 560,
-    deskWidth: 174 / 2,
-    deskHeight: 120 / 2,
-    deskGap: 20,
+    deskWidth: 154 / 2,
+    deskHeight: 136 / 2,
+    deskGapVert: 18,
+    deskGapHort: 22,
     area: null,
     startXOffset: null,
     startYOffset: null,
@@ -143,7 +144,7 @@ var AlertManager = function () {
 
             var showTime = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;
 
-            var spr = game.add.sprite(x + offsetx, y + offsety, 'alert');
+            var spr = game.add.sprite(x + offsetx + 4, y + offsety, 'alert');
             spr.anchor.setTo(0.5, 1);
             _global2.default.topGrp.add(spr);
             var heightOrg = spr.height;
@@ -179,11 +180,11 @@ var _StatePlay = __webpack_require__(4);
 
 var _StatePlay2 = _interopRequireDefault(_StatePlay);
 
-var _StateWin = __webpack_require__(13);
+var _StateWin = __webpack_require__(15);
 
 var _StateWin2 = _interopRequireDefault(_StateWin);
 
-var _StateLose = __webpack_require__(14);
+var _StateLose = __webpack_require__(16);
 
 var _StateLose2 = _interopRequireDefault(_StateLose);
 
@@ -309,15 +310,16 @@ var StateMenu = function (_Phaser$State) {
 
             this.game.load.image('pixel', 'assets/pixel.png');
             this.game.load.image('table', 'assets/table.png');
-            this.game.load.image('chair', 'assets/chair.png');
-            this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
-            this.game.load.image('generic_boy_2', 'assets/generic_boy_2.png');
-            this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
-            this.game.load.image('generic_girl_2', 'assets/generic_girl_2.png');
-            this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
-            this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
-            this.game.load.image('bully', 'assets/bully.png');
-            this.game.load.image('teachers_pet', 'assets/teachers_pet.png');
+            this.game.load.spritesheet('pupils', 'assets/pupil_spritesheet.png', 156, 256);
+            // this.game.load.image('chair', 'assets/chair.png');
+            // this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
+            // this.game.load.image('generic_boy_2', 'assets/generic_boy_2.png');
+            // this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
+            // this.game.load.image('generic_girl_2', 'assets/generic_girl_2.png');
+            // this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
+            // this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
+            // this.game.load.image('bully', 'assets/bully.png');
+            // this.game.load.image('teachers_pet', 'assets/teachers_pet.png');
             this.game.load.image('blackboard', 'assets/blackboard.png');
             this.game.load.image('teachers_desk', 'assets/teachers_desk.png');
             this.game.load.image('alert', 'assets/alert.png');
@@ -365,7 +367,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _GameMap = __webpack_require__(5);
+var _GameMap = __webpack_require__(7);
 
 var _GameMap2 = _interopRequireDefault(_GameMap);
 
@@ -400,6 +402,7 @@ var StatePlay = function (_Phaser$State) {
         value: function create() {
             _global2.default.armGrp = this.game.add.group();
             _global2.default.envGrp = this.game.add.group();
+            _global2.default.highGrp = this.game.add.group();
             _global2.default.topGrp = this.game.add.group();
             this.gameMap = new _GameMap2.default(this.game);
         }
@@ -407,8 +410,9 @@ var StatePlay = function (_Phaser$State) {
         key: 'update',
         value: function update() {
             this.game.world.sort('y', Phaser.Group.SORT_ASCENDING);
-            this.game.world.bringToTop(_global2.default.armGrp);
+            this.game.world.sendToBack(_global2.default.highGrp);
             this.game.world.sendToBack(_global2.default.envGrp);
+            this.game.world.bringToTop(_global2.default.armGrp);
             this.game.world.bringToTop(_global2.default.topGrp);
             this.gameMap.update();
         }
@@ -428,7 +432,9 @@ var StatePlay = function (_Phaser$State) {
 exports.default = StatePlay;
 
 /***/ }),
-/* 5 */
+/* 5 */,
+/* 6 */,
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -440,27 +446,27 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _NeutralPupil = __webpack_require__(6);
+var _NeutralPupil = __webpack_require__(8);
 
 var _NeutralPupil2 = _interopRequireDefault(_NeutralPupil);
 
-var _EmptyPupil = __webpack_require__(8);
+var _EmptyPupil = __webpack_require__(10);
 
 var _EmptyPupil2 = _interopRequireDefault(_EmptyPupil);
 
-var _BullyPupil = __webpack_require__(9);
+var _BullyPupil = __webpack_require__(11);
 
 var _BullyPupil2 = _interopRequireDefault(_BullyPupil);
 
-var _PetPupil = __webpack_require__(10);
+var _PetPupil = __webpack_require__(12);
 
 var _PetPupil2 = _interopRequireDefault(_PetPupil);
 
-var _Teacher = __webpack_require__(11);
+var _Teacher = __webpack_require__(13);
 
 var _Teacher2 = _interopRequireDefault(_Teacher);
 
-var _Meter = __webpack_require__(12);
+var _Meter = __webpack_require__(14);
 
 var _Meter2 = _interopRequireDefault(_Meter);
 
@@ -474,7 +480,7 @@ var GameMap = function () {
 
         this.game = game;
 
-        this.teacherAreaHeight = 190;
+        this.teacherZoneHeight = 190;
 
         this.wallH = 160;
         this.wallSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'pixel');
@@ -501,24 +507,25 @@ var GameMap = function () {
 
         this.meterObj = new _Meter2.default(this.game, this.boardSpr.x + this.boardSpr.width / 2 + 6, _global2.default.area.top + 11);
 
-        this.deskRowSize = Math.floor(_global2.default.areaW / (_global2.default.deskWidth + _global2.default.deskGap));
-        var deskRowWidth = this.deskRowSize * _global2.default.deskWidth + (this.deskRowSize - 1) * _global2.default.deskGap;
-        _global2.default.startXOffset = (_global2.default.areaW - deskRowWidth) / 2;
+        this.deskRowSize = Math.floor(_global2.default.area.width / (_global2.default.deskWidth + _global2.default.deskGapHort));
+        var deskRowWidth = this.deskRowSize * _global2.default.deskWidth + (this.deskRowSize - 1) * _global2.default.deskGapHort;
+        _global2.default.startXOffset = (_global2.default.area.width - deskRowWidth) / 2 + _global2.default.deskWidth / 2;
 
-        this.deskColSize = Math.floor((_global2.default.areaH - this.teacherAreaHeight) / (_global2.default.deskHeight + _global2.default.deskGap));
-        var deskColWidth = this.deskColSize * _global2.default.deskHeight + (this.deskColSize - 1) * _global2.default.deskGap;
-        _global2.default.startYOffset = (_global2.default.areaH - this.teacherAreaHeight - deskColWidth) / 2;
+        this.deskColSize = Math.floor((_global2.default.area.height - this.teacherZoneHeight) / (_global2.default.deskHeight + _global2.default.deskGapVert));
+        var deskColWidth = this.deskColSize * _global2.default.deskHeight + (this.deskColSize - 1) * _global2.default.deskGapVert;
+        _global2.default.startYOffset = (_global2.default.area.height - this.teacherZoneHeight - deskColWidth) / 2 + 8;
 
         for (var y = 0; y < this.deskColSize; y++) {
             for (var x = 0; x < this.deskRowSize; x++) {
-                this.desk = this.game.add.sprite(_global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGap) * x, _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGap) * y, 'table');
-                this.desk.anchor.setTo(0, 1);
-                this.desk.scale.setTo(0.5);
+                var desk = this.game.add.sprite(_global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGapHort) * x, _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGapVert) * y, 'table');
+                desk.anchor.setTo(0.5, 1);
+                desk.scale.setTo(0.5);
+                _global2.default.envGrp.add(desk);
             }
         }
         this.generatePupils();
 
-        this.teacher = new _Teacher2.default(this.game, _global2.default.area.left + _global2.default.area.width / 2, _global2.default.area.top + this.teacherAreaHeight);
+        this.teacher = new _Teacher2.default(this.game, _global2.default.area.left + _global2.default.area.width / 2, _global2.default.area.top + this.teacherZoneHeight);
     }
 
     _createClass(GameMap, [{
@@ -672,7 +679,7 @@ var GameMap = function () {
 module.exports = GameMap;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -684,9 +691,17 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _ArmManager = __webpack_require__(7);
+var _utils = __webpack_require__(17);
+
+var _utils2 = _interopRequireDefault(_utils);
+
+var _ArmManager = __webpack_require__(9);
 
 var _ArmManager2 = _interopRequireDefault(_ArmManager);
+
+var _FilterManager = __webpack_require__(18);
+
+var _FilterManager2 = _interopRequireDefault(_FilterManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -697,37 +712,48 @@ var NeutralPupil = function () {
         _classCallCheck(this, NeutralPupil);
 
         this.game = game;
-        this.speed = 10;
-        this.noiseRange = [0, 5];
         this.paper = false;
 
-        var x = _global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGap) * iX - _global2.default.deskGap + _global2.default.deskWidth / 2 - 10;
-        var y = _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGap) * iY - _global2.default.deskGap + 38;
-
-        var key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_girl_1';
-        if (this.game.rnd.integerInRange(0, 100) > 50) {
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_boy_2';
-        } else {
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_girl_1' : 'generic_girl_2';
-        }
-
+        var pupil = this.game.rnd.integerInRange(3, 6);
         if (type === 'hero') {
             this.hero = true;
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'hero_boy_1' : 'hero_boy_1';
+            pupil = 1;
         } else if (type === 'target') {
             this.target = true;
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'target_boy_1' : 'target_boy_1';
+            pupil = 2;
         }
 
-        if (key === 'generic_girl_2') {
-            x -= 5;
-        }
+        var pos = _utils2.default.deskXYIndexToXYPoint(iX, iY);
 
-        this.spr = this.game.add.sprite(x, y, key);
-        this.spr.anchor.setTo(0, 1);
+        this.sprOutline = this.game.add.sprite(pos.x + 1, pos.y + 4, 'pupils', pupil);
+        this.sprOutline.anchor.setTo(0.5, 1);
+        this.sprOutline.scale.setTo(0.53);
+        this.sprOutline.visible = false;
+        _global2.default.highGrp.add(this.sprOutline);
+
+        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', pupil);
+        this.spr.anchor.setTo(0.5, 1);
         this.spr.scale.setTo(0.5);
 
-        this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
+        if (this.target) {
+            this.sprOutline.filters = [_FilterManager2.default.getTargetPupilFilter()];
+            this.sprOutline.visible = true;
+        }
+
+        // TODO just render the sprite twice...
+        // Make shader that whites out to fill in color
+
+        // this.filter = this.game.add.filter('TestFilter', g.areaW, g.areaH, Phaser.Color.createColor(100, 100, 100), 3, Math.min(1, this.game.world.width / 70), new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height));
+        // this.filter = this.game.add.filter('TestFilter', g.areaW, g.areaH);
+        // this.filter.u_color = Phaser.Color.createColor(0, 0, 0);
+        // this.filter.border_alpha = 0.5;
+        // this.filter.u_viewportInverse = new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height);
+        // this.sprOutline.filters = [this.filter];
+        // this.spr.filters = [new Phaser.Filter.TestFilter(this.game, this.spr.width, this.spr.height, Phaser.Color.createColor(100, 100, 100), 3, Math.min(1, this.game.world.width / 70), new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height))];
+
+        var collWidth = 60;
+        var collHeight = this.spr.height - 45;
+        this.coll = new Phaser.Rectangle(pos.x - collWidth / 2, pos.y - collHeight - 10, collWidth, collHeight);
         this.armManager = new _ArmManager2.default(this.coll, this.game, this, this.spr.centerX, this.spr.centerY);
 
         // this.game.debug.geom(this.coll);
@@ -745,9 +771,6 @@ var NeutralPupil = function () {
             this.armManager.update();
         }
     }, {
-        key: 'select',
-        value: function select() {}
-    }, {
         key: 'check',
         value: function check(x, y) {
             return this.coll.contains(x, y);
@@ -755,10 +778,12 @@ var NeutralPupil = function () {
     }, {
         key: 'highlight',
         value: function highlight(_highlight) {
-            if (_highlight) {
-                this.spr.tint = 0x16EE16;
+            if (_highlight && !this.sprOutline.filters) {
+                this.sprOutline.filters = [_FilterManager2.default.getSelectedPupilFilter()];
+                this.sprOutline.visible = true;
             } else {
-                this.spr.tint = 0xFFFFFF;
+                this.sprOutline.filters = null;
+                this.sprOutline.visible = false;
             }
         }
     }, {
@@ -787,16 +812,6 @@ var NeutralPupil = function () {
         value: function isSelectable() {
             return true;
         }
-    }, {
-        key: 'getSpeed',
-        value: function getSpeed() {
-            return this.speed;
-        }
-    }, {
-        key: 'getNoise',
-        value: function getNoise() {
-            return this.game.rnd.integerInRange(this.noiseRange[0], this.noiseRange[1]);
-        }
     }]);
 
     return NeutralPupil;
@@ -805,7 +820,7 @@ var NeutralPupil = function () {
 module.exports = NeutralPupil;
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -956,7 +971,7 @@ var ArmManager = function () {
 module.exports = ArmManager;
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -968,6 +983,10 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
+var _utils = __webpack_require__(17);
+
+var _utils2 = _interopRequireDefault(_utils);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -977,10 +996,11 @@ var EmptyPupil = function () {
         _classCallCheck(this, EmptyPupil);
 
         this.game = game;
-        var x = _global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGap) * iX - _global2.default.deskGap + _global2.default.deskWidth / 2 - 4;
-        var y = _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGap) * iY - _global2.default.deskGap + 42;
-        this.spr = this.game.add.sprite(x, y, 'chair');
-        this.spr.anchor.setTo(0, 1);
+
+        var pos = _utils2.default.deskXYIndexToXYPoint(iX, iY);
+
+        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', 0);
+        this.spr.anchor.setTo(0.5, 1);
         this.spr.scale.setTo(0.5);
     }
 
@@ -993,9 +1013,6 @@ var EmptyPupil = function () {
         key: 'update',
         value: function update() {}
     }, {
-        key: 'select',
-        value: function select() {}
-    }, {
         key: 'check',
         value: function check(x, y) {}
     }, {
@@ -1006,12 +1023,6 @@ var EmptyPupil = function () {
         value: function isSelectable() {
             return false;
         }
-    }, {
-        key: 'getSpeed',
-        value: function getSpeed() {}
-    }, {
-        key: 'getNoise',
-        value: function getNoise() {}
     }]);
 
     return EmptyPupil;
@@ -1020,7 +1031,7 @@ var EmptyPupil = function () {
 module.exports = EmptyPupil;
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1031,6 +1042,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
+
+var _utils = __webpack_require__(17);
+
+var _utils2 = _interopRequireDefault(_utils);
 
 var _AlertManager = __webpack_require__(1);
 
@@ -1051,11 +1066,10 @@ var BullyPupil = function () {
 
         this.index = new Phaser.Point(iX, iY);
 
-        var x = _global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGap) * iX - _global2.default.deskGap + _global2.default.deskWidth / 2 - 17;
-        var y = _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGap) * iY - _global2.default.deskGap + 38;
+        var pos = _utils2.default.deskXYIndexToXYPoint(iX, iY);
 
-        this.spr = this.game.add.sprite(x, y, 'bully');
-        this.spr.anchor.setTo(0, 1);
+        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', 8);
+        this.spr.anchor.setTo(0.5, 1);
         this.spr.scale.setTo(0.5);
 
         this.beatupSpr = this.game.add.sprite(-100, -100, 'beatup');
@@ -1063,10 +1077,11 @@ var BullyPupil = function () {
         this.beatupSpr.scale.setTo(0.8);
         this.beatupSpr.visible = false;
         _global2.default.topGrp.add(this.beatupSpr);
+
         this.aniBeatup = this.beatupSpr.animations.add('beatup', [0, 1, 2], 4, true);
         this.aniBeatup.play('beatup');
 
-        this.coll = new Phaser.Circle(x + this.spr.width / 2, y - this.spr.height / 2 - 10, 140);
+        this.coll = new Phaser.Circle(pos.x, pos.y - this.spr.height / 2 + 10, 130);
 
         // this.game.debug.geom(this.coll);
     }
@@ -1084,7 +1099,7 @@ var BullyPupil = function () {
             var _this = this;
 
             if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y) && _global2.default.armActive && !_global2.default.stopArm && !this.paper) {
-                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, this.spr.width / 2, -this.spr.height + 35);
+                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 46);
                 _global2.default.soundBullyGrunts = this.game.sound.play('bully_grunts', 0.5, false);
                 _global2.default.bullyStopArm = true;
                 _global2.default.meter += _global2.default.bullyNoise;
@@ -1122,9 +1137,6 @@ var BullyPupil = function () {
             }
         }
     }, {
-        key: 'select',
-        value: function select() {}
-    }, {
         key: 'check',
         value: function check(x, y) {
             return this.coll.contains(x, y);
@@ -1139,24 +1151,9 @@ var BullyPupil = function () {
             }
         }
     }, {
-        key: 'hasPaper',
-        value: function hasPaper() {
-            return this.paper;
-        }
-    }, {
         key: 'isSelectable',
         value: function isSelectable() {
             return false;
-        }
-    }, {
-        key: 'getSpeed',
-        value: function getSpeed() {
-            return this.speed;
-        }
-    }, {
-        key: 'getNoise',
-        value: function getNoise() {
-            return this.game.rnd.integerInRange(this.noiseRange[0], this.noiseRange[1]);
         }
     }]);
 
@@ -1166,7 +1163,7 @@ var BullyPupil = function () {
 module.exports = BullyPupil;
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1177,6 +1174,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
+
+var _utils = __webpack_require__(17);
+
+var _utils2 = _interopRequireDefault(_utils);
 
 var _AlertManager = __webpack_require__(1);
 
@@ -1195,14 +1196,13 @@ var PetPupil = function () {
         this.noiseRange = [0, 5];
         this.paper = false;
 
-        var x = _global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGap) * iX - _global2.default.deskGap + _global2.default.deskWidth / 2 - 12;
-        var y = _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGap) * iY - _global2.default.deskGap + 38;
+        var pos = _utils2.default.deskXYIndexToXYPoint(iX, iY);
 
-        this.spr = this.game.add.sprite(x, y, 'teachers_pet');
-        this.spr.anchor.setTo(0, 1);
+        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', 7);
+        this.spr.anchor.setTo(0.5, 1);
         this.spr.scale.setTo(0.5);
 
-        this.coll = new Phaser.Circle(x + this.spr.width / 2, y - this.spr.height / 2 - 10, 140);
+        this.coll = new Phaser.Circle(pos.x, pos.y - this.spr.height / 2 + 10, 130);
 
         // this.game.debug.geom(this.coll);
     }
@@ -1217,15 +1217,12 @@ var PetPupil = function () {
         key: 'update',
         value: function update() {
             if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y) && !_global2.default.lose) {
-                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, this.spr.width / 2, -this.spr.height + 35);
+                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 45);
                 _global2.default.meter = 1000;
                 _global2.default.petStopArm = true;
                 _global2.default.soundPetScream = this.game.sound.play('scream_pet', 0.4, false);
             }
         }
-    }, {
-        key: 'select',
-        value: function select() {}
     }, {
         key: 'check',
         value: function check(x, y) {
@@ -1243,17 +1240,7 @@ var PetPupil = function () {
     }, {
         key: 'isSelectable',
         value: function isSelectable() {
-            return true;
-        }
-    }, {
-        key: 'getSpeed',
-        value: function getSpeed() {
-            return this.speed;
-        }
-    }, {
-        key: 'getNoise',
-        value: function getNoise() {
-            return this.game.rnd.integerInRange(this.noiseRange[0], this.noiseRange[1]);
+            return false;
         }
     }]);
 
@@ -1263,7 +1250,7 @@ var PetPupil = function () {
 module.exports = PetPupil;
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1396,7 +1383,7 @@ var Teacher = function () {
 module.exports = Teacher;
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1448,7 +1435,7 @@ var Meter = function () {
 module.exports = Meter;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1538,7 +1525,7 @@ var StateWin = function (_Phaser$State) {
 module.exports = StateWin;
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1626,6 +1613,149 @@ var StateLose = function (_Phaser$State) {
 }(Phaser.State);
 
 module.exports = StateLose;
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _global = __webpack_require__(0);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Utils = function () {
+    function Utils() {
+        _classCallCheck(this, Utils);
+    }
+
+    _createClass(Utils, null, [{
+        key: 'deskXYIndexToXYPoint',
+        value: function deskXYIndexToXYPoint(iX, iY) {
+            var x = _global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGapHort) * iX;
+            var y = _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGapVert) * iY + _global2.default.deskHeight / 3;
+            return new Phaser.Point(x, y);
+        }
+    }]);
+
+    return Utils;
+}();
+
+module.exports = Utils;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _global = __webpack_require__(0);
+
+var _global2 = _interopRequireDefault(_global);
+
+var _FilterColorFillLoad = __webpack_require__(19);
+
+var _FilterColorFillLoad2 = _interopRequireDefault(_FilterColorFillLoad);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var FilterManager = function () {
+    function FilterManager() {
+        _classCallCheck(this, FilterManager);
+
+        (0, _FilterColorFillLoad2.default)();
+    }
+
+    _createClass(FilterManager, [{
+        key: 'getFillColorFilter',
+        value: function getFillColorFilter(r, g, b) {
+            var filter = window.game.add.filter('ColorFill', g.areaW, g.areaH);
+            filter.u_color = Phaser.Color.createColor(r, g, b);
+            return filter;
+        }
+    }, {
+        key: 'getSelectedPupilFilter',
+        value: function getSelectedPupilFilter() {
+            if (!this.selectedPupilFilter) {
+                this.selectedPupilFilter = this.getFillColorFilter(255, 255, 255);
+            }
+            return this.selectedPupilFilter;
+        }
+    }, {
+        key: 'getTargetPupilFilter',
+        value: function getTargetPupilFilter() {
+            if (!this.targetPupilFilter) {
+                this.targetPupilFilter = this.getFillColorFilter(80, 230, 100);
+            }
+            return this.targetPupilFilter;
+        }
+    }]);
+
+    return FilterManager;
+}();
+
+module.exports = new FilterManager();
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function FilterColorFillLoad() {
+
+    Phaser.Filter.ColorFill = function (game) {
+
+        Phaser.Filter.call(this, game);
+
+        this.uniforms.u_color = { type: '3f', value: { x: 0.0, y: 0.0, z: 0.0 } };
+
+        this.fragmentSrc = ["precision mediump float;", "precision mediump int;", "uniform vec3 u_color;", "uniform sampler2D uSampler;", "varying vec2 vTextureCoord;", "varying vec4 vColor;", "void main() {", "gl_FragColor = texture2D(uSampler, vTextureCoord);", "if (gl_FragColor.a > 0.0) {", "gl_FragColor.r = u_color.x;", "gl_FragColor.g = u_color.y;", "gl_FragColor.b = u_color.z;", "gl_FragColor.a = 1.0;", "}", "}"];
+    };
+
+    Phaser.Filter.ColorFill.prototype = Object.create(Phaser.Filter.prototype);
+    Phaser.Filter.ColorFill.prototype.constructor = Phaser.Filter.ColorFill;
+
+    Phaser.Filter.ColorFill.prototype.init = function (width, height, color) {
+        this.setResolution(width, height);
+        if (color) {
+            this.uniforms.u_color.value = {
+                x: color.r / 255,
+                y: color.g / 255,
+                z: color.b / 255
+            };
+        }
+    };
+
+    Object.defineProperty(Phaser.Filter.ColorFill.prototype, 'u_color', {
+        get: function get() {
+            return this.uniforms.u_color.value;
+        },
+
+        set: function set(value) {
+            this.uniforms.u_color.value = {
+                x: value.r / 255,
+                y: value.g / 255,
+                z: value.b / 255
+            };
+        }
+    });
+}
+
+module.exports = FilterColorFillLoad;
 
 /***/ })
 /******/ ]);

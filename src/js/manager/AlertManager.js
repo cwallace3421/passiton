@@ -3,7 +3,7 @@ import g from '../global';
 class AlertManager {
 
     static pingAlert(game, x, y, offsetx, offsety, showTime = 1) {
-        const spr = game.add.sprite(x + offsetx, y + offsety, 'alert');
+        const spr = game.add.sprite(x + offsetx + 4, y + offsety, 'alert');
         spr.anchor.setTo(0.5, 1);
         g.topGrp.add(spr);
         const heightOrg = spr.height;

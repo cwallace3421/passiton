@@ -1,41 +1,54 @@
 import g from '../global';
+import utils from '../utils';
 import ArmManager from '../manager/ArmManager';
+import FilterManager from '../manager/FilterManager';
 
 class NeutralPupil {
 
     constructor(game, iX, iY, type) {
         this.game = game;
-        this.speed = 10;
-        this.noiseRange = [0, 5];
         this.paper = false;
 
-        let x = g.area.left + g.startXOffset + ((g.deskWidth + g.deskGap) * iX) - g.deskGap + (g.deskWidth / 2) - 10;
-        let y = g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGap) * iY) - g.deskGap + 38;
-
-        let key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_girl_1';
-        if (this.game.rnd.integerInRange(0, 100) > 50) {
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_boy_1' : 'generic_boy_2';
-        } else {
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'generic_girl_1' : 'generic_girl_2';
-        }
-
+        let pupil = this.game.rnd.integerInRange(3, 6);
         if (type === 'hero') {
             this.hero = true;
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'hero_boy_1' : 'hero_boy_1';
+            pupil = 1;
         } else if (type === 'target') {
             this.target = true;
-            key = this.game.rnd.integerInRange(0, 100) > 50 ? 'target_boy_1' : 'target_boy_1';
+            pupil = 2;
         }
 
-        if (key === 'generic_girl_2') {
-            x -= 5;
-        }
+        const pos = utils.deskXYIndexToXYPoint(iX, iY);
 
-        this.spr = this.game.add.sprite(x, y, key);
-        this.spr.anchor.setTo(0, 1);
+        this.sprOutline = this.game.add.sprite(pos.x + 1, pos.y + 4, 'pupils', pupil);
+        this.sprOutline.anchor.setTo(0.5, 1);
+        this.sprOutline.scale.setTo(0.53);
+        this.sprOutline.visible = false;
+        g.highGrp.add(this.sprOutline);
+
+        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', pupil);
+        this.spr.anchor.setTo(0.5, 1);
         this.spr.scale.setTo(0.5);
 
-        this.coll = new Phaser.Rectangle(x, y - this.spr.height + 5, this.spr.width, this.spr.height - 25);
+        if (this.target) {
+            this.sprOutline.filters = [FilterManager.getTargetPupilFilter()];
+            this.sprOutline.visible = true;
+        }
+
+        // TODO just render the sprite twice...
+        // Make shader that whites out to fill in color
+
+        // this.filter = this.game.add.filter('TestFilter', g.areaW, g.areaH, Phaser.Color.createColor(100, 100, 100), 3, Math.min(1, this.game.world.width / 70), new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height));
+        // this.filter = this.game.add.filter('TestFilter', g.areaW, g.areaH);
+        // this.filter.u_color = Phaser.Color.createColor(0, 0, 0);
+        // this.filter.border_alpha = 0.5;
+        // this.filter.u_viewportInverse = new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height);
+        // this.sprOutline.filters = [this.filter];
+        // this.spr.filters = [new Phaser.Filter.TestFilter(this.game, this.spr.width, this.spr.height, Phaser.Color.createColor(100, 100, 100), 3, Math.min(1, this.game.world.width / 70), new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height))];
+
+        const collWidth = 60;
+        const collHeight = this.spr.height - 45;
+        this.coll = new Phaser.Rectangle(pos.x - (collWidth / 2), pos.y - collHeight - 10, collWidth, collHeight);
         this.armManager = new ArmManager(this.coll, this.game, this, this.spr.centerX, this.spr.centerY);
 
         // this.game.debug.geom(this.coll);
@@ -50,19 +63,17 @@ class NeutralPupil {
         this.armManager.update();
     }
 
-    select() {
-
-    }
-
     check(x, y) {
         return this.coll.contains(x, y);
     }
 
     highlight(highlight) {
-        if (highlight) {
-            this.spr.tint = 0x16EE16;
+        if (highlight && !this.sprOutline.filters) {
+            this.sprOutline.filters = [FilterManager.getSelectedPupilFilter()];
+            this.sprOutline.visible = true;
         } else {
-            this.spr.tint = 0xFFFFFF;
+            this.sprOutline.filters = null;
+            this.sprOutline.visible = false;
         }
     }
 
@@ -86,14 +97,6 @@ class NeutralPupil {
 
     isSelectable() {
         return true;
-    }
-
-    getSpeed() {
-        return this.speed;
-    }
-
-    getNoise() {
-        return this.game.rnd.integerInRange(this.noiseRange[0], this.noiseRange[1]);
     }
 
 }

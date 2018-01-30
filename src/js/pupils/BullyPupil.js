@@ -1,4 +1,5 @@
 import g from '../global';
+import utils from '../utils';
 import AlertManager from '../manager/AlertManager';
 
 class BullyPupil {
@@ -11,11 +12,10 @@ class BullyPupil {
 
         this.index = new Phaser.Point(iX, iY);
 
-        const x = g.area.left + g.startXOffset + ((g.deskWidth + g.deskGap) * iX) - g.deskGap + (g.deskWidth / 2) - 17;
-        const y = g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGap) * iY) - g.deskGap + 38;
+        const pos = utils.deskXYIndexToXYPoint(iX, iY);
 
-        this.spr = this.game.add.sprite(x, y, 'bully');
-        this.spr.anchor.setTo(0, 1);
+        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', 8);
+        this.spr.anchor.setTo(0.5, 1);
         this.spr.scale.setTo(0.5);
 
         this.beatupSpr = this.game.add.sprite(-100, -100, 'beatup');
@@ -23,10 +23,11 @@ class BullyPupil {
         this.beatupSpr.scale.setTo(0.8);
         this.beatupSpr.visible = false;
         g.topGrp.add(this.beatupSpr);
+
         this.aniBeatup = this.beatupSpr.animations.add('beatup', [0, 1, 2], 4, true);
         this.aniBeatup.play('beatup');
 
-        this.coll = new Phaser.Circle(x + (this.spr.width / 2), y - (this.spr.height / 2) - 10, 140);
+        this.coll = new Phaser.Circle(pos.x, pos.y - (this.spr.height / 2) + 10, 130);
 
         // this.game.debug.geom(this.coll);
     }
@@ -39,7 +40,7 @@ class BullyPupil {
 
     update() {
         if (g.currentPoint && this.coll.contains(g.currentPoint.x, g.currentPoint.y) && g.armActive && !g.stopArm && !this.paper) {
-            AlertManager.pingAlert(this.game, this.spr.position.x, this.spr.position.y, this.spr.width / 2, -this.spr.height + 35);
+            AlertManager.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 46);
             g.soundBullyGrunts = this.game.sound.play('bully_grunts', 0.5, false);
             g.bullyStopArm = true;
             g.meter += g.bullyNoise;
@@ -76,10 +77,6 @@ class BullyPupil {
         }
     }
 
-    select() {
-
-    }
-
     check(x, y) {
         return this.coll.contains(x, y);
     }
@@ -92,20 +89,8 @@ class BullyPupil {
         }
     }
 
-    hasPaper() {
-        return this.paper;
-    }
-
     isSelectable() {
         return false;
-    }
-
-    getSpeed() {
-        return this.speed;
-    }
-
-    getNoise() {
-        return this.game.rnd.integerInRange(this.noiseRange[0], this.noiseRange[1]);
     }
 
 }

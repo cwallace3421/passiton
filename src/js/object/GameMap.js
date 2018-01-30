@@ -11,7 +11,7 @@ class GameMap {
     constructor(game) {
         this.game = game;
 
-        this.teacherAreaHeight = 190;
+        this.teacherZoneHeight = 190;
 
         this.wallH = 160;
         this.wallSpr = this.game.add.sprite(g.area.left, g.area.top, 'pixel');
@@ -38,27 +38,29 @@ class GameMap {
 
         this.meterObj = new Meter(this.game, this.boardSpr.x + (this.boardSpr.width / 2) + 6, g.area.top + 11);
 
-        this.deskRowSize = Math.floor(g.areaW / (g.deskWidth + g.deskGap));
-        const deskRowWidth = (this.deskRowSize * g.deskWidth) + ((this.deskRowSize - 1) * g.deskGap);
-        g.startXOffset = (g.areaW - deskRowWidth) / 2;
 
-        this.deskColSize = Math.floor((g.areaH - this.teacherAreaHeight) / (g.deskHeight + g.deskGap));
-        const deskColWidth = (this.deskColSize * g.deskHeight) + ((this.deskColSize - 1) * g.deskGap);
-        g.startYOffset = ((g.areaH - this.teacherAreaHeight) - deskColWidth) / 2;
+        this.deskRowSize = Math.floor(g.area.width / (g.deskWidth + g.deskGapHort));
+        const deskRowWidth = (this.deskRowSize * g.deskWidth) + ((this.deskRowSize - 1) * g.deskGapHort);
+        g.startXOffset = (g.area.width - deskRowWidth) / 2 + (g.deskWidth / 2);
+
+        this.deskColSize = Math.floor((g.area.height - this.teacherZoneHeight) / (g.deskHeight + g.deskGapVert));
+        const deskColWidth = (this.deskColSize * g.deskHeight) + ((this.deskColSize - 1) * g.deskGapVert);
+        g.startYOffset = (((g.area.height - this.teacherZoneHeight) - deskColWidth) / 2) + 8;
 
         for (let y = 0; y < this.deskColSize; y++) {
             for (let x = 0; x < this.deskRowSize; x++) {
-                this.desk = this.game.add.sprite(
-                    g.area.left + g.startXOffset + ((g.deskWidth + g.deskGap) * x),
-                    g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGap) * y),
+                const desk = this.game.add.sprite(
+                    g.area.left + g.startXOffset + ((g.deskWidth + g.deskGapHort) * x),
+                    g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGapVert) * y),
                     'table');
-                this.desk.anchor.setTo(0, 1);
-                this.desk.scale.setTo(0.5);
+                desk.anchor.setTo(0.5, 1);
+                desk.scale.setTo(0.5);
+                g.envGrp.add(desk);
             }
         }
         this.generatePupils();
 
-        this.teacher = new Teacher(this.game, g.area.left + (g.area.width / 2), g.area.top + this.teacherAreaHeight);
+        this.teacher = new Teacher(this.game, g.area.left + (g.area.width / 2), g.area.top + this.teacherZoneHeight);
     }
 
     generatePupils() {

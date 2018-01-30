@@ -54,15 +54,16 @@ class StateMenu extends Phaser.State {
 
         this.game.load.image('pixel', 'assets/pixel.png');
         this.game.load.image('table', 'assets/table.png');
-        this.game.load.image('chair', 'assets/chair.png');
-        this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
-        this.game.load.image('generic_boy_2', 'assets/generic_boy_2.png');
-        this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
-        this.game.load.image('generic_girl_2', 'assets/generic_girl_2.png');
-        this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
-        this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
-        this.game.load.image('bully', 'assets/bully.png');
-        this.game.load.image('teachers_pet', 'assets/teachers_pet.png');
+        this.game.load.spritesheet('pupils', 'assets/pupil_spritesheet.png', 156, 256);
+        // this.game.load.image('chair', 'assets/chair.png');
+        // this.game.load.image('generic_boy_1', 'assets/generic_boy_1.png');
+        // this.game.load.image('generic_boy_2', 'assets/generic_boy_2.png');
+        // this.game.load.image('generic_girl_1', 'assets/generic_girl_1.png');
+        // this.game.load.image('generic_girl_2', 'assets/generic_girl_2.png');
+        // this.game.load.image('hero_boy_1', 'assets/hero_boy_1.png');
+        // this.game.load.image('target_boy_1', 'assets/target_boy_1.png');
+        // this.game.load.image('bully', 'assets/bully.png');
+        // this.game.load.image('teachers_pet', 'assets/teachers_pet.png');
         this.game.load.image('blackboard', 'assets/blackboard.png');
         this.game.load.image('teachers_desk', 'assets/teachers_desk.png');
         this.game.load.image('alert', 'assets/alert.png');
