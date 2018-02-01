@@ -27,6 +27,13 @@ class FilterManager {
         return this.targetPupilFilter;
     }
 
+    getWinPupilFilter() {
+        if (!this.winPupilFilter) {
+            this.winPupilFilter = this.getFillColorFilter(247, 239, 17);
+        }
+        return this.winPupilFilter;
+    }
+
 }
 
 module.exports = new FilterManager();

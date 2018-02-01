@@ -55,7 +55,6 @@ class GameMap {
                     'table');
                 desk.anchor.setTo(0.5, 1);
                 desk.scale.setTo(0.5);
-                g.envGrp.add(desk);
             }
         }
         this.generatePupils();

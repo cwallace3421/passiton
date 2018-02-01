@@ -433,7 +433,6 @@ var StatePlay = function (_Phaser$State) {
         value: function create() {
             _global2.default.armGrp = this.game.add.group();
             _global2.default.envGrp = this.game.add.group();
-            _global2.default.highGrp = this.game.add.group();
             _global2.default.topGrp = this.game.add.group();
             this.gameMap = new _GameMap2.default(this.game);
         }
@@ -441,7 +440,6 @@ var StatePlay = function (_Phaser$State) {
         key: 'update',
         value: function update() {
             this.game.world.sort('y', Phaser.Group.SORT_ASCENDING);
-            this.game.world.sendToBack(_global2.default.highGrp);
             this.game.world.sendToBack(_global2.default.envGrp);
             this.game.world.bringToTop(_global2.default.armGrp);
             this.game.world.bringToTop(_global2.default.topGrp);
@@ -549,7 +547,6 @@ var GameMap = function () {
                 var desk = this.game.add.sprite(_global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGapHort) * x, _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGapVert) * y, 'table');
                 desk.anchor.setTo(0.5, 1);
                 desk.scale.setTo(0.5);
-                _global2.default.envGrp.add(desk);
             }
         }
         this.generatePupils();
@@ -754,13 +751,12 @@ var NeutralPupil = function () {
 
         var pos = _utils2.default.deskXYIndexToXYPoint(iX, iY);
 
-        this.sprOutline = this.game.add.sprite(pos.x, pos.y + 7, 'pupils', pupil);
-        this.sprOutline.anchor.setTo(0.5, 1);
+        this.sprOutline = this.game.add.sprite(pos.x, pos.y - 9, 'pupils', pupil);
+        this.sprOutline.anchor.setTo(0.5, 0.9);
         this.sprOutline.scale.setTo(0.5);
-        this.sprOutline.width += 18;
-        this.sprOutline.height += 14;
+        this.sprOutline.width += 14;
+        this.sprOutline.height += 12;
         this.sprOutline.visible = false;
-        _global2.default.highGrp.add(this.sprOutline);
 
         this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', pupil);
         this.spr.anchor.setTo(0.5, 1);
@@ -801,7 +797,10 @@ var NeutralPupil = function () {
             if (_highlight && !this.sprOutline.filters) {
                 this.sprOutline.filters = [_FilterManager2.default.getSelectedPupilFilter()];
                 this.sprOutline.visible = true;
-            } else {
+            } else if (_highlight && this.target) {
+                this.sprOutline.filters = [_FilterManager2.default.getWinPupilFilter()];
+                this.sprOutline.visible = true;
+            } else if (!_highlight) {
                 this.sprOutline.filters = null;
                 this.sprOutline.visible = false;
             }
@@ -1040,6 +1039,14 @@ var FilterManager = function () {
                 this.targetPupilFilter = this.getFillColorFilter(80, 230, 100);
             }
             return this.targetPupilFilter;
+        }
+    }, {
+        key: 'getWinPupilFilter',
+        value: function getWinPupilFilter() {
+            if (!this.winPupilFilter) {
+                this.winPupilFilter = this.getFillColorFilter(247, 239, 17);
+            }
+            return this.winPupilFilter;
         }
     }]);
 

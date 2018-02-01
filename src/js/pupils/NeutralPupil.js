@@ -20,13 +20,12 @@ class NeutralPupil {
 
         const pos = utils.deskXYIndexToXYPoint(iX, iY);
 
-        this.sprOutline = this.game.add.sprite(pos.x, pos.y + 7, 'pupils', pupil);
-        this.sprOutline.anchor.setTo(0.5, 1);
+        this.sprOutline = this.game.add.sprite(pos.x, pos.y - 9, 'pupils', pupil);
+        this.sprOutline.anchor.setTo(0.5, 0.9);
         this.sprOutline.scale.setTo(0.5);
-        this.sprOutline.width += 18;
-        this.sprOutline.height += 14;
+        this.sprOutline.width += 14;
+        this.sprOutline.height += 12;
         this.sprOutline.visible = false;
-        g.highGrp.add(this.sprOutline);
 
         this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', pupil);
         this.spr.anchor.setTo(0.5, 1);
@@ -62,7 +61,10 @@ class NeutralPupil {
         if (highlight && !this.sprOutline.filters) {
             this.sprOutline.filters = [FilterManager.getSelectedPupilFilter()];
             this.sprOutline.visible = true;
-        } else {
+        } else if (highlight && this.target) {
+            this.sprOutline.filters = [FilterManager.getWinPupilFilter()];
+            this.sprOutline.visible = true;
+        } else if (!highlight) {
             this.sprOutline.filters = null;
             this.sprOutline.visible = false;
         }

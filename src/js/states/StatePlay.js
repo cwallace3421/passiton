@@ -18,14 +18,12 @@ class StatePlay extends Phaser.State {
     create() {
         g.armGrp = this.game.add.group();
         g.envGrp = this.game.add.group();
-        g.highGrp = this.game.add.group();
         g.topGrp = this.game.add.group();
         this.gameMap = new GameMap(this.game);
     }
 
     update() {
         this.game.world.sort('y', Phaser.Group.SORT_ASCENDING);
-        this.game.world.sendToBack(g.highGrp);
         this.game.world.sendToBack(g.envGrp);
         this.game.world.bringToTop(g.armGrp);
         this.game.world.bringToTop(g.topGrp);
