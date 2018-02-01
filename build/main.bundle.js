@@ -1352,7 +1352,7 @@ var PetPupil = function () {
         value: function update() {
             if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y) && !_global2.default.lose) {
                 _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 45);
-                _global2.default.meter = 1000;
+                _global2.default.meter = 100;
                 _global2.default.petStopArm = true;
                 _global2.default.soundPetScream = this.game.sound.play('scream_pet', 0.4, false);
             }
@@ -1563,7 +1563,7 @@ var Meter = function () {
     _createClass(Meter, [{
         key: 'update',
         value: function update() {
-            this.meterSpr.height = Math.ceil(_global2.default.meter / 100 * (192 / 2));
+            this.meterSpr.height = Math.ceil(_global2.default.meter / 100 * (192 / 2)) + 3;
         }
     }]);
 

@@ -23,7 +23,7 @@ class Meter {
     }
 
     update() {
-        this.meterSpr.height = Math.ceil((g.meter / 100) * (192 / 2));
+        this.meterSpr.height = Math.ceil((g.meter / 100) * (192 / 2)) + 3;
     }
 
 }

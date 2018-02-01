@@ -29,7 +29,7 @@ class PetPupil {
     update() {
         if (g.currentPoint && this.coll.contains(g.currentPoint.x, g.currentPoint.y) && !g.lose) {
             AlertManager.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 45);
-            g.meter = 1000;
+            g.meter = 100;
             g.petStopArm = true;
             g.soundPetScream = this.game.sound.play('scream_pet', 0.4, false);
         }
