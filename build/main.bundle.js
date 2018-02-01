@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -132,6 +132,42 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Utils = function () {
+    function Utils() {
+        _classCallCheck(this, Utils);
+    }
+
+    _createClass(Utils, null, [{
+        key: 'deskXYIndexToXYPoint',
+        value: function deskXYIndexToXYPoint(iX, iY) {
+            var x = _global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGapHort) * iX;
+            var y = _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGapVert) * iY + _global2.default.deskHeight / 3;
+            return new Phaser.Point(x, y);
+        }
+    }]);
+
+    return Utils;
+}();
+
+module.exports = Utils;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _global = __webpack_require__(0);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var AlertManager = function () {
     function AlertManager() {
         _classCallCheck(this, AlertManager);
@@ -166,25 +202,25 @@ var AlertManager = function () {
 module.exports = AlertManager;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _StateMenu = __webpack_require__(3);
+var _StateMenu = __webpack_require__(4);
 
 var _StateMenu2 = _interopRequireDefault(_StateMenu);
 
-var _StatePlay = __webpack_require__(4);
+var _StatePlay = __webpack_require__(5);
 
 var _StatePlay2 = _interopRequireDefault(_StatePlay);
 
-var _StateWin = __webpack_require__(15);
+var _StateWin = __webpack_require__(16);
 
 var _StateWin2 = _interopRequireDefault(_StateWin);
 
-var _StateLose = __webpack_require__(16);
+var _StateLose = __webpack_require__(17);
 
 var _StateLose2 = _interopRequireDefault(_StateLose);
 
@@ -222,7 +258,7 @@ window.addEventListener('resize', function () {
 });
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -351,7 +387,7 @@ var StateMenu = function (_Phaser$State) {
 exports.default = StateMenu;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -367,7 +403,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _GameMap = __webpack_require__(7);
+var _GameMap = __webpack_require__(6);
 
 var _GameMap2 = _interopRequireDefault(_GameMap);
 
@@ -432,9 +468,7 @@ var StatePlay = function (_Phaser$State) {
 exports.default = StatePlay;
 
 /***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -446,27 +480,27 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _NeutralPupil = __webpack_require__(8);
+var _NeutralPupil = __webpack_require__(7);
 
 var _NeutralPupil2 = _interopRequireDefault(_NeutralPupil);
 
-var _EmptyPupil = __webpack_require__(10);
+var _EmptyPupil = __webpack_require__(11);
 
 var _EmptyPupil2 = _interopRequireDefault(_EmptyPupil);
 
-var _BullyPupil = __webpack_require__(11);
+var _BullyPupil = __webpack_require__(12);
 
 var _BullyPupil2 = _interopRequireDefault(_BullyPupil);
 
-var _PetPupil = __webpack_require__(12);
+var _PetPupil = __webpack_require__(13);
 
 var _PetPupil2 = _interopRequireDefault(_PetPupil);
 
-var _Teacher = __webpack_require__(13);
+var _Teacher = __webpack_require__(14);
 
 var _Teacher2 = _interopRequireDefault(_Teacher);
 
-var _Meter = __webpack_require__(14);
+var _Meter = __webpack_require__(15);
 
 var _Meter2 = _interopRequireDefault(_Meter);
 
@@ -679,7 +713,7 @@ var GameMap = function () {
 module.exports = GameMap;
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -691,15 +725,15 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _utils = __webpack_require__(17);
+var _utils = __webpack_require__(1);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _ArmManager = __webpack_require__(9);
+var _ArmManager = __webpack_require__(8);
 
 var _ArmManager2 = _interopRequireDefault(_ArmManager);
 
-var _FilterManager = __webpack_require__(18);
+var _FilterManager = __webpack_require__(9);
 
 var _FilterManager2 = _interopRequireDefault(_FilterManager);
 
@@ -725,9 +759,11 @@ var NeutralPupil = function () {
 
         var pos = _utils2.default.deskXYIndexToXYPoint(iX, iY);
 
-        this.sprOutline = this.game.add.sprite(pos.x + 1, pos.y + 4, 'pupils', pupil);
+        this.sprOutline = this.game.add.sprite(pos.x, pos.y + 7, 'pupils', pupil);
         this.sprOutline.anchor.setTo(0.5, 1);
-        this.sprOutline.scale.setTo(0.53);
+        this.sprOutline.scale.setTo(0.5);
+        this.sprOutline.width += 18;
+        this.sprOutline.height += 14;
         this.sprOutline.visible = false;
         _global2.default.highGrp.add(this.sprOutline);
 
@@ -739,17 +775,6 @@ var NeutralPupil = function () {
             this.sprOutline.filters = [_FilterManager2.default.getTargetPupilFilter()];
             this.sprOutline.visible = true;
         }
-
-        // TODO just render the sprite twice...
-        // Make shader that whites out to fill in color
-
-        // this.filter = this.game.add.filter('TestFilter', g.areaW, g.areaH, Phaser.Color.createColor(100, 100, 100), 3, Math.min(1, this.game.world.width / 70), new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height));
-        // this.filter = this.game.add.filter('TestFilter', g.areaW, g.areaH);
-        // this.filter.u_color = Phaser.Color.createColor(0, 0, 0);
-        // this.filter.border_alpha = 0.5;
-        // this.filter.u_viewportInverse = new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height);
-        // this.sprOutline.filters = [this.filter];
-        // this.spr.filters = [new Phaser.Filter.TestFilter(this.game, this.spr.width, this.spr.height, Phaser.Color.createColor(100, 100, 100), 3, Math.min(1, this.game.world.width / 70), new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height))];
 
         var collWidth = 60;
         var collHeight = this.spr.height - 45;
@@ -820,7 +845,7 @@ var NeutralPupil = function () {
 module.exports = NeutralPupil;
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -971,7 +996,7 @@ var ArmManager = function () {
 module.exports = ArmManager;
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -983,7 +1008,114 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _utils = __webpack_require__(17);
+var _FilterColorFillLoad = __webpack_require__(10);
+
+var _FilterColorFillLoad2 = _interopRequireDefault(_FilterColorFillLoad);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var FilterManager = function () {
+    function FilterManager() {
+        _classCallCheck(this, FilterManager);
+
+        (0, _FilterColorFillLoad2.default)();
+    }
+
+    _createClass(FilterManager, [{
+        key: 'getFillColorFilter',
+        value: function getFillColorFilter(r, g, b) {
+            var filter = window.game.add.filter('ColorFill', g.areaW, g.areaH);
+            filter.u_color = Phaser.Color.createColor(r, g, b);
+            return filter;
+        }
+    }, {
+        key: 'getSelectedPupilFilter',
+        value: function getSelectedPupilFilter() {
+            if (!this.selectedPupilFilter) {
+                this.selectedPupilFilter = this.getFillColorFilter(255, 255, 255);
+            }
+            return this.selectedPupilFilter;
+        }
+    }, {
+        key: 'getTargetPupilFilter',
+        value: function getTargetPupilFilter() {
+            if (!this.targetPupilFilter) {
+                this.targetPupilFilter = this.getFillColorFilter(80, 230, 100);
+            }
+            return this.targetPupilFilter;
+        }
+    }]);
+
+    return FilterManager;
+}();
+
+module.exports = new FilterManager();
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function FilterColorFillLoad() {
+
+    Phaser.Filter.ColorFill = function (game) {
+
+        Phaser.Filter.call(this, game);
+
+        this.uniforms.u_color = { type: '3f', value: { x: 0.0, y: 0.0, z: 0.0 } };
+
+        this.fragmentSrc = ["precision mediump float;", "precision mediump int;", "uniform vec3 u_color;", "uniform sampler2D uSampler;", "varying vec2 vTextureCoord;", "varying vec4 vColor;", "void main() {", "vec4 tex = texture2D(uSampler, vTextureCoord);", "vec4 newColor = vec4(u_color.x, u_color.y, u_color.z, 1);", "gl_FragColor = newColor * tex.a;", "}"];
+    };
+
+    Phaser.Filter.ColorFill.prototype = Object.create(Phaser.Filter.prototype);
+    Phaser.Filter.ColorFill.prototype.constructor = Phaser.Filter.ColorFill;
+
+    Phaser.Filter.ColorFill.prototype.init = function (width, height, color) {
+        this.setResolution(width, height);
+        if (color) {
+            this.uniforms.u_color.value = {
+                x: color.r / 255,
+                y: color.g / 255,
+                z: color.b / 255
+            };
+        }
+    };
+
+    Object.defineProperty(Phaser.Filter.ColorFill.prototype, 'u_color', {
+        get: function get() {
+            return this.uniforms.u_color.value;
+        },
+
+        set: function set(value) {
+            this.uniforms.u_color.value = {
+                x: value.r / 255,
+                y: value.g / 255,
+                z: value.b / 255
+            };
+        }
+    });
+}
+
+module.exports = FilterColorFillLoad;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _global = __webpack_require__(0);
+
+var _global2 = _interopRequireDefault(_global);
+
+var _utils = __webpack_require__(1);
 
 var _utils2 = _interopRequireDefault(_utils);
 
@@ -1031,7 +1163,7 @@ var EmptyPupil = function () {
 module.exports = EmptyPupil;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1043,11 +1175,11 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _utils = __webpack_require__(17);
+var _utils = __webpack_require__(1);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _AlertManager = __webpack_require__(1);
+var _AlertManager = __webpack_require__(2);
 
 var _AlertManager2 = _interopRequireDefault(_AlertManager);
 
@@ -1163,7 +1295,7 @@ var BullyPupil = function () {
 module.exports = BullyPupil;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1175,11 +1307,11 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _utils = __webpack_require__(17);
+var _utils = __webpack_require__(1);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _AlertManager = __webpack_require__(1);
+var _AlertManager = __webpack_require__(2);
 
 var _AlertManager2 = _interopRequireDefault(_AlertManager);
 
@@ -1250,7 +1382,7 @@ var PetPupil = function () {
 module.exports = PetPupil;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1262,7 +1394,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _AlertManager = __webpack_require__(1);
+var _AlertManager = __webpack_require__(2);
 
 var _AlertManager2 = _interopRequireDefault(_AlertManager);
 
@@ -1383,7 +1515,7 @@ var Teacher = function () {
 module.exports = Teacher;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1435,7 +1567,7 @@ var Meter = function () {
 module.exports = Meter;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1525,7 +1657,7 @@ var StateWin = function (_Phaser$State) {
 module.exports = StateWin;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1613,149 +1745,6 @@ var StateLose = function (_Phaser$State) {
 }(Phaser.State);
 
 module.exports = StateLose;
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _global = __webpack_require__(0);
-
-var _global2 = _interopRequireDefault(_global);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Utils = function () {
-    function Utils() {
-        _classCallCheck(this, Utils);
-    }
-
-    _createClass(Utils, null, [{
-        key: 'deskXYIndexToXYPoint',
-        value: function deskXYIndexToXYPoint(iX, iY) {
-            var x = _global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGapHort) * iX;
-            var y = _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGapVert) * iY + _global2.default.deskHeight / 3;
-            return new Phaser.Point(x, y);
-        }
-    }]);
-
-    return Utils;
-}();
-
-module.exports = Utils;
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _global = __webpack_require__(0);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _FilterColorFillLoad = __webpack_require__(19);
-
-var _FilterColorFillLoad2 = _interopRequireDefault(_FilterColorFillLoad);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var FilterManager = function () {
-    function FilterManager() {
-        _classCallCheck(this, FilterManager);
-
-        (0, _FilterColorFillLoad2.default)();
-    }
-
-    _createClass(FilterManager, [{
-        key: 'getFillColorFilter',
-        value: function getFillColorFilter(r, g, b) {
-            var filter = window.game.add.filter('ColorFill', g.areaW, g.areaH);
-            filter.u_color = Phaser.Color.createColor(r, g, b);
-            return filter;
-        }
-    }, {
-        key: 'getSelectedPupilFilter',
-        value: function getSelectedPupilFilter() {
-            if (!this.selectedPupilFilter) {
-                this.selectedPupilFilter = this.getFillColorFilter(255, 255, 255);
-            }
-            return this.selectedPupilFilter;
-        }
-    }, {
-        key: 'getTargetPupilFilter',
-        value: function getTargetPupilFilter() {
-            if (!this.targetPupilFilter) {
-                this.targetPupilFilter = this.getFillColorFilter(80, 230, 100);
-            }
-            return this.targetPupilFilter;
-        }
-    }]);
-
-    return FilterManager;
-}();
-
-module.exports = new FilterManager();
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function FilterColorFillLoad() {
-
-    Phaser.Filter.ColorFill = function (game) {
-
-        Phaser.Filter.call(this, game);
-
-        this.uniforms.u_color = { type: '3f', value: { x: 0.0, y: 0.0, z: 0.0 } };
-
-        this.fragmentSrc = ["precision mediump float;", "precision mediump int;", "uniform vec3 u_color;", "uniform sampler2D uSampler;", "varying vec2 vTextureCoord;", "varying vec4 vColor;", "void main() {", "gl_FragColor = texture2D(uSampler, vTextureCoord);", "if (gl_FragColor.a > 0.0) {", "gl_FragColor.r = u_color.x;", "gl_FragColor.g = u_color.y;", "gl_FragColor.b = u_color.z;", "gl_FragColor.a = 1.0;", "}", "}"];
-    };
-
-    Phaser.Filter.ColorFill.prototype = Object.create(Phaser.Filter.prototype);
-    Phaser.Filter.ColorFill.prototype.constructor = Phaser.Filter.ColorFill;
-
-    Phaser.Filter.ColorFill.prototype.init = function (width, height, color) {
-        this.setResolution(width, height);
-        if (color) {
-            this.uniforms.u_color.value = {
-                x: color.r / 255,
-                y: color.g / 255,
-                z: color.b / 255
-            };
-        }
-    };
-
-    Object.defineProperty(Phaser.Filter.ColorFill.prototype, 'u_color', {
-        get: function get() {
-            return this.uniforms.u_color.value;
-        },
-
-        set: function set(value) {
-            this.uniforms.u_color.value = {
-                x: value.r / 255,
-                y: value.g / 255,
-                z: value.b / 255
-            };
-        }
-    });
-}
-
-module.exports = FilterColorFillLoad;
 
 /***/ })
 /******/ ]);

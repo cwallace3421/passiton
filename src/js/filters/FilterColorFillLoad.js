@@ -13,17 +13,12 @@ function FilterColorFillLoad() {
             "uniform vec3 u_color;",
             "uniform sampler2D uSampler;",
             "varying vec2 vTextureCoord;",
-
             "varying vec4 vColor;",
 
             "void main() {",
-                "gl_FragColor = texture2D(uSampler, vTextureCoord);",
-                "if (gl_FragColor.a > 0.0) {",
-                    "gl_FragColor.r = u_color.x;",
-                    "gl_FragColor.g = u_color.y;",
-                    "gl_FragColor.b = u_color.z;",
-                    "gl_FragColor.a = 1.0;",
-                "}",
+                "vec4 tex = texture2D(uSampler, vTextureCoord);",
+                "vec4 newColor = vec4(u_color.x, u_color.y, u_color.z, 1);",
+                "gl_FragColor = newColor * tex.a;",
             "}"
         ];
 

@@ -20,9 +20,11 @@ class NeutralPupil {
 
         const pos = utils.deskXYIndexToXYPoint(iX, iY);
 
-        this.sprOutline = this.game.add.sprite(pos.x + 1, pos.y + 4, 'pupils', pupil);
+        this.sprOutline = this.game.add.sprite(pos.x, pos.y + 7, 'pupils', pupil);
         this.sprOutline.anchor.setTo(0.5, 1);
-        this.sprOutline.scale.setTo(0.53);
+        this.sprOutline.scale.setTo(0.5);
+        this.sprOutline.width += 18;
+        this.sprOutline.height += 14;
         this.sprOutline.visible = false;
         g.highGrp.add(this.sprOutline);
 
@@ -34,17 +36,6 @@ class NeutralPupil {
             this.sprOutline.filters = [FilterManager.getTargetPupilFilter()];
             this.sprOutline.visible = true;
         }
-
-        // TODO just render the sprite twice...
-        // Make shader that whites out to fill in color
-
-        // this.filter = this.game.add.filter('TestFilter', g.areaW, g.areaH, Phaser.Color.createColor(100, 100, 100), 3, Math.min(1, this.game.world.width / 70), new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height));
-        // this.filter = this.game.add.filter('TestFilter', g.areaW, g.areaH);
-        // this.filter.u_color = Phaser.Color.createColor(0, 0, 0);
-        // this.filter.border_alpha = 0.5;
-        // this.filter.u_viewportInverse = new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height);
-        // this.sprOutline.filters = [this.filter];
-        // this.spr.filters = [new Phaser.Filter.TestFilter(this.game, this.spr.width, this.spr.height, Phaser.Color.createColor(100, 100, 100), 3, Math.min(1, this.game.world.width / 70), new Phaser.Point(1 / this.game.world.width, 1 / this.game.world.height))];
 
         const collWidth = 60;
         const collHeight = this.spr.height - 45;
