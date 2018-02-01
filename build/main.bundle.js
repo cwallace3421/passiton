@@ -1420,15 +1420,19 @@ var Teacher = function () {
             var waitTimer = _this.game.time.create(true);
             waitTimer.add(Phaser.Timer.SECOND * 4, function () {
                 console.log('waitTurner complete');
+                _this.aniTurn.stop();
+                _this.turnTimer = undefined;
+
+                if (_global2.default.noInput) {
+                    _this.spr.frame = 2;
+                    return;
+                }
+
                 for (var i = 0; i < _this.game.rnd.integerInRange(2, 6); i++) {
                     _this.lowerMeter();
                 }
-                _this.aniTurn.stop();
+
                 _this.aniChalk.play('chalk');
-                if (_this.turnTimer) {
-                    console.log(_this.turnTimer);
-                }
-                _this.turnTimer = undefined;
                 _this.facingClass = false;
                 _global2.default.soundTeacherTalk.resume();
             }, _this);
@@ -1478,7 +1482,7 @@ var Teacher = function () {
                 _global2.default.lose = true;
             }
             if (_global2.default.lose && !this.alerting) {
-                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 28, 6);
+                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, -4, -this.spr.height + 36, 6);
                 this.alerting = true;
             }
             if (_global2.default.lose) {

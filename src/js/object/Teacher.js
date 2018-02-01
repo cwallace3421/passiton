@@ -14,15 +14,19 @@ class Teacher {
             const waitTimer = this.game.time.create(true);
             waitTimer.add(Phaser.Timer.SECOND * 4, () => {
                 console.log('waitTurner complete');
+                this.aniTurn.stop();
+                this.turnTimer = undefined;
+
+                if (g.noInput) {
+                    this.spr.frame = 2;
+                    return;
+                }
+
                 for (let i = 0; i < this.game.rnd.integerInRange(2, 6); i++) {
                     this.lowerMeter();
                 }
-                this.aniTurn.stop();
+
                 this.aniChalk.play('chalk');
-                if (this.turnTimer) {
-                    console.log(this.turnTimer);
-                }
-                this.turnTimer = undefined;
                 this.facingClass = false;
                 g.soundTeacherTalk.resume();
             }, this);
@@ -68,7 +72,7 @@ class Teacher {
             g.lose = true;
         }
         if (g.lose && !this.alerting) {
-            AlertManager.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 28, 6);
+            AlertManager.pingAlert(this.game, this.spr.position.x, this.spr.position.y, -4, -this.spr.height + 36, 6);
             this.alerting = true;
         }
         if (g.lose) {
