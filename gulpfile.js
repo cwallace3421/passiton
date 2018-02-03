@@ -3,7 +3,7 @@ const clean = require('gulp-rimraf');
 
 gulp.task('default', ['clean'], function() {
     gulp.src(["src/assets/**/*", "!src/**/project files/*"]).pipe(gulp.dest('docs/assets'));
-    gulp.src("build/main.min.bundle.js").pipe(gulp.dest('docs/build'));
+    gulp.src("build/main.min.js").pipe(gulp.dest('docs/build'));
 });
 
 gulp.task('clean', [], function() {
