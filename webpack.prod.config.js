@@ -6,7 +6,7 @@ module.exports = {
 	entry: './src/js/main.js',
 	output: {
 		path: path.resolve(__dirname, 'build'),
-		filename: 'main.min.js'
+		filename: 'main.bundle.min.js'
 	},
 	module: {
 		loaders: [
