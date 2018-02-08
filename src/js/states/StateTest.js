@@ -26,7 +26,7 @@ class StateTest extends Phaser.State {
     }
 
     resize() {
-        this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
+        // this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
     }
 }
 

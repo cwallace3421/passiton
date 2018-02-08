@@ -13,38 +13,56 @@ class StateMenu extends Phaser.State {
     }
 
     create() {
-        g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
 
-        this.game.stage.backgroundColor = 0x000000;
+        const sprBack = this.game.add.sprite(0, 0, 'pixel');
+        sprBack.width = this.game.width;
+        sprBack.height = this.game.height;
+        sprBack.tint = 0x00FF00;
+        const spr = this.game.add.sprite(5, 5, 'pixel');
+        spr.width = this.game.width - 10;
+        spr.height = this.game.height - 10;
+        spr.tint = 0x000000;
+        console.log(this.game.width);
+        console.log(this.game.height);
+        console.log();
+        console.log(window.innerWidth);
+        console.log(window.innerHeight);
+        console.log();
+        console.log(screen.width);
+        console.log(screen.height);
+        console.log(window.devicePixelRatio);
 
-        this.state = 0;
-        this.introSpr = this.game.add.sprite(g.area.left, g.area.top, 'title');
-        this.introSpr.visible = false;
-        this.infoOneSpr = this.game.add.sprite(g.area.left, g.area.top, 'info_1');
-        this.infoOneSpr.visible = false;
-        this.infoTwoSpr = this.game.add.sprite(g.area.left, g.area.top, 'info_2');
-        this.infoTwoSpr.visible = false;
+        // this.game.stage.backgroundColor = 0x000000;
 
-        g.soundBackground = this.game.sound.play('background_music', 0.4, true);
+        // g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
+        // this.state = 0;
+        // this.introSpr = this.game.add.sprite(g.area.left, g.area.top, 'title');
+        // this.introSpr.visible = false;
+        // this.infoOneSpr = this.game.add.sprite(g.area.left, g.area.top, 'info_1');
+        // this.infoOneSpr.visible = false;
+        // this.infoTwoSpr = this.game.add.sprite(g.area.left, g.area.top, 'info_2');
+        // this.infoTwoSpr.visible = false;
+
+        // g.soundBackground = this.game.sound.play('background_music', 0.4, true);
     }
 
     update() {
-        this.game.input.keyboard.onUpCallback = (event) => {
-            this.state++;
-            console.log(this.state);
-        };
+        // this.game.input.keyboard.onUpCallback = (event) => {
+        //     // this.state++;
+        //     console.log(this.state);
+        // };
 
-        if (this.state === 0) {
-            this.introSpr.visible = true;
-        } else if (this.state === 1) {
-            this.introSpr.visible = false;
-            this.infoOneSpr.visible = true;
-        } else if (this.state === 2) {
-            this.infoOneSpr.visible = false;
-            this.infoTwoSpr.visible = true;
-        } else if (this.state >= 3) {
-            this.game.state.start('play', true);
-        }
+        // if (this.state === 0) {
+        //     this.introSpr.visible = true;
+        // } else if (this.state === 1) {
+        //     this.introSpr.visible = false;
+        //     this.infoOneSpr.visible = true;
+        // } else if (this.state === 2) {
+        //     this.infoOneSpr.visible = false;
+        //     this.infoTwoSpr.visible = true;
+        // } else if (this.state >= 3) {
+        //     this.game.state.start('play', true);
+        // }
     }
 
     preload() {
@@ -79,7 +97,7 @@ class StateMenu extends Phaser.State {
     }
 
     resize() {
-        this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
+        // this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
     }
 }
 

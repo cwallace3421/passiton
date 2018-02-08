@@ -238,7 +238,8 @@ var Game = function (_Phaser$Game) {
     function Game() {
         _classCallCheck(this, Game);
 
-        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, window.innerWidth, window.innerHeight, Phaser.AUTO, 'container', null, false, true));
+        // super(window.innerWidth, window.innerHeight, Phaser.AUTO, 'container', null, false, true);
+        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, 720, 1280, Phaser.AUTO, 'container', null, false, true));
 
         _this.state.add('menu', new _StateMenu2.default(), true);
         _this.state.add('play', new _StatePlay2.default(), false);
@@ -301,41 +302,57 @@ var StateMenu = function (_Phaser$State) {
     }, {
         key: 'create',
         value: function create() {
-            _global2.default.area = new Phaser.Rectangle(Math.floor((window.innerWidth - _global2.default.areaW) / 2), Math.floor((window.innerHeight - _global2.default.areaH) / 2), _global2.default.areaW, _global2.default.areaH);
 
-            this.game.stage.backgroundColor = 0x000000;
+            var sprBack = this.game.add.sprite(0, 0, 'pixel');
+            sprBack.width = this.game.width;
+            sprBack.height = this.game.height;
+            sprBack.tint = 0x00FF00;
+            var spr = this.game.add.sprite(5, 5, 'pixel');
+            spr.width = this.game.width - 10;
+            spr.height = this.game.height - 10;
+            spr.tint = 0x000000;
+            console.log(this.game.width);
+            console.log(this.game.height);
+            console.log();
+            console.log(window.innerWidth);
+            console.log(window.innerHeight);
+            console.log();
+            console.log(screen.width);
+            console.log(screen.height);
+            console.log(window.devicePixelRatio);
 
-            this.state = 0;
-            this.introSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'title');
-            this.introSpr.visible = false;
-            this.infoOneSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'info_1');
-            this.infoOneSpr.visible = false;
-            this.infoTwoSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'info_2');
-            this.infoTwoSpr.visible = false;
+            // this.game.stage.backgroundColor = 0x000000;
 
-            _global2.default.soundBackground = this.game.sound.play('background_music', 0.4, true);
+            // g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
+            // this.state = 0;
+            // this.introSpr = this.game.add.sprite(g.area.left, g.area.top, 'title');
+            // this.introSpr.visible = false;
+            // this.infoOneSpr = this.game.add.sprite(g.area.left, g.area.top, 'info_1');
+            // this.infoOneSpr.visible = false;
+            // this.infoTwoSpr = this.game.add.sprite(g.area.left, g.area.top, 'info_2');
+            // this.infoTwoSpr.visible = false;
+
+            // g.soundBackground = this.game.sound.play('background_music', 0.4, true);
         }
     }, {
         key: 'update',
         value: function update() {
-            var _this2 = this;
+            // this.game.input.keyboard.onUpCallback = (event) => {
+            //     // this.state++;
+            //     console.log(this.state);
+            // };
 
-            this.game.input.keyboard.onUpCallback = function (event) {
-                _this2.state++;
-                console.log(_this2.state);
-            };
-
-            if (this.state === 0) {
-                this.introSpr.visible = true;
-            } else if (this.state === 1) {
-                this.introSpr.visible = false;
-                this.infoOneSpr.visible = true;
-            } else if (this.state === 2) {
-                this.infoOneSpr.visible = false;
-                this.infoTwoSpr.visible = true;
-            } else if (this.state >= 3) {
-                this.game.state.start('play', true);
-            }
+            // if (this.state === 0) {
+            //     this.introSpr.visible = true;
+            // } else if (this.state === 1) {
+            //     this.introSpr.visible = false;
+            //     this.infoOneSpr.visible = true;
+            // } else if (this.state === 2) {
+            //     this.infoOneSpr.visible = false;
+            //     this.infoTwoSpr.visible = true;
+            // } else if (this.state >= 3) {
+            //     this.game.state.start('play', true);
+            // }
         }
     }, {
         key: 'preload',
@@ -372,7 +389,7 @@ var StateMenu = function (_Phaser$State) {
     }, {
         key: 'resize',
         value: function resize() {
-            this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
+            // this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
         }
     }]);
 
@@ -451,7 +468,7 @@ var StatePlay = function (_Phaser$State) {
     }, {
         key: 'resize',
         value: function resize() {
-            this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
+            // this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
         }
     }]);
 
@@ -1653,7 +1670,7 @@ var StateWin = function (_Phaser$State) {
     }, {
         key: 'resize',
         value: function resize() {
-            this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
+            // this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
         }
     }]);
 
@@ -1743,7 +1760,7 @@ var StateLose = function (_Phaser$State) {
     }, {
         key: 'resize',
         value: function resize() {
-            this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
+            // this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
         }
     }]);
 
