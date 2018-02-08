@@ -10,6 +10,7 @@ class StateMenu extends Phaser.State {
         this.game.stage.disableVisibilityChange = true;
         this.game.renderer.clearBeforeRender = false;
         this.game.renderer.renderSession.roundPixels = true;
+        this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     }
 
     create() {
@@ -24,12 +25,18 @@ class StateMenu extends Phaser.State {
         spr.tint = 0x000000;
         console.log(this.game.width);
         console.log(this.game.height);
-        console.log();
+        console.log('--');
         console.log(window.innerWidth);
         console.log(window.innerHeight);
-        console.log();
+        console.log('--');
         console.log(screen.width);
         console.log(screen.height);
+        console.log('--');
+        console.log(this.game.width * window.devicePixelRatio);
+        console.log(this.game.height * window.devicePixelRatio);
+        console.log('--');
+        console.log(screen.width * window.devicePixelRatio);
+        console.log(screen.height * window.devicePixelRatio);
         console.log(window.devicePixelRatio);
 
         // this.game.stage.backgroundColor = 0x000000;

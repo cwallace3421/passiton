@@ -239,7 +239,7 @@ var Game = function (_Phaser$Game) {
         _classCallCheck(this, Game);
 
         // super(window.innerWidth, window.innerHeight, Phaser.AUTO, 'container', null, false, true);
-        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, 720, 1280, Phaser.AUTO, 'container', null, false, true));
+        var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, 720, 1280, Phaser.AUTO, null, null, false, true));
 
         _this.state.add('menu', new _StateMenu2.default(), true);
         _this.state.add('play', new _StatePlay2.default(), false);
@@ -298,6 +298,7 @@ var StateMenu = function (_Phaser$State) {
             this.game.stage.disableVisibilityChange = true;
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
+            this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         }
     }, {
         key: 'create',
@@ -313,12 +314,18 @@ var StateMenu = function (_Phaser$State) {
             spr.tint = 0x000000;
             console.log(this.game.width);
             console.log(this.game.height);
-            console.log();
+            console.log('--');
             console.log(window.innerWidth);
             console.log(window.innerHeight);
-            console.log();
+            console.log('--');
             console.log(screen.width);
             console.log(screen.height);
+            console.log('--');
+            console.log(this.game.width * window.devicePixelRatio);
+            console.log(this.game.height * window.devicePixelRatio);
+            console.log('--');
+            console.log(screen.width * window.devicePixelRatio);
+            console.log(screen.height * window.devicePixelRatio);
             console.log(window.devicePixelRatio);
 
             // this.game.stage.backgroundColor = 0x000000;
