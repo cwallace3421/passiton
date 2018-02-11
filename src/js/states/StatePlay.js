@@ -12,12 +12,18 @@ class StatePlay extends Phaser.State {
         this.game.renderer.clearBeforeRender = false;
         this.game.renderer.renderSession.roundPixels = true;
         this.game.input.mouse.capture = true;
-        this.game.input.keyboard.onUpCallback = undefined;
     }
 
     create() {
+        const scaleToggleKey = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
+        scaleToggleKey.onUp.add(function() {
+            this.game.scale.scaleMode = this.game.scale.scaleMode === Phaser.ScaleManager.NO_SCALE ? Phaser.ScaleManager.SHOW_ALL : Phaser.ScaleManager.NO_SCALE;
+            this.game.camera.setBoundsToWorld();
+        }, this);
+
         g.armGrp = this.game.add.group();
         g.envGrp = this.game.add.group();
+        g.classGrp = this.game.add.group();
         g.topGrp = this.game.add.group();
         this.gameMap = new GameMap(this.game);
     }

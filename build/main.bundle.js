@@ -94,6 +94,7 @@ var global = {
     lose: false,
     armGrp: null,
     envGrp: null,
+    classGrp: null,
     topGrp: null,
     bullyStopArm: false,
     petStopArm: false,
@@ -216,11 +217,11 @@ var _StatePlay = __webpack_require__(5);
 
 var _StatePlay2 = _interopRequireDefault(_StatePlay);
 
-var _StateWin = __webpack_require__(16);
+var _StateWin = __webpack_require__(18);
 
 var _StateWin2 = _interopRequireDefault(_StateWin);
 
-var _StateLose = __webpack_require__(17);
+var _StateLose = __webpack_require__(19);
 
 var _StateLose2 = _interopRequireDefault(_StateLose);
 
@@ -303,34 +304,23 @@ var StateMenu = function (_Phaser$State) {
     }, {
         key: 'create',
         value: function create() {
+            var scaleToggleKey = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
+            scaleToggleKey.onUp.add(function () {
+                this.game.scale.scaleMode = this.game.scale.scaleMode === Phaser.ScaleManager.NO_SCALE ? Phaser.ScaleManager.SHOW_ALL : Phaser.ScaleManager.NO_SCALE;
+                this.game.camera.setBoundsToWorld();
+            }, this);
 
-            var sprBack = this.game.add.sprite(0, 0, 'pixel');
-            sprBack.width = this.game.width;
-            sprBack.height = this.game.height;
-            sprBack.tint = 0x00FF00;
-            var spr = this.game.add.sprite(5, 5, 'pixel');
-            spr.width = this.game.width - 10;
-            spr.height = this.game.height - 10;
-            spr.tint = 0x000000;
-            console.log(this.game.width);
-            console.log(this.game.height);
-            console.log('--');
-            console.log(window.innerWidth);
-            console.log(window.innerHeight);
-            console.log('--');
-            console.log(screen.width);
-            console.log(screen.height);
-            console.log('--');
-            console.log(this.game.width * window.devicePixelRatio);
-            console.log(this.game.height * window.devicePixelRatio);
-            console.log('--');
-            console.log(screen.width * window.devicePixelRatio);
-            console.log(screen.height * window.devicePixelRatio);
-            console.log(window.devicePixelRatio);
+            var startGameKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+            startGameKey.onUp.add(function () {
+                this.game.state.start('play', true);
+            }, this);
+
+            this.game.camera.setBoundsToWorld();
+            this.game.scale.refresh();
 
             // this.game.stage.backgroundColor = 0x000000;
 
-            // g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
+            _global2.default.area = new Phaser.Rectangle(Math.floor((window.innerWidth - _global2.default.areaW) / 2), Math.floor((window.innerHeight - _global2.default.areaH) / 2), _global2.default.areaW, _global2.default.areaH);
             // this.state = 0;
             // this.introSpr = this.game.add.sprite(g.area.left, g.area.top, 'title');
             // this.introSpr.visible = false;
@@ -344,6 +334,7 @@ var StateMenu = function (_Phaser$State) {
     }, {
         key: 'update',
         value: function update() {
+            this.game.state.start('play', true);
             // this.game.input.keyboard.onUpCallback = (event) => {
             //     // this.state++;
             //     console.log(this.state);
@@ -450,13 +441,19 @@ var StatePlay = function (_Phaser$State) {
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
             this.game.input.mouse.capture = true;
-            this.game.input.keyboard.onUpCallback = undefined;
         }
     }, {
         key: 'create',
         value: function create() {
+            var scaleToggleKey = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
+            scaleToggleKey.onUp.add(function () {
+                this.game.scale.scaleMode = this.game.scale.scaleMode === Phaser.ScaleManager.NO_SCALE ? Phaser.ScaleManager.SHOW_ALL : Phaser.ScaleManager.NO_SCALE;
+                this.game.camera.setBoundsToWorld();
+            }, this);
+
             _global2.default.armGrp = this.game.add.group();
             _global2.default.envGrp = this.game.add.group();
+            _global2.default.classGrp = this.game.add.group();
             _global2.default.topGrp = this.game.add.group();
             this.gameMap = new _GameMap2.default(this.game);
         }
@@ -521,6 +518,10 @@ var _Meter = __webpack_require__(15);
 
 var _Meter2 = _interopRequireDefault(_Meter);
 
+var _LevelManager = __webpack_require__(16);
+
+var _LevelManager2 = _interopRequireDefault(_LevelManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -531,54 +532,161 @@ var GameMap = function () {
 
         this.game = game;
 
-        this.teacherZoneHeight = 190;
-
-        this.wallH = 160;
-        this.wallSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top, 'pixel');
-        this.wallSpr.width = _global2.default.areaW;
-        this.wallSpr.height = this.wallH;
+        this.wallSpr = this.game.add.sprite(0, 0, 'pixel');
+        this.wallSpr.width = this.game.width;
+        this.wallSpr.height = 300;
         this.wallSpr.tint = 0xFCFBE3;
         _global2.default.envGrp.add(this.wallSpr);
 
-        this.floorSpr = this.game.add.sprite(_global2.default.area.left, _global2.default.area.top + this.wallH, 'pixel');
-        this.floorSpr.width = _global2.default.areaW;
-        this.floorSpr.height = _global2.default.area.height - this.wallH;
-        this.floorSpr.tint = 0xAAAAAA;
-        _global2.default.envGrp.add(this.floorSpr);
+        this.teacherFloorSpr = this.game.add.sprite(0, this.wallSpr.height, 'pixel');
+        this.teacherFloorSpr.width = this.game.width;
+        this.teacherFloorSpr.height = this.wallSpr.height + 200;
+        this.teacherFloorSpr.tint = 0xDDAACC;
+        _global2.default.envGrp.add(this.teacherFloorSpr);
 
-        this.boardSpr = this.game.add.sprite(_global2.default.area.left + _global2.default.area.width / 2, _global2.default.area.top + 4, 'blackboard');
-        this.boardSpr.anchor.setTo(0.5, 0);
-        this.boardSpr.scale.setTo(0.5);
-        _global2.default.envGrp.add(this.boardSpr);
+        _global2.default.classGrp.position.x = 0;
+        _global2.default.classGrp.position.y = this.teacherFloorSpr.height;
+        this.classFloorSpr = this.game.add.sprite(0, 0, 'pixel');
+        this.classFloorSpr.width = this.game.width;
+        this.classFloorSpr.height = this.game.height - _global2.default.classGrp.position.y;
+        this.classFloorSpr.tint = 0xAAAAAA;
+        _global2.default.classGrp.add(this.classFloorSpr);
 
-        this.teachersDeskSpr = this.game.add.sprite(_global2.default.area.right - 125, _global2.default.area.top + this.wallH + 40, 'teachers_desk');
-        this.teachersDeskSpr.anchor.setTo(0.5, 1);
-        this.teachersDeskSpr.scale.setTo(0.5);
-        _global2.default.envGrp.add(this.teachersDeskSpr);
+        var level = _LevelManager2.default.getLevel();
+        console.log(level);
 
-        this.meterObj = new _Meter2.default(this.game, this.boardSpr.x + this.boardSpr.width / 2 + 6, _global2.default.area.top + 11);
+        var deskWidth = 154;
+        var deskHeight = 136;
+        var deskGapX = deskWidth + 56;
+        var deskGapY = deskHeight + 36;
+        var edgeGapX = 148;
+        var edgeGapY = 72;
 
-        this.deskRowSize = Math.floor(_global2.default.area.width / (_global2.default.deskWidth + _global2.default.deskGapHort));
-        var deskRowWidth = this.deskRowSize * _global2.default.deskWidth + (this.deskRowSize - 1) * _global2.default.deskGapHort;
-        _global2.default.startXOffset = (_global2.default.area.width - deskRowWidth) / 2 + _global2.default.deskWidth / 2;
+        var classWidth = deskGapX * level[0].length - deskGapX + edgeGapX * 2;
+        this.classFloorSpr.width = classWidth;
 
-        this.deskColSize = Math.floor((_global2.default.area.height - this.teacherZoneHeight) / (_global2.default.deskHeight + _global2.default.deskGapVert));
-        var deskColWidth = this.deskColSize * _global2.default.deskHeight + (this.deskColSize - 1) * _global2.default.deskGapVert;
-        _global2.default.startYOffset = (_global2.default.area.height - this.teacherZoneHeight - deskColWidth) / 2 + 8;
+        // Dirty copy of level map
+        this.deskPositionMap = JSON.parse(JSON.stringify(level));
+        for (var y = level.length - 1; y >= 0; y--) {
+            for (var x = 0; x < level[y].length; x++) {
+                var posX = edgeGapX + x * deskGapX;
+                var posY = this.classFloorSpr.height - (edgeGapY + y * deskGapY);
 
-        for (var y = 0; y < this.deskColSize; y++) {
-            for (var x = 0; x < this.deskRowSize; x++) {
-                var desk = this.game.add.sprite(_global2.default.area.left + _global2.default.startXOffset + (_global2.default.deskWidth + _global2.default.deskGapHort) * x, _global2.default.area.bottom - _global2.default.startYOffset - (_global2.default.deskHeight + _global2.default.deskGapVert) * y, 'table');
+                var desk = this.game.add.sprite(posX, posY, 'table');
                 desk.anchor.setTo(0.5, 1);
-                desk.scale.setTo(0.5);
+                _global2.default.classGrp.add(desk);
+
+                this.deskPositionMap[y][x] = {
+                    x: posX,
+                    y: posY
+                };
             }
         }
-        this.generatePupils();
 
-        this.teacher = new _Teacher2.default(this.game, _global2.default.area.left + _global2.default.area.width / 2, _global2.default.area.top + this.teacherZoneHeight);
+        this.createClassScroll();
+
+        // this.teacherZoneHeight = 190;
+
+        // this.wallH = 160;
+        // this.wallSpr = this.game.add.sprite(g.area.left, g.area.top, 'pixel');
+        // this.wallSpr.width = g.areaW;
+        // this.wallSpr.height = this.wallH;
+        // this.wallSpr.tint = 0xFCFBE3;
+        // g.envGrp.add(this.wallSpr);
+
+        // this.floorSpr = this.game.add.sprite(g.area.left, g.area.top + this.wallH, 'pixel');
+        // this.floorSpr.width = g.areaW;
+        // this.floorSpr.height = g.area.height - this.wallH;
+        // this.floorSpr.tint = 0xAAAAAA;
+        // g.envGrp.add(this.floorSpr);
+
+        // this.boardSpr = this.game.add.sprite(g.area.left + (g.area.width / 2), g.area.top + 4, 'blackboard');
+        // this.boardSpr.anchor.setTo(0.5, 0);
+        // this.boardSpr.scale.setTo(0.5);
+        // g.envGrp.add(this.boardSpr);
+
+        // this.teachersDeskSpr = this.game.add.sprite(g.area.right - 125, g.area.top + this.wallH + 40, 'teachers_desk');
+        // this.teachersDeskSpr.anchor.setTo(0.5, 1);
+        // this.teachersDeskSpr.scale.setTo(0.5);
+        // g.envGrp.add(this.teachersDeskSpr);
+
+        // this.meterObj = new Meter(this.game, this.boardSpr.x + (this.boardSpr.width / 2) + 6, g.area.top + 11);
+
+
+        // this.deskRowSize = Math.floor(g.area.width / (g.deskWidth + g.deskGapHort));
+        // const deskRowWidth = (this.deskRowSize * g.deskWidth) + ((this.deskRowSize - 1) * g.deskGapHort);
+        // g.startXOffset = (g.area.width - deskRowWidth) / 2 + (g.deskWidth / 2);
+
+        // this.deskColSize = Math.floor((g.area.height - this.teacherZoneHeight) / (g.deskHeight + g.deskGapVert));
+        // const deskColWidth = (this.deskColSize * g.deskHeight) + ((this.deskColSize - 1) * g.deskGapVert);
+        // g.startYOffset = (((g.area.height - this.teacherZoneHeight) - deskColWidth) / 2) + 8;
+
+        // for (let y = 0; y < this.deskColSize; y++) {
+        //     for (let x = 0; x < this.deskRowSize; x++) {
+        //         const desk = this.game.add.sprite(
+        //             g.area.left + g.startXOffset + ((g.deskWidth + g.deskGapHort) * x),
+        //             g.area.bottom - g.startYOffset - ((g.deskHeight + g.deskGapVert) * y),
+        //             'table');
+        //         desk.anchor.setTo(0.5, 1);
+        //         desk.scale.setTo(0.5);
+        //     }
+        // }
+        // this.generatePupils();
+
+        // this.teacher = new Teacher(this.game, g.area.left + (g.area.width / 2), g.area.top + this.teacherZoneHeight);
     }
 
     _createClass(GameMap, [{
+        key: 'createClassScroll',
+        value: function createClassScroll() {
+            this.classFloorSpr.savedPosition = new Phaser.Point(_global2.default.classGrp.position.x, _global2.default.classGrp.position.y);
+            this.classFloorSpr.isBeingDragged = false;
+            this.classFloorSpr.scrollingSpeed = 0;
+            this.classFloorSpr.inputEnabled = true;
+            console.log(this.classFloorSpr.getBounds());
+            // sprite.getBounds().contains(x, y)
+        }
+    }, {
+        key: 'updateClassScroll',
+        value: function updateClassScroll() {
+            var pointer = this.game.input.activePointer;
+            // if (pointer.isDown && this.classFloorSpr.getBounds().contains(pointer.clientX, pointer.clientY)) {
+            //     console.log('touching');
+            // }
+
+            // if (this.classFloorSpr.input.pointerOver()) {
+            //     console.log('touching');
+            // }
+
+            // if (pointer.isDown) {
+            //     console.log(pointer);
+            // }
+
+            this.game.debug.pointer(pointer);
+
+            if (this.classFloorSpr.isBeingDragged) {
+                this.classFloorSpr.savedPosition = new Phaser.Point(_global2.default.classGrp.position.x, _global2.default.classGrp.position.y);
+            } else {
+                if (this.classFloorSpr.scrollingSpeed > 1) {
+                    _global2.default.classGrp.position.x += this.classFloorSpr.scrollingSpeed * Math.cos(this.classFloorSpr.scrollingAngle);
+                    if (_global2.default.classGrp.position.x > 0) {
+                        _global2.default.classGrp.position.x = 0;
+                    } else if (_global2.default.classGrp.position.x + this.classFloorSpr.width < this.game.width) {
+                        _global2.default.classGrp.position.x = this.classFloorSpr.width - this.game.width;
+                    }
+                    this.classFloorSpr.scrollingSpeed *= 0.7;
+                    this.classFloorSpr.savedPosition = new Phaser.Point(_global2.default.classGrp.position.x, _global2.default.classGrp.position.y);
+                } else {
+                    var distance = this.classFloorSpr.savedPosition.distance(_global2.default.classGrp.position);
+                    var angle = this.classFloorSpr.savedPosition.angle(_global2.default.classGrp.position);
+                    if (distance > 4) {
+                        this.classFloorSpr.scrollingSpeed = distance * 0.5;
+                        this.classFloorSpr.scrollingAngle = angle;
+                    }
+                }
+            }
+        }
+    }, {
         key: 'generatePupils',
         value: function generatePupils() {
             this.pupils = [];
@@ -622,63 +730,63 @@ var GameMap = function () {
     }, {
         key: 'update',
         value: function update() {
-            var _this = this;
+            this.game.debug.geom(this.classFloorSpr.getBounds());
+            this.updateClassScroll();
+            // if (!g.noInput) {
+            //     g.meter -= g.passiveSilence;
+            //     if (g.meter < 0) {
+            //         g.meter = 0;
+            //     }
+            // }
 
-            if (!_global2.default.noInput) {
-                _global2.default.meter -= _global2.default.passiveSilence;
-                if (_global2.default.meter < 0) {
-                    _global2.default.meter = 0;
-                }
-            }
+            // for (let y = 0; y < this.pupils.length; y++) {
+            //     for (let x = 0; x < this.pupils[0].length; x++) {
+            //         if (this.pupils[y][x].update) {
+            //             this.pupils[y][x].update();
+            //         }
+            //     }
+            // }
+            // this.shouldPassPaper();
+            // this.teacher.update();
+            // this.meterObj.update();
 
-            for (var y = 0; y < this.pupils.length; y++) {
-                for (var x = 0; x < this.pupils[0].length; x++) {
-                    if (this.pupils[y][x].update) {
-                        this.pupils[y][x].update();
-                    }
-                }
-            }
-            this.shouldPassPaper();
-            this.teacher.update();
-            this.meterObj.update();
+            // if (g.passToFromIndex) {
+            //     const available = [];
+            //     if (this.pupils[g.passToFromIndex.y - 1][g.passToFromIndex.x].givePaper) {
+            //         available.push(new Phaser.Point(g.passToFromIndex.x, g.passToFromIndex.y - 1));
+            //     }
+            //     if (this.pupils[g.passToFromIndex.y - 1][g.passToFromIndex.x - 1].givePaper) {
+            //         available.push(new Phaser.Point(g.passToFromIndex.x - 1, g.passToFromIndex.y - 1));
+            //     }
+            //     if (this.pupils[g.passToFromIndex.y - 1][g.passToFromIndex.x + 1].givePaper) {
+            //         available.push(new Phaser.Point(g.passToFromIndex.x + 1, g.passToFromIndex.y - 1));
+            //     }
+            //     const passTo = this.game.rnd.integerInRange(0, available.length - 1);
+            //     this.pupils[available[passTo].y][available[passTo].x].givePaper();
+            //     g.passToFromIndex = null;
+            // }
 
-            if (_global2.default.passToFromIndex) {
-                var available = [];
-                if (this.pupils[_global2.default.passToFromIndex.y - 1][_global2.default.passToFromIndex.x].givePaper) {
-                    available.push(new Phaser.Point(_global2.default.passToFromIndex.x, _global2.default.passToFromIndex.y - 1));
-                }
-                if (this.pupils[_global2.default.passToFromIndex.y - 1][_global2.default.passToFromIndex.x - 1].givePaper) {
-                    available.push(new Phaser.Point(_global2.default.passToFromIndex.x - 1, _global2.default.passToFromIndex.y - 1));
-                }
-                if (this.pupils[_global2.default.passToFromIndex.y - 1][_global2.default.passToFromIndex.x + 1].givePaper) {
-                    available.push(new Phaser.Point(_global2.default.passToFromIndex.x + 1, _global2.default.passToFromIndex.y - 1));
-                }
-                var passTo = this.game.rnd.integerInRange(0, available.length - 1);
-                this.pupils[available[passTo].y][available[passTo].x].givePaper();
-                _global2.default.passToFromIndex = null;
-            }
+            // if (g.win) {
+            //     const winTimer = this.game.time.create(true);
+            //     winTimer.add(Phaser.Timer.SECOND * 1, () => {
+            //         console.log('change to win state');
+            //         this.game.state.start('win', true, false);
+            //     }, this);
+            //     winTimer.start();
+            //     g.win = false;
+            //     g.noInput = true;
+            // }
 
-            if (_global2.default.win) {
-                var winTimer = this.game.time.create(true);
-                winTimer.add(Phaser.Timer.SECOND * 1, function () {
-                    console.log('change to win state');
-                    _this.game.state.start('win', true, false);
-                }, this);
-                winTimer.start();
-                _global2.default.win = false;
-                _global2.default.noInput = true;
-            }
-
-            if (_global2.default.lose) {
-                var loseTimer = this.game.time.create(true);
-                loseTimer.add(Phaser.Timer.SECOND * 4, function () {
-                    console.log('change to lose state');
-                    _this.game.state.start('lose', true, false);
-                }, this);
-                loseTimer.start();
-                _global2.default.lose = false;
-                _global2.default.noInput = true;
-            }
+            // if (g.lose) {
+            //     const loseTimer = this.game.time.create(true);
+            //     loseTimer.add(Phaser.Timer.SECOND * 4, () => {
+            //         console.log('change to lose state');
+            //         this.game.state.start('lose', true, false);
+            //     }, this);
+            //     loseTimer.start();
+            //     g.lose = false;
+            //     g.noInput = true;
+            // }
         }
     }, {
         key: 'giveInitialNote',
@@ -1605,6 +1713,46 @@ module.exports = Meter;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _levelConfig = __webpack_require__(17);
+
+var _levelConfig2 = _interopRequireDefault(_levelConfig);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LevelManager = function () {
+    function LevelManager() {
+        _classCallCheck(this, LevelManager);
+    }
+
+    _createClass(LevelManager, [{
+        key: 'getLevel',
+        value: function getLevel() {
+            return _levelConfig2.default.levels[0].map;
+        }
+    }]);
+
+    return LevelManager;
+}();
+
+module.exports = new LevelManager();
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+module.exports = {"levels":[{"name":"","width":0,"height":0,"start":[0,0],"end":[0,0],"map":[[0,0,0,0,0,0,0],[0,1,0,0,0,0,0],[0,0,1,0,0,0,0],[0,0,0,1,0,0,0]]}]}
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
@@ -1687,7 +1835,7 @@ var StateWin = function (_Phaser$State) {
 module.exports = StateWin;
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

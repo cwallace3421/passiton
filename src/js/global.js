@@ -19,6 +19,7 @@ const global = {
     lose: false,
     armGrp: null,
     envGrp: null,
+    classGrp: null,
     topGrp: null,
     bullyStopArm: false,
     petStopArm: false,
