@@ -1,72 +1,52 @@
+import _Pupil from './_Pupil';
+import pupilsDef from './PupilMap';
 import g from '../global';
-import utils from '../utils';
 import ArmManager from '../manager/ArmManager';
 import FilterManager from '../manager/FilterManager';
 
-class NeutralPupil {
+class NeutralPupil extends _Pupil {
 
-    constructor(game, iX, iY, type) {
-        this.game = game;
-        this.paper = false;
-
-        let pupil = this.game.rnd.integerInRange(3, 6);
-        if (type === 'hero') {
-            this.hero = true;
-            pupil = 1;
-        } else if (type === 'target') {
-            this.target = true;
-            pupil = 2;
-        }
-
-        const pos = utils.deskXYIndexToXYPoint(iX, iY);
-
-        this.sprOutline = this.game.add.sprite(pos.x, pos.y - 9, 'pupils', pupil);
-        this.sprOutline.anchor.setTo(0.5, 0.9);
-        this.sprOutline.scale.setTo(0.5);
-        this.sprOutline.width += 14;
-        this.sprOutline.height += 12;
-        this.sprOutline.visible = false;
-
-        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', pupil);
-        this.spr.anchor.setTo(0.5, 1);
-        this.spr.scale.setTo(0.5);
-
-        if (this.target) {
-            this.sprOutline.filters = [FilterManager.getTargetPupilFilter()];
-            this.sprOutline.visible = true;
-        }
-
-        const collWidth = 60;
-        const collHeight = this.spr.height - 45;
-        this.coll = new Phaser.Rectangle(pos.x - (collWidth / 2), pos.y - collHeight - 10, collWidth, collHeight);
-        this.armManager = new ArmManager(this.coll, this.game, this, this.spr.centerX, this.spr.centerY);
-
-        // this.game.debug.geom(this.coll);
+    constructor(game, x, y) {
+        super(game, pupilsDef.types.NEUTRAL, x, y, 'pupils', [3, 6]);
+        this.createOutline();
+        this.createCollision();
+        // this.arm = new ArmManager(this.collision, this.game, this, this.pupilSpr.centerX, this.pupilSpr.centerY);
     }
 
-    destroy() {
-        this.spr.destroy();
-        this.coll = null;
+    createOutline() {
+        this.outlineSpr = this.game.add.sprite(this.getPosition().x, this.getPosition().y - 9, 'pupils', this.frame);
+        this.outlineSpr.anchor.setTo(0.5, 0.9);
+        this.outlineSpr.scale.setTo(0.5);
+        this.outlineSpr.width += 14;
+        this.outlineSpr.height += 12;
+        this.outlineSpr.visible = false;
+    }
+
+    createCollision() {
+        const collWidth = 60;
+        const collHeight = this.pupilSpr.height - 45;
+        // this.getSprite().getBounds().setTo(0, 0, 40, 40);
+        // this.pupilSpr.getBounds().setTo(0, 0, 40, 40);
+        // this.getSprite().getBounds().setTo(this.getPosition().x - (collWidth / 2), this.getPosition().y - collHeight - 10, collWidth, collHeight);
+        // this.collision = new Phaser.Rectangle(this.getPosition().x - (collWidth / 2), this.getPosition().y - collHeight - 10, collWidth, collHeight);
     }
 
     update() {
-        this.armManager.update();
+        // this.arm.update();
+        // this.game.debug.geom(this.getSprite().getBounds());
     }
 
     check(x, y) {
-        return this.coll.contains(x, y);
+        return this.collision.contains(x, y);
     }
 
     highlight(highlight) {
-        if (highlight && !this.sprOutline.filters) {
-            this.sprOutline.filters = [FilterManager.getSelectedPupilFilter()];
-            this.sprOutline.visible = true;
-        } else if (highlight && this.target) {
-            this.sprOutline.filters = [FilterManager.getWinPupilFilter()];
-            this.sprOutline.visible = true;
+        if (highlight && !this.outlineSpr.filters) {
+            this.outlineSpr.filters = [FilterManager.getSelectedPupilFilter()];
+            this.outlineSpr.visible = true;
         } else if (!highlight) {
-            this.sprOutline.filters = null;
-            this.sprOutline.visible = false;
+            this.outlineSpr.filters = null;
+            this.outlineSpr.visible = false;
         }
     }
 
@@ -82,10 +62,6 @@ class NeutralPupil {
     takePaper() {
         this.highlight(false);
         this.paper = false;
-    }
-
-    hasPaper() {
-        return this.paper;
     }
 
     isSelectable() {

@@ -1,8 +1,5 @@
 import g from '../global';
-import NeutralPupil from '../pupils/NeutralPupil';
-import EmptyPupil from '../pupils/EmptyPupil';
-import BullyPupil from '../pupils/BullyPupil';
-import PetPupil from '../pupils/PetPupil';
+import pupilsDef from '../pupils/PupilMap';
 import Teacher from '../object/Teacher';
 import Meter from '../object/Meter';
 import LevelManager from '../manager/LevelManager';
@@ -14,13 +11,13 @@ class GameMap {
 
         this.wallSpr = this.game.add.sprite(0, 0, 'pixel');
         this.wallSpr.width = this.game.width;
-        this.wallSpr.height = 300;
+        this.wallSpr.height = 350;
         this.wallSpr.tint = 0xFCFBE3;
         g.envGrp.add(this.wallSpr);
 
         this.teacherFloorSpr = this.game.add.sprite(0, this.wallSpr.height, 'pixel');
         this.teacherFloorSpr.width = this.game.width;
-        this.teacherFloorSpr.height = this.wallSpr.height + 200;
+        this.teacherFloorSpr.height = this.wallSpr.height + 150;
         this.teacherFloorSpr.tint = 0xDDAACC;
         g.envGrp.add(this.teacherFloorSpr);
 
@@ -46,9 +43,9 @@ class GameMap {
         this.classFloorSpr.width = classWidth;
 
         // Dirty copy of level map
-        this.deskPositionMap = JSON.parse(JSON.stringify(level));
-        for (let y = (level.length - 1); y >= 0; y--) {
-            for (let x = 0; x < level[y].length; x++) {
+        const deskPositions = JSON.parse(JSON.stringify(level));
+        for (let y = (deskPositions.length - 1); y >= 0; y--) {
+            for (let x = 0; x < deskPositions[y].length; x++) {
                 const posX = edgeGapX + (x * deskGapX);
                 const posY = this.classFloorSpr.height - (edgeGapY + (y * deskGapY));
 
@@ -56,15 +53,34 @@ class GameMap {
                 desk.anchor.setTo(0.5, 1);
                 g.classGrp.add(desk);
 
-                this.deskPositionMap[y][x] = {
+                deskPositions[y][x] = {
                     x: posX,
                     y: posY
                 };
             }
         }
 
-        this.createClassScroll();
+        this.pupils = JSON.parse(JSON.stringify(level));
+        let count = 0;
+        for (let y = (this.pupils.length - 1); y >= 0; y--) {
+            for (let x = 0; x < this.pupils[y].length; x++) {
+                count++;
+                const type = this.pupils[y][x];
+                const pos = deskPositions[y][x];
+                this.pupils[y][x] = new pupilsDef.classes[type](window.game, pos.x, pos.y);
+            }
+        }
+        console.log(this.pupils);
+        console.log(count);
 
+        this.boardSpr = this.game.add.sprite(this.game.width / 2, 30, 'blackboard');
+        this.boardSpr.anchor.setTo(0.5, 0);
+        g.envGrp.add(this.boardSpr);
+
+        this.meterObj = new Meter(this.game, this.boardSpr.x + (this.boardSpr.width / 2) + 6, 45);
+        this.teacher = new Teacher(this.game, this.game.width / 2, this.wallSpr.height + 50);
+
+        this.createClassScroll();
 
         // this.teacherZoneHeight = 190;
 
@@ -122,47 +138,58 @@ class GameMap {
         this.classFloorSpr.isBeingDragged = false;
         this.classFloorSpr.scrollingSpeed = 0;
         this.classFloorSpr.inputEnabled = true;
-        console.log( this.classFloorSpr.getBounds());
-        // sprite.getBounds().contains(x, y)
     }
 
     updateClassScroll() {
         const pointer = this.game.input.activePointer;
-        // if (pointer.isDown && this.classFloorSpr.getBounds().contains(pointer.clientX, pointer.clientY)) {
-        //     console.log('touching');
-        // }
+        if (pointer.isDown && this.classFloorSpr.getBounds().contains(pointer.x, pointer.y)) {
+            this.classFloorSpr.isBeingDragged = true;
+        } else {
+            this.classFloorSpr.isBeingDragged = false;
+        }
 
-        // if (this.classFloorSpr.input.pointerOver()) {
-        //     console.log('touching');
-        // }
+        const leftScrollCheck = () => {
+            return g.classGrp.position.x > 0;
+        };
 
-        // if (pointer.isDown) {
-        //     console.log(pointer);
-        // }
-
-        this.game.debug.pointer(pointer);
-
+        const rightScrollCheck = () => {
+            return (g.classGrp.position.x + this.classFloorSpr.width) < window.game.width;
+        };
 
         if (this.classFloorSpr.isBeingDragged) {
             this.classFloorSpr.savedPosition = new Phaser.Point(g.classGrp.position.x, g.classGrp.position.y);
+            if (!this.classFloorSpr.pointerOffsetX) {
+                this.classFloorSpr.pointerOffsetX = (pointer.x - g.classGrp.position.x);
+            }
+            g.classGrp.position.x = pointer.x - this.classFloorSpr.pointerOffsetX;
+            if (leftScrollCheck()) {
+                g.classGrp.position.x = 0;
+                this.classFloorSpr.pointerOffsetX = (pointer.x - g.classGrp.position.x);
+            }
+            if (rightScrollCheck()) {
+                g.classGrp.position.x = -(this.classFloorSpr.width - this.game.width);
+                this.classFloorSpr.pointerOffsetX = (pointer.x - g.classGrp.position.x);
+            }
         } else {
             if (this.classFloorSpr.scrollingSpeed > 1) {
                 g.classGrp.position.x += this.classFloorSpr.scrollingSpeed * Math.cos(this.classFloorSpr.scrollingAngle);
-                if (g.classGrp.position.x > 0) {
+                if (leftScrollCheck()) {
                     g.classGrp.position.x = 0;
-                } else if ((g.classGrp.position.x + this.classFloorSpr.width) < this.game.width) {
-                    g.classGrp.position.x = this.classFloorSpr.width - this.game.width;
                 }
-                this.classFloorSpr.scrollingSpeed *= 0.7;
+                if (rightScrollCheck()) {
+                    g.classGrp.position.x = -(this.classFloorSpr.width - this.game.width);
+                }
+                this.classFloorSpr.scrollingSpeed *= 0.8;
                 this.classFloorSpr.savedPosition = new Phaser.Point(g.classGrp.position.x, g.classGrp.position.y);
             } else {
                 const distance = this.classFloorSpr.savedPosition.distance(g.classGrp.position);
                 const angle = this.classFloorSpr.savedPosition.angle(g.classGrp.position);
                 if (distance > 4) {
-                    this.classFloorSpr.scrollingSpeed = distance * 0.5;
+                    this.classFloorSpr.scrollingSpeed = distance * 2.5;
                     this.classFloorSpr.scrollingAngle = angle;
                 }
             }
+            this.classFloorSpr.pointerOffsetX = undefined;
         }
     }
 
@@ -207,7 +234,7 @@ class GameMap {
     }
 
     update() {
-        this.game.debug.geom(this.classFloorSpr.getBounds());
+        // this.game.debug.geom(this.classFloorSpr.getBounds());
         this.updateClassScroll();
         // if (!g.noInput) {
         //     g.meter -= g.passiveSilence;
@@ -216,13 +243,13 @@ class GameMap {
         //     }
         // }
 
-        // for (let y = 0; y < this.pupils.length; y++) {
-        //     for (let x = 0; x < this.pupils[0].length; x++) {
-        //         if (this.pupils[y][x].update) {
-        //             this.pupils[y][x].update();
-        //         }
-        //     }
-        // }
+        for (let y = 0; y < this.pupils.length; y++) {
+            for (let x = 0; x < this.pupils[0].length; x++) {
+                if (this.pupils[y][x].update) {
+                    this.pupils[y][x].update();
+                }
+            }
+        }
         // this.shouldPassPaper();
         // this.teacher.update();
         // this.meterObj.update();

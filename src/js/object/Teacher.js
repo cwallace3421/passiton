@@ -7,49 +7,49 @@ class Teacher {
         this.game = game;
         this.spr = this.game.add.sprite(x, y, 'teacher', 0);
         this.spr.anchor.setTo(0.5, 1);
-        this.spr.scale.setTo(0.5);
+        // this.spr.scale.setTo(0.5);
 
-        this.aniTurn = this.spr.animations.add('turn', [1, 5, 5, 2], 2, false);
-        this.aniTurn.onComplete.add(() => {
-            const waitTimer = this.game.time.create(true);
-            waitTimer.add(Phaser.Timer.SECOND * 4, () => {
-                console.log('waitTurner complete');
-                this.aniTurn.stop();
-                this.turnTimer = undefined;
+        // this.aniTurn = this.spr.animations.add('turn', [1, 5, 5, 2], 2, false);
+        // this.aniTurn.onComplete.add(() => {
+        //     const waitTimer = this.game.time.create(true);
+        //     waitTimer.add(Phaser.Timer.SECOND * 4, () => {
+        //         console.log('waitTurner complete');
+        //         this.aniTurn.stop();
+        //         this.turnTimer = undefined;
 
-                if (g.noInput) {
-                    this.spr.frame = 2;
-                    return;
-                }
+        //         if (g.noInput) {
+        //             this.spr.frame = 2;
+        //             return;
+        //         }
 
-                for (let i = 0; i < this.game.rnd.integerInRange(2, 6); i++) {
-                    this.lowerMeter();
-                }
+        //         for (let i = 0; i < this.game.rnd.integerInRange(2, 6); i++) {
+        //             this.lowerMeter();
+        //         }
 
-                this.aniChalk.play('chalk');
-                this.facingClass = false;
-                g.soundTeacherTalk.resume();
-            }, this);
-            waitTimer.start();
-            this.facingClass = true;
-            console.log('waitTimer start');
-        });
+        //         this.aniChalk.play('chalk');
+        //         this.facingClass = false;
+        //         g.soundTeacherTalk.resume();
+        //     }, this);
+        //     waitTimer.start();
+        //     this.facingClass = true;
+        //     console.log('waitTimer start');
+        // });
 
         this.aniChalk = this.spr.animations.add('chalk', [0, 1], 2, true);
         this.aniChalk.play('chalk');
 
-        g.soundTeacherTalk = this.game.sound.play('teacher_talk', 0.5, true);
+        // g.soundTeacherTalk = this.game.sound.play('teacher_talk', 0.5, true);
 
-        this.startPhase = true;
+        // this.startPhase = true;
 
-        this.startTimer = this.game.time.create(true);
-        this.startTimer.add(Phaser.Timer.SECOND * 5, () => {
-            console.log('startTimer complete');
-            this.startPhase = false;
-        }, this);
-        this.startTimer.start();
+        // this.startTimer = this.game.time.create(true);
+        // this.startTimer.add(Phaser.Timer.SECOND * 5, () => {
+        //     console.log('startTimer complete');
+        //     this.startPhase = false;
+        // }, this);
+        // this.startTimer.start();
 
-        console.log('startTimer start');
+        // console.log('startTimer start');
     }
 
     update() {

@@ -1,4 +1,5 @@
 import g from '../global';
+import ScaleManager from '../manager/ScaleManager';
 
 class StateMenu extends Phaser.State {
 
@@ -11,26 +12,21 @@ class StateMenu extends Phaser.State {
         this.game.renderer.clearBeforeRender = false;
         this.game.renderer.renderSession.roundPixels = true;
         this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        window.m = {};
+        window.m.scale = new ScaleManager();
     }
 
     create() {
-        const scaleToggleKey = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
-        scaleToggleKey.onUp.add(function() {
-            this.game.scale.scaleMode = this.game.scale.scaleMode === Phaser.ScaleManager.NO_SCALE ? Phaser.ScaleManager.SHOW_ALL : Phaser.ScaleManager.NO_SCALE;
-            this.game.camera.setBoundsToWorld();
-        }, this);
+        window.m.scale.toggleFullScreen(false);
 
-        const startGameKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-        startGameKey.onUp.add(function() {
-            this.game.state.start('play', true);
-        }, this);
-
-        this.game.camera.setBoundsToWorld();
-        this.game.scale.refresh();
+        // const startGameKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        // startGameKey.onUp.add(function() {
+        //     this.game.state.start('play', true);
+        // }, this);
 
         // this.game.stage.backgroundColor = 0x000000;
 
-        g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
+        // g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
         // this.state = 0;
         // this.introSpr = this.game.add.sprite(g.area.left, g.area.top, 'title');
         // this.introSpr.visible = false;
@@ -44,6 +40,7 @@ class StateMenu extends Phaser.State {
 
     update() {
         this.game.state.start('play', true);
+        window.m.scale.update();
         // this.game.input.keyboard.onUpCallback = (event) => {
         //     // this.state++;
         //     console.log(this.state);

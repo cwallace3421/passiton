@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -209,21 +209,102 @@ module.exports = AlertManager;
 "use strict";
 
 
-var _StateMenu = __webpack_require__(4);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ScaleManager = function () {
+    function ScaleManager() {
+        _classCallCheck(this, ScaleManager);
+
+        this.isFullScreen = false;
+        this.hasRecalcuated = true;
+        this.createToggle();
+    }
+
+    _createClass(ScaleManager, [{
+        key: "createToggle",
+        value: function createToggle() {
+            var _this = this;
+
+            window.game.input.onTap.add(function (pointer, doubleTap) {
+                // if (doubleTap && !this.isFullScreen) {
+                //     window.game.scale.startFullScreen(true, false);
+                //     window.game.scale.refresh();
+                // } else if (doubleTap) {
+                //     window.game.scale.stopFullScreen();
+                //     window.game.scale.refresh();
+                // }
+            }, this);
+            window.game.scale.onFullScreenChange.add(function (scale) {
+                _this.toggleFullScreen(scale.isFullScreen);
+            }, this);
+        }
+    }, {
+        key: "fillScreen",
+        value: function fillScreen() {
+            if (window.game.scale.width !== window.screen.availWidth) {
+                window.game.scale.setMinMax(0, 0, window.screen.availWidth, window.screen.availHeight);
+                window.game.scale.setGameSize(Math.ceil(window.screen.availWidth * window.game.scale.scaleFactor.x), 1280);
+                window.game.scale.refresh();
+            } else {
+                window.game.scale.setMinMax(0, 0, window.screen.availWidth, window.screen.availHeight);
+                window.game.scale.setGameSize(720, 1280);
+                window.game.scale.refresh();
+            }
+        }
+    }, {
+        key: "toggleFullScreen",
+        value: function toggleFullScreen(fullscreen) {
+            this.hasRecalcuated = fullscreen !== this.isFullScreen;
+            this.isFullScreen = fullscreen;
+        }
+    }, {
+        key: "update",
+        value: function update() {
+            if (!this.hasRecalcuated) {
+                this.fillScreen(game);
+                this.hasRecalcuated = true;
+            }
+        }
+    }, {
+        key: "isFullScreen",
+        value: function isFullScreen() {
+            return this.isFullScreen;
+        }
+    }]);
+
+    return ScaleManager;
+}();
+
+module.exports = ScaleManager;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _StateMenu = __webpack_require__(5);
 
 var _StateMenu2 = _interopRequireDefault(_StateMenu);
 
-var _StatePlay = __webpack_require__(5);
+var _StatePlay = __webpack_require__(6);
 
 var _StatePlay2 = _interopRequireDefault(_StatePlay);
 
-var _StateWin = __webpack_require__(18);
+var _StateWin = __webpack_require__(20);
 
 var _StateWin2 = _interopRequireDefault(_StateWin);
 
-var _StateLose = __webpack_require__(19);
+var _StateLose = __webpack_require__(21);
 
 var _StateLose2 = _interopRequireDefault(_StateLose);
+
+var _ScaleManager = __webpack_require__(3);
+
+var _ScaleManager2 = _interopRequireDefault(_ScaleManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -239,7 +320,6 @@ var Game = function (_Phaser$Game) {
     function Game() {
         _classCallCheck(this, Game);
 
-        // super(window.innerWidth, window.innerHeight, Phaser.AUTO, 'container', null, false, true);
         var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, 720, 1280, Phaser.AUTO, null, null, false, true));
 
         _this.state.add('menu', new _StateMenu2.default(), true);
@@ -260,7 +340,7 @@ window.addEventListener('resize', function () {
 });
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -275,6 +355,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
+
+var _ScaleManager = __webpack_require__(3);
+
+var _ScaleManager2 = _interopRequireDefault(_ScaleManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -300,27 +384,22 @@ var StateMenu = function (_Phaser$State) {
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
             this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+            window.m = {};
+            window.m.scale = new _ScaleManager2.default();
         }
     }, {
         key: 'create',
         value: function create() {
-            var scaleToggleKey = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
-            scaleToggleKey.onUp.add(function () {
-                this.game.scale.scaleMode = this.game.scale.scaleMode === Phaser.ScaleManager.NO_SCALE ? Phaser.ScaleManager.SHOW_ALL : Phaser.ScaleManager.NO_SCALE;
-                this.game.camera.setBoundsToWorld();
-            }, this);
+            window.m.scale.toggleFullScreen(false);
 
-            var startGameKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-            startGameKey.onUp.add(function () {
-                this.game.state.start('play', true);
-            }, this);
-
-            this.game.camera.setBoundsToWorld();
-            this.game.scale.refresh();
+            // const startGameKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+            // startGameKey.onUp.add(function() {
+            //     this.game.state.start('play', true);
+            // }, this);
 
             // this.game.stage.backgroundColor = 0x000000;
 
-            _global2.default.area = new Phaser.Rectangle(Math.floor((window.innerWidth - _global2.default.areaW) / 2), Math.floor((window.innerHeight - _global2.default.areaH) / 2), _global2.default.areaW, _global2.default.areaH);
+            // g.area = new Phaser.Rectangle(Math.floor((window.innerWidth - g.areaW) / 2), Math.floor((window.innerHeight - g.areaH) / 2), g.areaW, g.areaH);
             // this.state = 0;
             // this.introSpr = this.game.add.sprite(g.area.left, g.area.top, 'title');
             // this.introSpr.visible = false;
@@ -335,6 +414,7 @@ var StateMenu = function (_Phaser$State) {
         key: 'update',
         value: function update() {
             this.game.state.start('play', true);
+            window.m.scale.update();
             // this.game.input.keyboard.onUpCallback = (event) => {
             //     // this.state++;
             //     console.log(this.state);
@@ -397,7 +477,7 @@ var StateMenu = function (_Phaser$State) {
 exports.default = StateMenu;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -413,7 +493,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _GameMap = __webpack_require__(6);
+var _GameMap = __webpack_require__(7);
 
 var _GameMap2 = _interopRequireDefault(_GameMap);
 
@@ -431,7 +511,11 @@ var StatePlay = function (_Phaser$State) {
     function StatePlay() {
         _classCallCheck(this, StatePlay);
 
-        return _possibleConstructorReturn(this, (StatePlay.__proto__ || Object.getPrototypeOf(StatePlay)).call(this));
+        var _this = _possibleConstructorReturn(this, (StatePlay.__proto__ || Object.getPrototypeOf(StatePlay)).call(this));
+
+        _this.isFullscreen = false;
+        _this.message = '';
+        return _this;
     }
 
     _createClass(StatePlay, [{
@@ -440,17 +524,11 @@ var StatePlay = function (_Phaser$State) {
             this.game.stage.disableVisibilityChange = true;
             this.game.renderer.clearBeforeRender = false;
             this.game.renderer.renderSession.roundPixels = true;
-            this.game.input.mouse.capture = true;
+            window.m.scale.createToggle();
         }
     }, {
         key: 'create',
         value: function create() {
-            var scaleToggleKey = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
-            scaleToggleKey.onUp.add(function () {
-                this.game.scale.scaleMode = this.game.scale.scaleMode === Phaser.ScaleManager.NO_SCALE ? Phaser.ScaleManager.SHOW_ALL : Phaser.ScaleManager.NO_SCALE;
-                this.game.camera.setBoundsToWorld();
-            }, this);
-
             _global2.default.armGrp = this.game.add.group();
             _global2.default.envGrp = this.game.add.group();
             _global2.default.classGrp = this.game.add.group();
@@ -465,6 +543,8 @@ var StatePlay = function (_Phaser$State) {
             this.game.world.bringToTop(_global2.default.armGrp);
             this.game.world.bringToTop(_global2.default.topGrp);
             this.gameMap.update();
+
+            window.m.scale.update();
         }
     }, {
         key: 'preload',
@@ -482,7 +562,7 @@ var StatePlay = function (_Phaser$State) {
 exports.default = StatePlay;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -494,31 +574,19 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _NeutralPupil = __webpack_require__(7);
+var _PupilMap = __webpack_require__(8);
 
-var _NeutralPupil2 = _interopRequireDefault(_NeutralPupil);
+var _PupilMap2 = _interopRequireDefault(_PupilMap);
 
-var _EmptyPupil = __webpack_require__(11);
-
-var _EmptyPupil2 = _interopRequireDefault(_EmptyPupil);
-
-var _BullyPupil = __webpack_require__(12);
-
-var _BullyPupil2 = _interopRequireDefault(_BullyPupil);
-
-var _PetPupil = __webpack_require__(13);
-
-var _PetPupil2 = _interopRequireDefault(_PetPupil);
-
-var _Teacher = __webpack_require__(14);
+var _Teacher = __webpack_require__(16);
 
 var _Teacher2 = _interopRequireDefault(_Teacher);
 
-var _Meter = __webpack_require__(15);
+var _Meter = __webpack_require__(17);
 
 var _Meter2 = _interopRequireDefault(_Meter);
 
-var _LevelManager = __webpack_require__(16);
+var _LevelManager = __webpack_require__(18);
 
 var _LevelManager2 = _interopRequireDefault(_LevelManager);
 
@@ -534,13 +602,13 @@ var GameMap = function () {
 
         this.wallSpr = this.game.add.sprite(0, 0, 'pixel');
         this.wallSpr.width = this.game.width;
-        this.wallSpr.height = 300;
+        this.wallSpr.height = 350;
         this.wallSpr.tint = 0xFCFBE3;
         _global2.default.envGrp.add(this.wallSpr);
 
         this.teacherFloorSpr = this.game.add.sprite(0, this.wallSpr.height, 'pixel');
         this.teacherFloorSpr.width = this.game.width;
-        this.teacherFloorSpr.height = this.wallSpr.height + 200;
+        this.teacherFloorSpr.height = this.wallSpr.height + 150;
         this.teacherFloorSpr.tint = 0xDDAACC;
         _global2.default.envGrp.add(this.teacherFloorSpr);
 
@@ -566,9 +634,9 @@ var GameMap = function () {
         this.classFloorSpr.width = classWidth;
 
         // Dirty copy of level map
-        this.deskPositionMap = JSON.parse(JSON.stringify(level));
-        for (var y = level.length - 1; y >= 0; y--) {
-            for (var x = 0; x < level[y].length; x++) {
+        var deskPositions = JSON.parse(JSON.stringify(level));
+        for (var y = deskPositions.length - 1; y >= 0; y--) {
+            for (var x = 0; x < deskPositions[y].length; x++) {
                 var posX = edgeGapX + x * deskGapX;
                 var posY = this.classFloorSpr.height - (edgeGapY + y * deskGapY);
 
@@ -576,12 +644,32 @@ var GameMap = function () {
                 desk.anchor.setTo(0.5, 1);
                 _global2.default.classGrp.add(desk);
 
-                this.deskPositionMap[y][x] = {
+                deskPositions[y][x] = {
                     x: posX,
                     y: posY
                 };
             }
         }
+
+        this.pupils = JSON.parse(JSON.stringify(level));
+        var count = 0;
+        for (var _y = this.pupils.length - 1; _y >= 0; _y--) {
+            for (var _x = 0; _x < this.pupils[_y].length; _x++) {
+                count++;
+                var type = this.pupils[_y][_x];
+                var pos = deskPositions[_y][_x];
+                this.pupils[_y][_x] = new _PupilMap2.default.classes[type](window.game, pos.x, pos.y);
+            }
+        }
+        console.log(this.pupils);
+        console.log(count);
+
+        this.boardSpr = this.game.add.sprite(this.game.width / 2, 30, 'blackboard');
+        this.boardSpr.anchor.setTo(0.5, 0);
+        _global2.default.envGrp.add(this.boardSpr);
+
+        this.meterObj = new _Meter2.default(this.game, this.boardSpr.x + this.boardSpr.width / 2 + 6, 45);
+        this.teacher = new _Teacher2.default(this.game, this.game.width / 2, this.wallSpr.height + 50);
 
         this.createClassScroll();
 
@@ -643,47 +731,61 @@ var GameMap = function () {
             this.classFloorSpr.isBeingDragged = false;
             this.classFloorSpr.scrollingSpeed = 0;
             this.classFloorSpr.inputEnabled = true;
-            console.log(this.classFloorSpr.getBounds());
-            // sprite.getBounds().contains(x, y)
         }
     }, {
         key: 'updateClassScroll',
         value: function updateClassScroll() {
+            var _this = this;
+
             var pointer = this.game.input.activePointer;
-            // if (pointer.isDown && this.classFloorSpr.getBounds().contains(pointer.clientX, pointer.clientY)) {
-            //     console.log('touching');
-            // }
+            if (pointer.isDown && this.classFloorSpr.getBounds().contains(pointer.x, pointer.y)) {
+                this.classFloorSpr.isBeingDragged = true;
+            } else {
+                this.classFloorSpr.isBeingDragged = false;
+            }
 
-            // if (this.classFloorSpr.input.pointerOver()) {
-            //     console.log('touching');
-            // }
+            var leftScrollCheck = function leftScrollCheck() {
+                return _global2.default.classGrp.position.x > 0;
+            };
 
-            // if (pointer.isDown) {
-            //     console.log(pointer);
-            // }
-
-            this.game.debug.pointer(pointer);
+            var rightScrollCheck = function rightScrollCheck() {
+                return _global2.default.classGrp.position.x + _this.classFloorSpr.width < window.game.width;
+            };
 
             if (this.classFloorSpr.isBeingDragged) {
                 this.classFloorSpr.savedPosition = new Phaser.Point(_global2.default.classGrp.position.x, _global2.default.classGrp.position.y);
+                if (!this.classFloorSpr.pointerOffsetX) {
+                    this.classFloorSpr.pointerOffsetX = pointer.x - _global2.default.classGrp.position.x;
+                }
+                _global2.default.classGrp.position.x = pointer.x - this.classFloorSpr.pointerOffsetX;
+                if (leftScrollCheck()) {
+                    _global2.default.classGrp.position.x = 0;
+                    this.classFloorSpr.pointerOffsetX = pointer.x - _global2.default.classGrp.position.x;
+                }
+                if (rightScrollCheck()) {
+                    _global2.default.classGrp.position.x = -(this.classFloorSpr.width - this.game.width);
+                    this.classFloorSpr.pointerOffsetX = pointer.x - _global2.default.classGrp.position.x;
+                }
             } else {
                 if (this.classFloorSpr.scrollingSpeed > 1) {
                     _global2.default.classGrp.position.x += this.classFloorSpr.scrollingSpeed * Math.cos(this.classFloorSpr.scrollingAngle);
-                    if (_global2.default.classGrp.position.x > 0) {
+                    if (leftScrollCheck()) {
                         _global2.default.classGrp.position.x = 0;
-                    } else if (_global2.default.classGrp.position.x + this.classFloorSpr.width < this.game.width) {
-                        _global2.default.classGrp.position.x = this.classFloorSpr.width - this.game.width;
                     }
-                    this.classFloorSpr.scrollingSpeed *= 0.7;
+                    if (rightScrollCheck()) {
+                        _global2.default.classGrp.position.x = -(this.classFloorSpr.width - this.game.width);
+                    }
+                    this.classFloorSpr.scrollingSpeed *= 0.8;
                     this.classFloorSpr.savedPosition = new Phaser.Point(_global2.default.classGrp.position.x, _global2.default.classGrp.position.y);
                 } else {
                     var distance = this.classFloorSpr.savedPosition.distance(_global2.default.classGrp.position);
                     var angle = this.classFloorSpr.savedPosition.angle(_global2.default.classGrp.position);
                     if (distance > 4) {
-                        this.classFloorSpr.scrollingSpeed = distance * 0.5;
+                        this.classFloorSpr.scrollingSpeed = distance * 2.5;
                         this.classFloorSpr.scrollingAngle = angle;
                     }
                 }
+                this.classFloorSpr.pointerOffsetX = undefined;
             }
         }
     }, {
@@ -694,9 +796,9 @@ var GameMap = function () {
                 var row = [];
                 for (var x = 0; x < this.deskRowSize; x++) {
                     if (this.game.rnd.integerInRange(0, 100) > 80) {
-                        row.push(new _EmptyPupil2.default(this.game, x, y));
+                        row.push(new EmptyPupil(this.game, x, y));
                     } else {
-                        row.push(new _NeutralPupil2.default(this.game, x, y));
+                        row.push(new NeutralPupil(this.game, x, y));
                     }
                 }
                 this.pupils.push(row);
@@ -705,24 +807,24 @@ var GameMap = function () {
 
             // Generate bullies
             for (var n = 0; n < 2; n++) {
-                var _x = this.game.rnd.integerInRange(1, this.deskRowSize - 2);
-                var _y = this.game.rnd.integerInRange(1, this.deskColSize - 2);
-
-                if (this.pupils[_y][_x].destroy) {
-                    this.pupils[_y][_x].destroy();
-                }
-                this.pupils[_y][_x] = new _BullyPupil2.default(this.game, _x, _y);
-            }
-
-            // Generate teacher pet
-            for (var _n = 0; _n < 1; _n++) {
                 var _x2 = this.game.rnd.integerInRange(1, this.deskRowSize - 2);
                 var _y2 = this.game.rnd.integerInRange(1, this.deskColSize - 2);
 
                 if (this.pupils[_y2][_x2].destroy) {
                     this.pupils[_y2][_x2].destroy();
                 }
-                this.pupils[_y2][_x2] = new _PetPupil2.default(this.game, _x2, _y2);
+                this.pupils[_y2][_x2] = new BullyPupil(this.game, _x2, _y2);
+            }
+
+            // Generate teacher pet
+            for (var _n = 0; _n < 1; _n++) {
+                var _x3 = this.game.rnd.integerInRange(1, this.deskRowSize - 2);
+                var _y3 = this.game.rnd.integerInRange(1, this.deskColSize - 2);
+
+                if (this.pupils[_y3][_x3].destroy) {
+                    this.pupils[_y3][_x3].destroy();
+                }
+                this.pupils[_y3][_x3] = new PetPupil(this.game, _x3, _y3);
             }
 
             console.log(this.pupils);
@@ -730,7 +832,7 @@ var GameMap = function () {
     }, {
         key: 'update',
         value: function update() {
-            this.game.debug.geom(this.classFloorSpr.getBounds());
+            // this.game.debug.geom(this.classFloorSpr.getBounds());
             this.updateClassScroll();
             // if (!g.noInput) {
             //     g.meter -= g.passiveSilence;
@@ -739,13 +841,13 @@ var GameMap = function () {
             //     }
             // }
 
-            // for (let y = 0; y < this.pupils.length; y++) {
-            //     for (let x = 0; x < this.pupils[0].length; x++) {
-            //         if (this.pupils[y][x].update) {
-            //             this.pupils[y][x].update();
-            //         }
-            //     }
-            // }
+            for (var y = 0; y < this.pupils.length; y++) {
+                for (var x = 0; x < this.pupils[0].length; x++) {
+                    if (this.pupils[y][x].update) {
+                        this.pupils[y][x].update();
+                    }
+                }
+            }
             // this.shouldPassPaper();
             // this.teacher.update();
             // this.meterObj.update();
@@ -794,21 +896,21 @@ var GameMap = function () {
             if (this.game.rnd.integerInRange(0, 100) > 50) {
                 // Bottom left hero
                 this.pupils[0][0].destroy();
-                this.pupils[0][0] = new _NeutralPupil2.default(this.game, 0, 0, 'hero');
+                this.pupils[0][0] = new NeutralPupil(this.game, 0, 0, 'hero');
                 this.pupils[0][0].givePaper();
 
                 // Top right target
                 this.pupils[this.deskColSize - 1][this.deskRowSize - 1].destroy();
-                this.pupils[this.deskColSize - 1][this.deskRowSize - 1] = new _NeutralPupil2.default(this.game, this.deskRowSize - 1, this.deskColSize - 1, 'target');
+                this.pupils[this.deskColSize - 1][this.deskRowSize - 1] = new NeutralPupil(this.game, this.deskRowSize - 1, this.deskColSize - 1, 'target');
             } else {
                 // Bottom right hero
                 this.pupils[0][this.deskRowSize - 1].destroy();
-                this.pupils[0][this.deskRowSize - 1] = new _NeutralPupil2.default(this.game, this.deskRowSize - 1, 0, 'hero');
+                this.pupils[0][this.deskRowSize - 1] = new NeutralPupil(this.game, this.deskRowSize - 1, 0, 'hero');
                 this.pupils[0][this.deskRowSize - 1].givePaper();
 
                 // Top left target
                 this.pupils[this.deskColSize - 1][0].destroy();
-                this.pupils[this.deskColSize - 1][0] = new _NeutralPupil2.default(this.game, 0, this.deskColSize - 1, 'target');
+                this.pupils[this.deskColSize - 1][0] = new NeutralPupil(this.game, 0, this.deskColSize - 1, 'target');
             }
         }
     }, {
@@ -837,7 +939,75 @@ var GameMap = function () {
 module.exports = GameMap;
 
 /***/ }),
-/* 7 */
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _BullyPupil = __webpack_require__(9);
+
+var _BullyPupil2 = _interopRequireDefault(_BullyPupil);
+
+var _EmptyPupil = __webpack_require__(10);
+
+var _EmptyPupil2 = _interopRequireDefault(_EmptyPupil);
+
+var _NeutralPupil = __webpack_require__(11);
+
+var _NeutralPupil2 = _interopRequireDefault(_NeutralPupil);
+
+var _PetPupil = __webpack_require__(15);
+
+var _PetPupil2 = _interopRequireDefault(_PetPupil);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var classes = {
+    0: _EmptyPupil2.default,
+    1: _NeutralPupil2.default,
+    4: _BullyPupil2.default,
+    5: _PetPupil2.default
+};
+
+var types = {
+    EMPTY: {
+        name: 'EMPTY',
+        class: 0
+    },
+    NEUTRAL: {
+        name: 'NEUTRAL',
+        class: 1
+    },
+    HERO: {
+        name: 'HERO',
+        class: undefined
+    },
+    TARGET: {
+        name: 'TARGET',
+        class: undefined
+    },
+    BULLY: {
+        name: 'BULLY',
+        class: 4
+    },
+    PET: {
+        name: 'PET',
+        class: 5
+    }
+};
+
+exports.default = {
+    classes: classes,
+    types: types
+};
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -853,70 +1023,94 @@ var _utils = __webpack_require__(1);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _ArmManager = __webpack_require__(8);
+var _AlertManager = __webpack_require__(2);
 
-var _ArmManager2 = _interopRequireDefault(_ArmManager);
-
-var _FilterManager = __webpack_require__(9);
-
-var _FilterManager2 = _interopRequireDefault(_FilterManager);
+var _AlertManager2 = _interopRequireDefault(_AlertManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var NeutralPupil = function () {
-    function NeutralPupil(game, iX, iY, type) {
-        _classCallCheck(this, NeutralPupil);
+var BullyPupil = function () {
+    function BullyPupil(game, iX, iY) {
+        _classCallCheck(this, BullyPupil);
 
         this.game = game;
+        this.speed = 10;
+        this.noiseRange = [0, 5];
         this.paper = false;
 
-        var pupil = this.game.rnd.integerInRange(3, 6);
-        if (type === 'hero') {
-            this.hero = true;
-            pupil = 1;
-        } else if (type === 'target') {
-            this.target = true;
-            pupil = 2;
-        }
+        this.index = new Phaser.Point(iX, iY);
 
         var pos = _utils2.default.deskXYIndexToXYPoint(iX, iY);
 
-        this.sprOutline = this.game.add.sprite(pos.x, pos.y - 9, 'pupils', pupil);
-        this.sprOutline.anchor.setTo(0.5, 0.9);
-        this.sprOutline.scale.setTo(0.5);
-        this.sprOutline.width += 14;
-        this.sprOutline.height += 12;
-        this.sprOutline.visible = false;
-
-        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', pupil);
+        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', 8);
         this.spr.anchor.setTo(0.5, 1);
         this.spr.scale.setTo(0.5);
 
-        if (this.target) {
-            this.sprOutline.filters = [_FilterManager2.default.getTargetPupilFilter()];
-            this.sprOutline.visible = true;
-        }
+        this.beatupSpr = this.game.add.sprite(-100, -100, 'beatup');
+        this.beatupSpr.anchor.setTo(0.5);
+        this.beatupSpr.scale.setTo(0.8);
+        this.beatupSpr.visible = false;
+        _global2.default.topGrp.add(this.beatupSpr);
 
-        var collWidth = 60;
-        var collHeight = this.spr.height - 45;
-        this.coll = new Phaser.Rectangle(pos.x - collWidth / 2, pos.y - collHeight - 10, collWidth, collHeight);
-        this.armManager = new _ArmManager2.default(this.coll, this.game, this, this.spr.centerX, this.spr.centerY);
+        this.aniBeatup = this.beatupSpr.animations.add('beatup', [0, 1, 2], 4, true);
+        this.aniBeatup.play('beatup');
+
+        this.coll = new Phaser.Circle(pos.x, pos.y - this.spr.height / 2 + 10, 130);
 
         // this.game.debug.geom(this.coll);
     }
 
-    _createClass(NeutralPupil, [{
+    _createClass(BullyPupil, [{
         key: 'destroy',
         value: function destroy() {
             this.spr.destroy();
+            this.beatupSpr.destroy();
             this.coll = null;
         }
     }, {
         key: 'update',
         value: function update() {
-            this.armManager.update();
+            var _this = this;
+
+            if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y) && _global2.default.armActive && !_global2.default.stopArm && !this.paper) {
+                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 46);
+                _global2.default.soundBullyGrunts = this.game.sound.play('bully_grunts', 0.5, false);
+                _global2.default.bullyStopArm = true;
+                _global2.default.meter += _global2.default.bullyNoise;
+                if (_global2.default.meter > 100) {
+                    _global2.default.meter = 100;
+                }
+                this.paper = true;
+                this.toggleBeatup(true, _global2.default.currentPoint);
+            }
+            if (this.paper && !this.passTimer) {
+                this.passTimer = this.game.time.create(true);
+                this.passTimer.add(Phaser.Timer.SECOND * 2, function () {
+                    console.log('bully pass timer complete');
+                    _this.toggleBeatup(false);
+                    _this.passTimer = undefined;
+                    _global2.default.passToFromIndex = _this.index;
+                }, this);
+                this.passTimer.start();
+                this.paper = false;
+            }
+        }
+    }, {
+        key: 'toggleBeatup',
+        value: function toggleBeatup(active, point) {
+            if (active) {
+                this.aniBeatup.play('beatup');
+                this.beatupSpr.position.x = point.x;
+                this.beatupSpr.position.y = point.y;
+                this.beatupSpr.visible = true;
+            } else {
+                this.aniBeatup.stop();
+                this.beatupSpr.position.x = -100;
+                this.beatupSpr.position.y = -100;
+                this.beatupSpr.visible = false;
+            }
         }
     }, {
         key: 'check',
@@ -926,15 +1120,152 @@ var NeutralPupil = function () {
     }, {
         key: 'highlight',
         value: function highlight(_highlight) {
-            if (_highlight && !this.sprOutline.filters) {
-                this.sprOutline.filters = [_FilterManager2.default.getSelectedPupilFilter()];
-                this.sprOutline.visible = true;
-            } else if (_highlight && this.target) {
-                this.sprOutline.filters = [_FilterManager2.default.getWinPupilFilter()];
-                this.sprOutline.visible = true;
+            if (_highlight) {
+                this.spr.tint = 0xAAAAAA;
+            } else {
+                this.spr.tint = 0xFFFFFF;
+            }
+        }
+    }, {
+        key: 'isSelectable',
+        value: function isSelectable() {
+            return false;
+        }
+    }]);
+
+    return BullyPupil;
+}();
+
+module.exports = BullyPupil;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _Pupil3 = __webpack_require__(22);
+
+var _Pupil4 = _interopRequireDefault(_Pupil3);
+
+var _PupilMap = __webpack_require__(8);
+
+var _PupilMap2 = _interopRequireDefault(_PupilMap);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var EmptyPupil = function (_Pupil2) {
+    _inherits(EmptyPupil, _Pupil2);
+
+    function EmptyPupil(game, x, y) {
+        _classCallCheck(this, EmptyPupil);
+
+        return _possibleConstructorReturn(this, (EmptyPupil.__proto__ || Object.getPrototypeOf(EmptyPupil)).call(this, game, _PupilMap2.default.types.Empty, x, y, 'pupils', 0));
+    }
+
+    return EmptyPupil;
+}(_Pupil4.default);
+
+module.exports = EmptyPupil;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Pupil3 = __webpack_require__(22);
+
+var _Pupil4 = _interopRequireDefault(_Pupil3);
+
+var _PupilMap = __webpack_require__(8);
+
+var _PupilMap2 = _interopRequireDefault(_PupilMap);
+
+var _global = __webpack_require__(0);
+
+var _global2 = _interopRequireDefault(_global);
+
+var _ArmManager = __webpack_require__(12);
+
+var _ArmManager2 = _interopRequireDefault(_ArmManager);
+
+var _FilterManager = __webpack_require__(13);
+
+var _FilterManager2 = _interopRequireDefault(_FilterManager);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NeutralPupil = function (_Pupil2) {
+    _inherits(NeutralPupil, _Pupil2);
+
+    function NeutralPupil(game, x, y) {
+        _classCallCheck(this, NeutralPupil);
+
+        var _this = _possibleConstructorReturn(this, (NeutralPupil.__proto__ || Object.getPrototypeOf(NeutralPupil)).call(this, game, _PupilMap2.default.types.NEUTRAL, x, y, 'pupils', [3, 6]));
+
+        _this.createOutline();
+        _this.createCollision();
+        // this.arm = new ArmManager(this.collision, this.game, this, this.pupilSpr.centerX, this.pupilSpr.centerY);
+        return _this;
+    }
+
+    _createClass(NeutralPupil, [{
+        key: 'createOutline',
+        value: function createOutline() {
+            this.outlineSpr = this.game.add.sprite(this.getPosition().x, this.getPosition().y - 9, 'pupils', this.frame);
+            this.outlineSpr.anchor.setTo(0.5, 0.9);
+            this.outlineSpr.scale.setTo(0.5);
+            this.outlineSpr.width += 14;
+            this.outlineSpr.height += 12;
+            this.outlineSpr.visible = false;
+        }
+    }, {
+        key: 'createCollision',
+        value: function createCollision() {
+            var collWidth = 60;
+            var collHeight = this.pupilSpr.height - 45;
+            // this.getSprite().getBounds().setTo(0, 0, 40, 40);
+            // this.pupilSpr.getBounds().setTo(0, 0, 40, 40);
+            // this.getSprite().getBounds().setTo(this.getPosition().x - (collWidth / 2), this.getPosition().y - collHeight - 10, collWidth, collHeight);
+            // this.collision = new Phaser.Rectangle(this.getPosition().x - (collWidth / 2), this.getPosition().y - collHeight - 10, collWidth, collHeight);
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+            // this.arm.update();
+            // this.game.debug.geom(this.getSprite().getBounds());
+        }
+    }, {
+        key: 'check',
+        value: function check(x, y) {
+            return this.collision.contains(x, y);
+        }
+    }, {
+        key: 'highlight',
+        value: function highlight(_highlight) {
+            if (_highlight && !this.outlineSpr.filters) {
+                this.outlineSpr.filters = [_FilterManager2.default.getSelectedPupilFilter()];
+                this.outlineSpr.visible = true;
             } else if (!_highlight) {
-                this.sprOutline.filters = null;
-                this.sprOutline.visible = false;
+                this.outlineSpr.filters = null;
+                this.outlineSpr.visible = false;
             }
         }
     }, {
@@ -954,11 +1285,6 @@ var NeutralPupil = function () {
             this.paper = false;
         }
     }, {
-        key: 'hasPaper',
-        value: function hasPaper() {
-            return this.paper;
-        }
-    }, {
         key: 'isSelectable',
         value: function isSelectable() {
             return true;
@@ -966,12 +1292,12 @@ var NeutralPupil = function () {
     }]);
 
     return NeutralPupil;
-}();
+}(_Pupil4.default);
 
 module.exports = NeutralPupil;
 
 /***/ }),
-/* 8 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1122,7 +1448,7 @@ var ArmManager = function () {
 module.exports = ArmManager;
 
 /***/ }),
-/* 9 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1134,7 +1460,7 @@ var _global = __webpack_require__(0);
 
 var _global2 = _interopRequireDefault(_global);
 
-var _FilterColorFillLoad = __webpack_require__(10);
+var _FilterColorFillLoad = __webpack_require__(14);
 
 var _FilterColorFillLoad2 = _interopRequireDefault(_FilterColorFillLoad);
 
@@ -1188,7 +1514,7 @@ var FilterManager = function () {
 module.exports = new FilterManager();
 
 /***/ }),
-/* 10 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1237,199 +1563,7 @@ function FilterColorFillLoad() {
 module.exports = FilterColorFillLoad;
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _global = __webpack_require__(0);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _utils = __webpack_require__(1);
-
-var _utils2 = _interopRequireDefault(_utils);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var EmptyPupil = function () {
-    function EmptyPupil(game, iX, iY) {
-        _classCallCheck(this, EmptyPupil);
-
-        this.game = game;
-
-        var pos = _utils2.default.deskXYIndexToXYPoint(iX, iY);
-
-        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', 0);
-        this.spr.anchor.setTo(0.5, 1);
-        this.spr.scale.setTo(0.5);
-    }
-
-    _createClass(EmptyPupil, [{
-        key: 'destroy',
-        value: function destroy() {
-            this.spr.destroy();
-        }
-    }, {
-        key: 'update',
-        value: function update() {}
-    }, {
-        key: 'check',
-        value: function check(x, y) {}
-    }, {
-        key: 'highlight',
-        value: function highlight(_highlight) {}
-    }, {
-        key: 'isSelectable',
-        value: function isSelectable() {
-            return false;
-        }
-    }]);
-
-    return EmptyPupil;
-}();
-
-module.exports = EmptyPupil;
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _global = __webpack_require__(0);
-
-var _global2 = _interopRequireDefault(_global);
-
-var _utils = __webpack_require__(1);
-
-var _utils2 = _interopRequireDefault(_utils);
-
-var _AlertManager = __webpack_require__(2);
-
-var _AlertManager2 = _interopRequireDefault(_AlertManager);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var BullyPupil = function () {
-    function BullyPupil(game, iX, iY) {
-        _classCallCheck(this, BullyPupil);
-
-        this.game = game;
-        this.speed = 10;
-        this.noiseRange = [0, 5];
-        this.paper = false;
-
-        this.index = new Phaser.Point(iX, iY);
-
-        var pos = _utils2.default.deskXYIndexToXYPoint(iX, iY);
-
-        this.spr = this.game.add.sprite(pos.x, pos.y, 'pupils', 8);
-        this.spr.anchor.setTo(0.5, 1);
-        this.spr.scale.setTo(0.5);
-
-        this.beatupSpr = this.game.add.sprite(-100, -100, 'beatup');
-        this.beatupSpr.anchor.setTo(0.5);
-        this.beatupSpr.scale.setTo(0.8);
-        this.beatupSpr.visible = false;
-        _global2.default.topGrp.add(this.beatupSpr);
-
-        this.aniBeatup = this.beatupSpr.animations.add('beatup', [0, 1, 2], 4, true);
-        this.aniBeatup.play('beatup');
-
-        this.coll = new Phaser.Circle(pos.x, pos.y - this.spr.height / 2 + 10, 130);
-
-        // this.game.debug.geom(this.coll);
-    }
-
-    _createClass(BullyPupil, [{
-        key: 'destroy',
-        value: function destroy() {
-            this.spr.destroy();
-            this.beatupSpr.destroy();
-            this.coll = null;
-        }
-    }, {
-        key: 'update',
-        value: function update() {
-            var _this = this;
-
-            if (_global2.default.currentPoint && this.coll.contains(_global2.default.currentPoint.x, _global2.default.currentPoint.y) && _global2.default.armActive && !_global2.default.stopArm && !this.paper) {
-                _AlertManager2.default.pingAlert(this.game, this.spr.position.x, this.spr.position.y, 0, -this.spr.height + 46);
-                _global2.default.soundBullyGrunts = this.game.sound.play('bully_grunts', 0.5, false);
-                _global2.default.bullyStopArm = true;
-                _global2.default.meter += _global2.default.bullyNoise;
-                if (_global2.default.meter > 100) {
-                    _global2.default.meter = 100;
-                }
-                this.paper = true;
-                this.toggleBeatup(true, _global2.default.currentPoint);
-            }
-            if (this.paper && !this.passTimer) {
-                this.passTimer = this.game.time.create(true);
-                this.passTimer.add(Phaser.Timer.SECOND * 2, function () {
-                    console.log('bully pass timer complete');
-                    _this.toggleBeatup(false);
-                    _this.passTimer = undefined;
-                    _global2.default.passToFromIndex = _this.index;
-                }, this);
-                this.passTimer.start();
-                this.paper = false;
-            }
-        }
-    }, {
-        key: 'toggleBeatup',
-        value: function toggleBeatup(active, point) {
-            if (active) {
-                this.aniBeatup.play('beatup');
-                this.beatupSpr.position.x = point.x;
-                this.beatupSpr.position.y = point.y;
-                this.beatupSpr.visible = true;
-            } else {
-                this.aniBeatup.stop();
-                this.beatupSpr.position.x = -100;
-                this.beatupSpr.position.y = -100;
-                this.beatupSpr.visible = false;
-            }
-        }
-    }, {
-        key: 'check',
-        value: function check(x, y) {
-            return this.coll.contains(x, y);
-        }
-    }, {
-        key: 'highlight',
-        value: function highlight(_highlight) {
-            if (_highlight) {
-                this.spr.tint = 0xAAAAAA;
-            } else {
-                this.spr.tint = 0xFFFFFF;
-            }
-        }
-    }, {
-        key: 'isSelectable',
-        value: function isSelectable() {
-            return false;
-        }
-    }]);
-
-    return BullyPupil;
-}();
-
-module.exports = BullyPupil;
-
-/***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1516,7 +1650,7 @@ var PetPupil = function () {
 module.exports = PetPupil;
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1538,69 +1672,67 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Teacher = function () {
     function Teacher(game, x, y) {
-        var _this = this;
-
         _classCallCheck(this, Teacher);
 
         this.game = game;
         this.spr = this.game.add.sprite(x, y, 'teacher', 0);
         this.spr.anchor.setTo(0.5, 1);
-        this.spr.scale.setTo(0.5);
+        // this.spr.scale.setTo(0.5);
 
-        this.aniTurn = this.spr.animations.add('turn', [1, 5, 5, 2], 2, false);
-        this.aniTurn.onComplete.add(function () {
-            var waitTimer = _this.game.time.create(true);
-            waitTimer.add(Phaser.Timer.SECOND * 4, function () {
-                console.log('waitTurner complete');
-                _this.aniTurn.stop();
-                _this.turnTimer = undefined;
+        // this.aniTurn = this.spr.animations.add('turn', [1, 5, 5, 2], 2, false);
+        // this.aniTurn.onComplete.add(() => {
+        //     const waitTimer = this.game.time.create(true);
+        //     waitTimer.add(Phaser.Timer.SECOND * 4, () => {
+        //         console.log('waitTurner complete');
+        //         this.aniTurn.stop();
+        //         this.turnTimer = undefined;
 
-                if (_global2.default.noInput) {
-                    _this.spr.frame = 2;
-                    return;
-                }
+        //         if (g.noInput) {
+        //             this.spr.frame = 2;
+        //             return;
+        //         }
 
-                for (var i = 0; i < _this.game.rnd.integerInRange(2, 6); i++) {
-                    _this.lowerMeter();
-                }
+        //         for (let i = 0; i < this.game.rnd.integerInRange(2, 6); i++) {
+        //             this.lowerMeter();
+        //         }
 
-                _this.aniChalk.play('chalk');
-                _this.facingClass = false;
-                _global2.default.soundTeacherTalk.resume();
-            }, _this);
-            waitTimer.start();
-            _this.facingClass = true;
-            console.log('waitTimer start');
-        });
+        //         this.aniChalk.play('chalk');
+        //         this.facingClass = false;
+        //         g.soundTeacherTalk.resume();
+        //     }, this);
+        //     waitTimer.start();
+        //     this.facingClass = true;
+        //     console.log('waitTimer start');
+        // });
 
         this.aniChalk = this.spr.animations.add('chalk', [0, 1], 2, true);
         this.aniChalk.play('chalk');
 
-        _global2.default.soundTeacherTalk = this.game.sound.play('teacher_talk', 0.5, true);
+        // g.soundTeacherTalk = this.game.sound.play('teacher_talk', 0.5, true);
 
-        this.startPhase = true;
+        // this.startPhase = true;
 
-        this.startTimer = this.game.time.create(true);
-        this.startTimer.add(Phaser.Timer.SECOND * 5, function () {
-            console.log('startTimer complete');
-            _this.startPhase = false;
-        }, this);
-        this.startTimer.start();
+        // this.startTimer = this.game.time.create(true);
+        // this.startTimer.add(Phaser.Timer.SECOND * 5, () => {
+        //     console.log('startTimer complete');
+        //     this.startPhase = false;
+        // }, this);
+        // this.startTimer.start();
 
-        console.log('startTimer start');
+        // console.log('startTimer start');
     }
 
     _createClass(Teacher, [{
         key: 'update',
         value: function update() {
-            var _this2 = this;
+            var _this = this;
 
             if (!this.startPhase) {
                 if (!this.turnTimer) {
                     this.turnTimer = this.game.time.create(true);
                     this.turnTimer.add(Phaser.Timer.SECOND * 4.5, function () {
                         console.log('turnTimer complete');
-                        _this2.turn();
+                        _this.turn();
                     }, this);
                     this.turnTimer.start();
 
@@ -1653,7 +1785,7 @@ var Teacher = function () {
 module.exports = Teacher;
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1676,20 +1808,21 @@ var Meter = function () {
         this.game = game;
 
         this.backSpr = this.game.add.sprite(x + 1, y, 'pixel');
-        this.backSpr.width = 30;
-        this.backSpr.height = 112;
+        this.backSpr.width = 30 * 2;
+        this.backSpr.height = 112 * 2;
         this.backSpr.tint = 0x1F3429;
         _global2.default.envGrp.add(this.backSpr);
 
-        this.meterSpr = this.game.add.sprite(x + 7, y - 7 + 112, 'pixel');
-        this.meterSpr.width = 34 / 2;
-        this.meterSpr.height = 192 / 2;
+        this.meterSpr = this.game.add.sprite(x + 7, y, 'pixel');
+        this.meterSpr.width = 26 * 2;
+        this.meterSpr.height = 112 * 2;
+        this.meterSpr.position.y += this.meterSpr.height;
         this.meterSpr.tint = 0x790000;
         this.meterSpr.anchor.setTo(0, 1);
         _global2.default.envGrp.add(this.meterSpr);
 
         this.frameSpr = this.game.add.sprite(x, y, 'meter_board');
-        this.frameSpr.scale.setTo(0.5);
+        // this.frameSpr.scale.setTo(0.5);
     }
 
     _createClass(Meter, [{
@@ -1705,7 +1838,7 @@ var Meter = function () {
 module.exports = Meter;
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1713,7 +1846,7 @@ module.exports = Meter;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _levelConfig = __webpack_require__(17);
+var _levelConfig = __webpack_require__(19);
 
 var _levelConfig2 = _interopRequireDefault(_levelConfig);
 
@@ -1739,13 +1872,13 @@ var LevelManager = function () {
 module.exports = new LevelManager();
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports) {
 
-module.exports = {"levels":[{"name":"","width":0,"height":0,"start":[0,0],"end":[0,0],"map":[[0,0,0,0,0,0,0],[0,1,0,0,0,0,0],[0,0,1,0,0,0,0],[0,0,0,1,0,0,0]]}]}
+module.exports = {"levels":[{"name":"","width":0,"height":0,"start":[0,0],"end":[0,0],"map":[[0,1,1,0,0,1,1],[0,1,0,1,1,0,0],[1,1,1,0,1,1,1],[0,0,0,1,0,1,1]]}]}
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1835,7 +1968,7 @@ var StateWin = function (_Phaser$State) {
 module.exports = StateWin;
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1923,6 +2056,116 @@ var StateLose = function (_Phaser$State) {
 }(Phaser.State);
 
 module.exports = StateLose;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _global = __webpack_require__(0);
+
+var _global2 = _interopRequireDefault(_global);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _Pupil = function () {
+    function _Pupil(game, type, x, y, key, frame) {
+        var anchor = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : { x: 0.5, y: 1 };
+
+        _classCallCheck(this, _Pupil);
+
+        console.log('_Pupil');
+        this.game = game;
+        this.type = type;
+        this.paper = false;
+        this.frame = frame;
+        this.pos = new Phaser.Point(x, y);
+        if (Array.isArray(this.frame)) {
+            this.frame = this.game.rnd.integerInRange(this.frame[0], this.frame[1]);
+        }
+        this.pupilSpr = this.game.add.sprite(this.pos.x, this.pos.y, key, this.frame);
+        this.pupilSpr.anchor.setTo(0.5, 1);
+        _global2.default.classGrp.add(this.pupilSpr);
+    }
+
+    _createClass(_Pupil, [{
+        key: 'destroy',
+        value: function destroy() {
+            this.pupilSpr.destroy();
+            if (this.outlineSpr) {
+                this.outlineSpr.destroy();
+            }
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+            return false;
+        }
+    }, {
+        key: 'check',
+        value: function check(x, y) {
+            return false;
+        }
+    }, {
+        key: 'highlight',
+        value: function highlight(_highlight) {
+            console.error('highlight(highlight) has not been implemented');
+            return false;
+        }
+    }, {
+        key: 'givePaper',
+        value: function givePaper() {
+            console.error('givePaper() has not been implemented');
+            return false;
+        }
+    }, {
+        key: 'takePaper',
+        value: function takePaper() {
+            console.error('takePaper() has not been implemented');
+            return false;
+        }
+    }, {
+        key: 'hasPaper',
+        value: function hasPaper() {
+            return this.paper;
+        }
+    }, {
+        key: 'isSelectable',
+        value: function isSelectable() {
+            return false;
+        }
+    }, {
+        key: 'getSprite',
+        value: function getSprite() {
+            return this.pupilSpr;
+        }
+    }, {
+        key: 'getType',
+        value: function getType() {
+            return this.type;
+        }
+    }, {
+        key: 'getGame',
+        value: function getGame() {
+            return this.game;
+        }
+    }, {
+        key: 'getPosition',
+        value: function getPosition() {
+            return this.pos;
+        }
+    }]);
+
+    return _Pupil;
+}();
+
+module.exports = _Pupil;
 
 /***/ })
 /******/ ]);

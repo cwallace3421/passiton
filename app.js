@@ -7,7 +7,7 @@ app.use('/js', express.static(path.join('build')));
 app.use('/phaser', express.static(path.join('node_modules', 'phaser-ce', 'build')));
 app.use('/assets', express.static(path.join('src', 'assets')));
 
-app.listen(8080, () => {
+app.listen(8080, '0.0.0.0', () => {
 	console.log();
 	console.log(chalk.green('Server listening on 8080'));
 })

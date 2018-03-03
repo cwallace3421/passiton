@@ -5,22 +5,18 @@ class StatePlay extends Phaser.State {
 
     constructor() {
         super();
+        this.isFullscreen = false;
+        this.message = '';
     }
 
     init() {
         this.game.stage.disableVisibilityChange = true;
         this.game.renderer.clearBeforeRender = false;
         this.game.renderer.renderSession.roundPixels = true;
-        this.game.input.mouse.capture = true;
+        window.m.scale.createToggle();
     }
 
     create() {
-        const scaleToggleKey = this.game.input.keyboard.addKey(Phaser.Keyboard.T);
-        scaleToggleKey.onUp.add(function() {
-            this.game.scale.scaleMode = this.game.scale.scaleMode === Phaser.ScaleManager.NO_SCALE ? Phaser.ScaleManager.SHOW_ALL : Phaser.ScaleManager.NO_SCALE;
-            this.game.camera.setBoundsToWorld();
-        }, this);
-
         g.armGrp = this.game.add.group();
         g.envGrp = this.game.add.group();
         g.classGrp = this.game.add.group();
@@ -34,6 +30,8 @@ class StatePlay extends Phaser.State {
         this.game.world.bringToTop(g.armGrp);
         this.game.world.bringToTop(g.topGrp);
         this.gameMap.update();
+
+        window.m.scale.update();
     }
 
     preload() {

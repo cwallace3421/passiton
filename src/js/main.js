@@ -2,12 +2,12 @@ import StateMenu from './states/StateMenu';
 import StatePlay from './states/StatePlay';
 import StateWin from './states/StateWin';
 import StateLose from './states/StateLose';
+import ScaleManager from './manager/ScaleManager';
 
 class Game extends Phaser.Game {
 
     constructor() {
         super(720, 1280, Phaser.AUTO, null, null, false, true);
-        // super(window.innerWidth, window.innerHeight, Phaser.AUTO, 'container', null, false, true);
         this.state.add('menu', new StateMenu(), true);
         this.state.add('play', new StatePlay(), false);
         this.state.add('win', new StateWin(), false);
